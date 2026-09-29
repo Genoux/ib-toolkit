@@ -1,0 +1,88 @@
+name: Verify (reusable)
+
+# Called from each app:
+#   jobs:
+#     verify:
+#       uses: Genoux/ib-toolkit/.github/workflows/verify.yml@main
+#       with: { arch-lint: true, db-check: true }
+on:
+  workflow_call:
+    inputs:
+      bun-version:
+        type: string
+        default: "1.3.5"
+      arch-lint:
+        description: Run `bun run lint:arch` (dependency-cruiser)
+        type: boolean
+        default: true
+      db-check:
+        description: Run `bun run db:check` (Drizzle journal)
+        type: boolean
+        default: true
+      standards-check:
+        description: Run `bunx ib check` (managed AGENTS block, skills, rules)
+        type: boolean
+        default: true
+      extra-command:
+        description: Optional extra step, e.g. `bun run test:uploads:db`
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lint, types, tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - run: bun install --frozen-lockfile
+
+      - name: Biome
+        run: bunx biome ci .
+
+      - name: Types
+        run: bunx tsc --noEmit
+
+      - name: Architecture
+        if: inputs.arch-lint
+        run: bun run lint:arch
+
+      - name: Unit tests
+        run: bun run test
+
+      - name: Migration journal
+        if: inputs.db-check
+        run: bun run db:check
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+
+      - name: Agent standards
+        if: inputs.standards-check
+        run: bunx ib check
+
+      - name: Extra
+        if: inputs.extra-command != ''
+        run: ${{ inputs.extra-command }}
+
+  secrets-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

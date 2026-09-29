@@ -1,0 +1,45 @@
+{
+  "name": "@inbeat/config",
+  "version": "0.1.0",
+  "description": "Shared tsconfig, Biome, dependency-cruiser, Vitest and commitlint presets for inBeat apps",
+  "type": "module",
+  "files": [
+    "tsconfig",
+    "biome.json",
+    "dependency-cruiser.cjs",
+    "vitest.ts",
+    "commitlint.js"
+  ],
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
+    "./tsconfig/library.json": "./tsconfig/library.json",
+    "./biome": "./biome.json",
+    "./dependency-cruiser": "./dependency-cruiser.cjs",
+    "./vitest": "./vitest.ts",
+    "./commitlint": "./commitlint.js"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "vitest": "^4"
+  },
+  "peerDependenciesMeta": {
+    "vitest": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "vitest": "^4.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Genoux/ib-toolkit.git",
+    "directory": "packages/config"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "license": "UNLICENSED"
+}

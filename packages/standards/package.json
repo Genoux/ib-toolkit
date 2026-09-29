@@ -1,0 +1,35 @@
+{
+  "name": "@inbeat/standards",
+  "version": "0.1.0",
+  "description": "Agent standards for inBeat apps: managed AGENTS.md block, Cursor/Claude skills and rules, ib CLI",
+  "type": "module",
+  "bin": {
+    "ib": "./src/cli.ts"
+  },
+  "files": [
+    "src",
+    "agents",
+    "skills",
+    "!src/**/*.test.ts"
+  ],
+  "exports": {
+    "./sync": "./src/sync.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@inbeat/config": "workspace:*",
+    "vitest": "^4.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Genoux/ib-toolkit.git",
+    "directory": "packages/standards"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
+    "test": {
+      "outputs": []
+    },
+    "lint:arch": {
+      "outputs": []
+    },
+    "build": {
+      "env": ["NEXT_PUBLIC_*", "SENTRY_*", "SKIP_ENV_VALIDATION"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "build-storybook": {
+      "outputs": ["storybook-static/**"]
+    }
+  }
+}

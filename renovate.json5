@@ -1,0 +1,39 @@
+// Shared preset. Apps: { "extends": ["github>Genoux/ib-toolkit//renovate.json5"] }
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended", ":semanticCommits", ":semanticCommitTypeAll(chore)"],
+  schedule: ["before 6am on monday"],
+  timezone: "America/Toronto",
+  rangeStrategy: "bump",
+  lockFileMaintenance: { enabled: true },
+  packageRules: [
+    {
+      groupName: "inbeat toolkit",
+      matchPackageNames: ["@inbeat/**"],
+      schedule: ["at any time"],
+      automerge: true,
+      matchUpdateTypes: ["minor", "patch"],
+    },
+    {
+      groupName: "next and react",
+      matchPackageNames: ["next", "react", "react-dom", "@types/react", "@types/react-dom", "eslint-config-next"],
+    },
+    {
+      groupName: "clerk",
+      matchPackageNames: ["@clerk/**"],
+    },
+    {
+      groupName: "sentry",
+      matchPackageNames: ["@sentry/**"],
+    },
+    {
+      groupName: "drizzle",
+      matchPackageNames: ["drizzle-orm", "drizzle-kit"],
+    },
+    {
+      matchDepTypes: ["devDependencies"],
+      matchUpdateTypes: ["minor", "patch"],
+      automerge: true,
+    },
+  ],
+}

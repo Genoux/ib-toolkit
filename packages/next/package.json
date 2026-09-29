@@ -1,0 +1,76 @@
+{
+  "name": "@inbeat/next",
+  "version": "0.1.0",
+  "description": "Next.js App Router building blocks for inBeat apps: actions, routes, auth guards, security, observability",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "src",
+    "!src/**/*.test.ts"
+  ],
+  "exports": {
+    "./action": "./src/action.ts",
+    "./route": "./src/route.ts",
+    "./auth": "./src/auth.ts",
+    "./claims": "./src/claims.ts",
+    "./capture": "./src/capture.ts",
+    "./clerk-webhook": "./src/clerk-webhook.ts",
+    "./db": "./src/db.ts",
+    "./maintenance": "./src/maintenance.ts",
+    "./rate-limit": "./src/rate-limit.ts",
+    "./security-headers": "./src/security-headers.ts",
+    "./sentry": "./src/sentry.ts",
+    "./sentry-client": "./src/sentry-client.ts",
+    "./safe-redirect": "./src/safe-redirect.ts",
+    "./fonts": "./src/fonts.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@inbeat/core": "workspace:*",
+    "@upstash/ratelimit": "^2.0.6",
+    "@upstash/redis": "^1.35.3",
+    "server-only": "^0.0.1"
+  },
+  "peerDependencies": {
+    "@clerk/nextjs": "^7",
+    "@neondatabase/serverless": "^1",
+    "@sentry/nextjs": "^10",
+    "drizzle-orm": ">=0.44",
+    "next": ">=16",
+    "react": "^19",
+    "zod": "^4"
+  },
+  "peerDependenciesMeta": {
+    "@neondatabase/serverless": {
+      "optional": true
+    },
+    "drizzle-orm": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@clerk/nextjs": "^7.0.6",
+    "@inbeat/config": "workspace:*",
+    "@neondatabase/serverless": "^1.0.2",
+    "@sentry/nextjs": "^10",
+    "@types/react": "^19",
+    "drizzle-orm": "^0.45.1",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "vitest": "^4.1.1",
+    "zod": "^4.3.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Genoux/ib-toolkit.git",
+    "directory": "packages/next"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "license": "UNLICENSED"
+}
