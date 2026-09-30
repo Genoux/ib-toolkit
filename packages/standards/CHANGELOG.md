@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.2.0...standards-v0.3.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **standards:** create always makes the base app, add-ons only via ib add ([#13](https://github.com/Genoux/ib-toolkit/issues/13))
+
+### Features
+
+* **standards:** create always makes the base app, add-ons only via ib add ([#13](https://github.com/Genoux/ib-toolkit/issues/13)) ([5f7e0c3](https://github.com/Genoux/ib-toolkit/commit/5f7e0c38a49b0f5dafd3dd9ae6472df03067f830))
+* **standards:** point any ai tool at the guides and the brief ([#12](https://github.com/Genoux/ib-toolkit/issues/12)) ([b419b4a](https://github.com/Genoux/ib-toolkit/commit/b419b4ad8e11a60ee704b4435add702fd9bd78b2))
+
 ## [0.2.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.1.2...standards-v0.2.0) (2026-09-30)
 
 

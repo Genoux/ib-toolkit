@@ -1,6 +1,6 @@
 {
   "name": "@inbeat/core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Framework-free primitives for inBeat apps: errors, results, logging, env fragments, signed events",
   "type": "module",
   "sideEffects": false,
