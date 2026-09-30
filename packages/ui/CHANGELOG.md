@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.2.0...ui-v0.3.0) (2026-09-30)
+
+
+### Miscellaneous Chores
+
+* **ui:** Synchronize inbeat versions
+
 ## [0.2.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.1.2...ui-v0.2.0) (2026-09-30)
 
 
