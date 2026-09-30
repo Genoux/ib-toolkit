@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.0](https://github.com/Genoux/ib-toolkit/compare/next-v0.1.2...next-v0.2.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ui,next:** harden ui peers, csp and rate-limit ip ([#8](https://github.com/Genoux/ib-toolkit/issues/8))
+* make the template a standalone project starter ([#7](https://github.com/Genoux/ib-toolkit/issues/7))
+
+### Features
+
+* make the template a standalone project starter ([#7](https://github.com/Genoux/ib-toolkit/issues/7)) ([98656a0](https://github.com/Genoux/ib-toolkit/commit/98656a0e22e90594f1f10d585aad61ed7de255ea))
+
+
+### Bug Fixes
+
+* **ui,next:** harden ui peers, csp and rate-limit ip ([#8](https://github.com/Genoux/ib-toolkit/issues/8)) ([4ad992c](https://github.com/Genoux/ib-toolkit/commit/4ad992c96181a21c3dbee0bb542d9afe32163deb))
+
 ## [0.1.2](https://github.com/Genoux/ib-toolkit/compare/next-v0.1.1...next-v0.1.2) (2026-09-30)
 
 
