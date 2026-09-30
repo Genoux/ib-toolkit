@@ -1,12 +1,13 @@
 {
   "name": "@inbeat/standards",
   "version": "0.3.0",
-  "description": "Agent standards for inBeat apps: managed AGENTS.md block, Cursor/Claude skills and rules, ib CLI",
+  "description": "Agent standards for inBeat apps: managed AGENTS.md block, skills under .agents/skills, ib CLI",
   "type": "module",
   "bin": {
     "ib": "./src/cli.ts"
   },
   "files": [
+    "CHANGELOG.md",
     "src",
     "agents",
     "skills",

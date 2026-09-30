@@ -1,4 +1,11 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -40,17 +47,72 @@ describe("applyManagedBlock", () => {
 });
 
 describe("write / staleFiles", () => {
+  const skillPath = (name: string) => join(".agents", "skills", name, "SKILL.md");
+
   it("syncs everything, then reports clean, then detects drift", () => {
     const dir = mkdtempSync(join(tmpdir(), "ib-std-"));
     expect(staleFiles(dir).length).toBeGreaterThan(0);
     write(dir);
     expect(staleFiles(dir)).toEqual([]);
-    expect(readFileSync(join(dir, ".cursor/rules/ib-ui.mdc"), "utf8")).toContain(
-      "alwaysApply: false",
-    );
 
-    writeFileSync(join(dir, ".cursor/skills/ib-ui/SKILL.md"), "edited");
-    expect(staleFiles(dir)).toEqual([join(".cursor", "skills", "ib-ui", "SKILL.md")]);
+    writeFileSync(join(dir, skillPath("ib-ui")), "edited");
+    expect(staleFiles(dir)).toEqual([skillPath("ib-ui")]);
+  });
+
+  it("writes skills only under .agents/skills", () => {
+    const dir = mkdtempSync(join(tmpdir(), "ib-std-"));
+    write(dir);
+    expect(readdirSync(dir).sort()).toEqual([".agents", "AGENTS.md"]);
+    expect(readdirSync(join(dir, ".agents", "skills")).sort()).toEqual([
+      "ib-feature",
+      "ib-toolkit",
+      "ib-ui",
+    ]);
+  });
+
+  describe("legacy files", () => {
+    const legacyPaths = [
+      ...["ib-ui", "ib-feature", "ib-toolkit"].flatMap((name) => [
+        join(".claude", "skills", name, "SKILL.md"),
+        join(".cursor", "skills", name, "SKILL.md"),
+        join(".cursor", "rules", `${name}.mdc`),
+      ]),
+    ];
+
+    function legacyApp(extra: Record<string, string> = {}): string {
+      const dir = mkdtempSync(join(tmpdir(), "ib-legacy-"));
+      write(dir);
+      for (const path of [...legacyPaths, ...Object.keys(extra)]) {
+        mkdirSync(join(dir, path, ".."), { recursive: true });
+        writeFileSync(join(dir, path), extra[path] ?? "old");
+      }
+      return dir;
+    }
+
+    it("reports them as stale", () => {
+      expect(staleFiles(legacyApp()).sort()).toEqual([...legacyPaths].sort());
+    });
+
+    it("removes exactly them and the directories they leave empty", () => {
+      const dir = legacyApp();
+      expect(write(dir).sort()).toEqual([...legacyPaths].sort());
+      expect(staleFiles(dir)).toEqual([]);
+      expect(existsSync(join(dir, ".claude"))).toBe(false);
+      expect(existsSync(join(dir, ".cursor"))).toBe(false);
+    });
+
+    it("keeps user files and the directories that hold them", () => {
+      const mine = {
+        [join(".claude", "skills", "mine", "SKILL.md")]: "mine",
+        [join(".cursor", "rules", "mine.mdc")]: "mine",
+        [join(".claude", "CLAUDE.md")]: "@AGENTS.md",
+      };
+      const dir = legacyApp(mine);
+      write(dir);
+      for (const path of Object.keys(mine)) expect(existsSync(join(dir, path))).toBe(true);
+      expect(existsSync(join(dir, ".claude", "skills", "ib-ui"))).toBe(false);
+      expect(existsSync(join(dir, ".cursor", "skills"))).toBe(false);
+    });
   });
 });
 
@@ -86,7 +148,7 @@ describe("claudeFilesIgnoringAgents", () => {
 describe("standard guide pointers", () => {
   it("points only at skills the package ships", () => {
     const standard = readFileSync(join(PACKAGE_ROOT, "agents", "standard.md"), "utf8");
-    const referenced = [...standard.matchAll(/\.claude\/skills\/([\w-]+)\/SKILL\.md/g)].map(
+    const referenced = [...standard.matchAll(/\.agents\/skills\/([\w-]+)\/SKILL\.md/g)].map(
       ([, name]) => name,
     );
     expect(referenced.length).toBeGreaterThan(0);
