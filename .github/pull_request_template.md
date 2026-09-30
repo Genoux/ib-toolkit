@@ -5,9 +5,9 @@
 ## Checklist
 
 - [ ] `bun run check` passes
-- [ ] Changeset added (`bun run changeset`) for every changed `@inbeat/*` package, or this PR touches none
+- [ ] PR title is a conventional commit (`feat(ui): …`, `fix(next): …`); it decides the next version
 - [ ] UI change: Storybook story added or updated, one generic example per state
-- [ ] Breaking change: bumped as major in the changeset and called out below
+- [ ] Breaking change: title uses `!` (`feat(ui)!: …`) and it is called out below
 - [ ] Synced into ugc-hub and proof-agent (`bun run sync ../ugc-hub ../proof-agent`) and both typecheck
 
 ## Breaking changes

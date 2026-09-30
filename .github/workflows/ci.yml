@@ -25,23 +25,12 @@ jobs:
       - run: bunx biome ci .
       - run: bunx turbo run typecheck test lint:arch build-storybook
 
-  changeset:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.5
-      - run: bun install --frozen-lockfile
-      - name: Every changed package has a changeset
-        run: bunx changeset status --since=origin/${{ github.base_ref }}
-
   secrets-scan:
     runs-on: ubuntu-latest
+    # gitleaks lists the PR commits through the API on pull_request events.
+    permissions:
+      contents: read
+      pull-requests: read
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
