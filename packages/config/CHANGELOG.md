@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.0](https://github.com/Genoux/ib-toolkit/compare/config-v0.3.0...config-v0.4.0) (2026-09-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* **standards:** sync skills to .agents/skills only ([#15](https://github.com/Genoux/ib-toolkit/issues/15))
+
+### Features
+
+* **standards:** sync skills to .agents/skills only ([#15](https://github.com/Genoux/ib-toolkit/issues/15)) ([cd3e8a2](https://github.com/Genoux/ib-toolkit/commit/cd3e8a21f028790ad84c26dc1cc832475885c461))
+
 ## [0.3.0](https://github.com/Genoux/ib-toolkit/compare/config-v0.2.0...config-v0.3.0) (2026-09-30)
 
 
