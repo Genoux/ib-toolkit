@@ -27,15 +27,16 @@ Packages are published to GitHub Packages under the `inBeat` org.
 `NODE_AUTH_TOKEN` is a classic token with `read:packages`. Set it locally, in CI and on Vercel.
 
 ```sh
-bun add @inbeat/core @inbeat/next @inbeat/ui
+bun add @inbeat/core @inbeat/next @inbeat/ui geist
 bun add -d @inbeat/config @inbeat/standards
 ```
 
 Then:
 
 - `tsconfig.json` extends `@inbeat/config/tsconfig/nextjs.json`
-- `next.config.ts` has `transpilePackages: ["@inbeat/ui"]` (core and next ship compiled JS)
-- vitest configs set `execArgv: ["--conditions=react-server"]` so `server-only` in `@inbeat/next` resolves in Node
+- `next.config.ts` has `transpilePackages: ["@inbeat/ui"]` (core and next ship compiled JS), and `geist` is a dependency (`@inbeat/next/fonts` loads it)
+- `vitest.config.ts` spreads `vitestPreset` from `@inbeat/config/vitest`, which runs `@inbeat/*` through Vite so mocks and aliases apply (alias `server-only` to a stub, see the template). Only code that runs outside Vite (e.g. workflow step bundles) needs `execArgv: ["--conditions=react-server"]`
+- `biome.json` extends `@inbeat/config/biome`
 - `globals.css` imports `@inbeat/ui/theme.css`
 - the root layout puts `fontVariables` from `@inbeat/next/fonts` on `<html>`
 - `bunx ib sync` writes the shared agent rules; `bunx ib check` fails CI when they drift

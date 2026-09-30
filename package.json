@@ -7,13 +7,13 @@
     "apps/*"
   ],
   "scripts": {
-    "check": "turbo run typecheck test lint:arch && biome check .",
+    "check": "turbo run typecheck test lint:arch lint ib:check && biome check .",
     "dev:template": "turbo run dev --filter=@inbeat/template...",
     "typecheck": "turbo run typecheck",
     "build:packages": "turbo run build --filter=./packages/*",
     "test": "turbo run test",
-    "lint": "biome check .",
-    "lint:fix": "biome check . --write",
+    "lint": "biome check . && turbo run lint",
+    "lint:fix": "biome check . --write && bun --filter @inbeat/template lint:fix",
     "storybook": "bun --filter @inbeat/ui storybook",
     "build-storybook": "turbo run build-storybook",
     "pack:local": "bun run build:packages && bun scripts/pack-local.ts",

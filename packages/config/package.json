@@ -8,6 +8,7 @@
     "biome.json",
     "dependency-cruiser.cjs",
     "vitest.js",
+    "vitest.d.ts",
     "commitlint.js"
   ],
   "exports": {
@@ -17,7 +18,10 @@
     "./tsconfig/compiled.json": "./tsconfig/compiled.json",
     "./biome": "./biome.json",
     "./dependency-cruiser": "./dependency-cruiser.cjs",
-    "./vitest": "./vitest.js",
+    "./vitest": {
+      "types": "./vitest.d.ts",
+      "default": "./vitest.js"
+    },
     "./commitlint": "./commitlint.js"
   },
   "scripts": {

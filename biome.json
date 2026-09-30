@@ -11,7 +11,8 @@
       "!!**/.next",
       "!!**/dist",
       "!**/next-env.d.ts",
-      "!!packages/ui/src/components"
+      "!!packages/ui/src/components",
+      "!apps/template"
     ]
   }
 }

@@ -1,18 +1,10 @@
-import { fileURLToPath } from "node:url";
 import { clerkFrontendApi, securityHeaders } from "@inbeat/next/security-headers";
 import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
-// Inside ib-toolkit, bun links `next` and the @inbeat/* sources from the monorepo root, which
-// Turbopack refuses to compile unless the root covers them. A standalone app uses its own dir.
-const workspaceRoot = fileURLToPath(new URL("../..", import.meta.url));
-
 const nextConfig: NextConfig = {
   devIndicators: false,
   transpilePackages: ["@inbeat/ui"],
-  turbopack: {
-    root: workspaceRoot,
-  },
   headers: async () => [
     {
       source: "/(.*)",

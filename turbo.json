@@ -13,6 +13,12 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
+    "lint": {
+      "outputs": []
+    },
+    "ib:check": {
+      "cache": false
+    },
     "build": {
       "dependsOn": ["^build"],
       "env": ["NEXT_PUBLIC_*", "SENTRY_*", "SKIP_ENV_VALIDATION"],
