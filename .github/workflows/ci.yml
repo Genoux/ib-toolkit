@@ -42,6 +42,10 @@ jobs:
 
   secrets-scan:
     runs-on: ubuntu-latest
+    # gitleaks lists the PR commits through the API on pull_request events.
+    permissions:
+      contents: read
+      pull-requests: read
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
