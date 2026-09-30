@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import { fontVariables } from "@inbeat/next/fonts";
 import { Toaster } from "@inbeat/ui/components/sonner";
 import { TooltipProvider } from "@inbeat/ui/components/tooltip";
@@ -12,13 +13,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className={fontVariables}>
-      <body className="min-h-screen font-sans antialiased">
-        <TooltipProvider>
-          <Toaster position="top-center" />
-          {children}
-        </TooltipProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={fontVariables}>
+        <body className="min-h-screen font-sans antialiased">
+          <TooltipProvider>
+            <Toaster position="top-center" />
+            {children}
+          </TooltipProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

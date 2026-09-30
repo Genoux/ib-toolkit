@@ -5,7 +5,7 @@ alwaysApply: false
 
 # ib-toolkit
 
-Read the "inBeat toolkit standard" block in `AGENTS.md` first. This skill is the how-to.
+Read the "inBeat toolkit standard" block in `AGENTS.md` first. This skill is the how-to. Examples use `requireAdmin` from the Clerk add-on; without auth use `publicAccess` plus a rate limiter.
 
 ## Server action
 
@@ -57,6 +57,8 @@ export const GET = route({
 - Postgres: `isUniqueViolation(err)` from `@inbeat/core/errors`, never string matching.
 
 ## Auth
+
+Only when the app was created with `--auth clerk`; without it there is no `src/shared/lib/auth.ts`, so skip `requireAdmin` and `authorize` guards. To add auth to an existing app run `bunx ib add clerk`; if it lists files to merge, merge them, then rerun.
 
 `src/shared/lib/auth.ts` owns the app's roles:
 

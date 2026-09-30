@@ -10,14 +10,19 @@
     "src",
     "agents",
     "skills",
-    "!src/**/*.test.ts"
+    "template",
+    "addons",
+    "!src/**/*.test.ts",
+    "!src/__snapshots__",
+    "!src/test"
   ],
   "exports": {
     "./sync": "./src/sync.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build": "bun scripts/build-template.ts"
   },
   "devDependencies": {
     "@inbeat/config": "workspace:^",

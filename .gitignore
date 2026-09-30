@@ -13,3 +13,4 @@ next-env.d.ts
 .cursor
 !apps/template/.cursor
 dist
+packages/standards/template

@@ -1,6 +1,6 @@
 ## inBeat toolkit standard
 
-Stack: Next.js App Router, TypeScript strict, React 19, Drizzle + Neon, Clerk, Sentry, Vercel, Bun.
+Stack: Next.js App Router, TypeScript strict, React 19, Drizzle + Neon, Clerk (optional add-on), Sentry, Vercel, Bun.
 Shared code comes from `@inbeat/*` (ui ships source via `transpilePackages`; core and next ship compiled JS). Never fork a toolkit
 file into the app; change it in ib-toolkit.
 
@@ -53,7 +53,8 @@ Server actions are queued per client; never use them for reads.
 
 ### Auth
 
-- Clerk everywhere. `authorize` is required on every `action()` and `route()`;
+- Authentication is an add-on (`ib create --auth clerk`); an app without it has no roles or
+  `requireViewer`, and the rest of this section applies once it is added. `authorize` is required on every `action()` and `route()`;
   `publicAccess` is an explicit choice and must be rate limited.
 - Roles are a pure function of session claims (`defineAuth({ resolveRole })`): verified email
   domain (`readVerifiedEmail`) or `publicMetadata.role` (`readMetadataRole`). Missing claims

@@ -1,0 +1,41 @@
+## .env.example
++ # Required
++ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
++ CLERK_SECRET_KEY=
++ # Verified emails on these domains resolve to admin; everyone else is a member.
++ ADMIN_EMAIL_DOMAINS=inbeat.agency
++ NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
++ CLERK_WEBHOOK_SIGNING_SECRET=
+
+## src/app/layout.tsx
+-     <html lang="en" className={fontVariables}>
+-       <body className="min-h-screen font-sans antialiased">
+-         <TooltipProvider>
+-           <Toaster position="top-center" />
+-           {children}
+-         </TooltipProvider>
+-       </body>
+-     </html>
++ import { ClerkProvider } from "@clerk/nextjs";
++     <ClerkProvider>
++       <html lang="en" className={fontVariables}>
++         <body className="min-h-screen font-sans antialiased">
++           <TooltipProvider>
++             <Toaster position="top-center" />
++             {children}
++           </TooltipProvider>
++         </body>
++       </html>
++     </ClerkProvider>
+
+## src/shared/config/env.ts
+- import { appUrlEnv, sentryClientEnv } from "@inbeat/core/env";
++ import { appUrlEnv, clerkClientEnv, clerkServerEnv, csv, sentryClientEnv } from "@inbeat/core/env";
++     ...clerkServerEnv,
++     ADMIN_EMAIL_DOMAINS: csv()
++       .transform((domains) => domains.map((domain) => domain.replace(/^@/, "")))
++       .refine((domains) => domains.length > 0, "ADMIN_EMAIL_DOMAINS must list at least one domain"),
++     ...clerkClientEnv,
++     NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().optional(),
++     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
++     NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
