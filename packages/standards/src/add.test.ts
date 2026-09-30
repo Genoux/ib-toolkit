@@ -30,25 +30,21 @@ async function plainProject() {
   const templateDir = fixtureTemplate();
   const addonsDir = fixtureAddons();
   const projectDir = join(mkdtempSync(join(tmpdir(), "ib-add-")), "app");
-  await create(projectDir, { local: false, templateDir, addonsDir, run: succeed, env });
+  await create(projectDir, { local: false, templateDir, run: succeed, env });
   return { templateDir, addonsDir, projectDir, options: { templateDir, addonsDir, run: succeed } };
 }
 
 describe("add", () => {
-  it("yields the same project as create with the addon", async () => {
-    const { templateDir, addonsDir, projectDir, options } = await plainProject();
+  it("applies the addon to a freshly created project", async () => {
+    const { projectDir, options } = await plainProject();
     await add("demo", { projectDir, ...options });
 
-    const reference = join(mkdtempSync(join(tmpdir(), "ib-add-")), "app");
-    await create(reference, {
-      local: false,
-      templateDir,
-      addonsDir,
-      addons: ["demo"],
-      run: succeed,
-      env,
-    });
-    expect(tree(projectDir)).toEqual(tree(reference));
+    expect(readFileSync(join(projectDir, "src/app/layout.tsx"), "utf8")).toBe("demo layout");
+    expect(readFileSync(join(projectDir, "src/app/demo/page.tsx"), "utf8")).toBe("demo page");
+    expect(readFileSync(join(projectDir, ".env.example"), "utf8")).toContain("DEMO_KEY");
+    const manifest = JSON.parse(readFileSync(join(projectDir, "package.json"), "utf8"));
+    expect(manifest.dependencies["demo-sdk"]).toBe("^1.0.0");
+    expect(manifest.ib.addons).toEqual(["demo"]);
   });
 
   it("appends the addon's new env keys to .env.local without touching existing values", async () => {

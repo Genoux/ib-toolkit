@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { applyAddon, listAddons, overlayEntries, planOverlay } from "./addons";
+import { applyAddon, listAddons, planOverlay } from "./addons";
 
 function write(root: string, file: string, contents: string): void {
   mkdirSync(dirname(join(root, file)), { recursive: true });
@@ -47,12 +47,6 @@ function fixtureProject(): string {
 describe("listAddons", () => {
   it("lists addon folders", () => {
     expect(listAddons(fixtureAddons())).toEqual(["demo"]);
-  });
-});
-
-describe("overlayEntries", () => {
-  it("lists the top-level paths an addon writes", () => {
-    expect(overlayEntries(join(fixtureAddons(), "demo")).sort()).toEqual([".env.example", "src"]);
   });
 });
 

@@ -58,7 +58,7 @@ export const GET = route({
 
 ## Auth
 
-Only when the app was created with `--auth clerk`; without it there is no `src/shared/lib/auth.ts`, so skip `requireAdmin` and `authorize` guards. To add auth to an existing app run `bunx ib add clerk`; if it lists files to merge, merge them, then rerun.
+Only once the app has the Clerk add-on; without it there is no `src/shared/lib/auth.ts`, so skip `requireAdmin` and `authorize` guards. To add auth run `bunx ib add clerk`; if it lists files to merge, merge them, then rerun.
 
 `src/shared/lib/auth.ts` owns the app's roles:
 
