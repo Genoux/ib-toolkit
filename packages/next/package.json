@@ -5,26 +5,69 @@
   "type": "module",
   "sideEffects": false,
   "files": [
-    "src",
-    "!src/**/*.test.ts"
+    "dist"
   ],
   "exports": {
-    "./action": "./src/action.ts",
-    "./route": "./src/route.ts",
-    "./auth": "./src/auth.ts",
-    "./claims": "./src/claims.ts",
-    "./capture": "./src/capture.ts",
-    "./clerk-webhook": "./src/clerk-webhook.ts",
-    "./db": "./src/db.ts",
-    "./maintenance": "./src/maintenance.ts",
-    "./rate-limit": "./src/rate-limit.ts",
-    "./security-headers": "./src/security-headers.ts",
-    "./sentry": "./src/sentry.ts",
-    "./sentry-client": "./src/sentry-client.ts",
-    "./safe-redirect": "./src/safe-redirect.ts",
-    "./fonts": "./src/fonts.ts"
+    "./action": {
+      "types": "./dist/action.d.ts",
+      "default": "./dist/action.js"
+    },
+    "./route": {
+      "types": "./dist/route.d.ts",
+      "default": "./dist/route.js"
+    },
+    "./auth": {
+      "types": "./dist/auth.d.ts",
+      "default": "./dist/auth.js"
+    },
+    "./claims": {
+      "types": "./dist/claims.d.ts",
+      "default": "./dist/claims.js"
+    },
+    "./capture": {
+      "types": "./dist/capture.d.ts",
+      "default": "./dist/capture.js"
+    },
+    "./clerk-webhook": {
+      "types": "./dist/clerk-webhook.d.ts",
+      "default": "./dist/clerk-webhook.js"
+    },
+    "./db": {
+      "types": "./dist/db.d.ts",
+      "default": "./dist/db.js"
+    },
+    "./maintenance": {
+      "types": "./dist/maintenance.d.ts",
+      "default": "./dist/maintenance.js"
+    },
+    "./rate-limit": {
+      "types": "./dist/rate-limit.d.ts",
+      "default": "./dist/rate-limit.js"
+    },
+    "./security-headers": {
+      "types": "./dist/security-headers.d.ts",
+      "default": "./dist/security-headers.js"
+    },
+    "./sentry": {
+      "types": "./dist/sentry.d.ts",
+      "default": "./dist/sentry.js"
+    },
+    "./sentry-client": {
+      "types": "./dist/sentry-client.d.ts",
+      "default": "./dist/sentry-client.js"
+    },
+    "./safe-redirect": {
+      "types": "./dist/safe-redirect.d.ts",
+      "default": "./dist/safe-redirect.js"
+    },
+    "./fonts": {
+      "types": "./dist/fonts.d.ts",
+      "default": "./dist/fonts.js"
+    }
   },
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

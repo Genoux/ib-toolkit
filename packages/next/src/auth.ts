@@ -2,9 +2,9 @@ import "server-only";
 import { auth } from "@clerk/nextjs/server";
 import { AppError } from "@inbeat/core/errors";
 import { cache } from "react";
-import type { SessionClaims } from "./claims";
+import type { SessionClaims } from "./claims.js";
 
-export { readEmail, readMetadataRole, readVerifiedEmail, type SessionClaims } from "./claims";
+export { readEmail, readMetadataRole, readVerifiedEmail, type SessionClaims } from "./claims.js";
 
 export type Viewer<TRole extends string> = {
   userId: string;

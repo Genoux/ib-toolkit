@@ -1,6 +1,6 @@
 import "server-only";
 import { verifyWebhook, type WebhookEvent } from "@clerk/nextjs/webhooks";
-import { captureAppError } from "./capture";
+import { captureAppError } from "./capture.js";
 
 // Clerk types some events as one member with a union `type` (`"user.created" | "user.updated"`),
 // which `Extract<WebhookEvent, { type: TType }>` collapses to never.

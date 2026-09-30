@@ -60,7 +60,7 @@ description: Build UI in an inBeat app with @inbeat/ui primitives and tokens. Us
 @import "@inbeat/ui/theme.css";
 ```
 
-`next.config.ts`: `transpilePackages: ["@inbeat/ui", "@inbeat/next", "@inbeat/core"]`.
+`next.config.ts`: `transpilePackages: ["@inbeat/ui"]` (ui ships source; core and next ship compiled JS).
 Fonts: Geist via `next/font`, exposed as `--font-geist-sans` / `--font-geist-mono`.
 
 ## Adding or changing a primitive

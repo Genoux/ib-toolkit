@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { SIGNATURE_HEADER, signPayload } from "./signature";
+import { SIGNATURE_HEADER, signPayload } from "./signature.js";
 
 export type EventSchemas = Record<string, z.ZodType>;
 

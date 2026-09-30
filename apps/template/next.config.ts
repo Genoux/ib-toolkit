@@ -9,7 +9,7 @@ const workspaceRoot = fileURLToPath(new URL("../..", import.meta.url));
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  transpilePackages: ["@inbeat/core", "@inbeat/next", "@inbeat/ui"],
+  transpilePackages: ["@inbeat/ui"],
   turbopack: {
     root: workspaceRoot,
   },

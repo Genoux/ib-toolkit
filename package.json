@@ -8,16 +8,17 @@
   ],
   "scripts": {
     "check": "turbo run typecheck test lint:arch && biome check .",
-    "dev:template": "bun --filter @inbeat/template dev",
+    "dev:template": "turbo run dev --filter=@inbeat/template...",
     "typecheck": "turbo run typecheck",
+    "build:packages": "turbo run build --filter=./packages/*",
     "test": "turbo run test",
     "lint": "biome check .",
     "lint:fix": "biome check . --write",
     "storybook": "bun --filter @inbeat/ui storybook",
     "build-storybook": "turbo run build-storybook",
-    "pack:local": "bun scripts/pack-local.ts",
-    "sync": "bun scripts/sync-local.ts",
-    "release": "bun scripts/publish.ts"
+    "pack:local": "bun run build:packages && bun scripts/pack-local.ts",
+    "sync": "bun run build:packages && bun scripts/sync-local.ts",
+    "release": "bun run build:packages && bun scripts/publish.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.14",

@@ -1,7 +1,7 @@
 import { APP_ERROR_STATUS, AppError } from "@inbeat/core/errors";
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server.js";
 import type { z } from "zod";
-import { captureAppError } from "./capture";
+import { captureAppError } from "./capture.js";
 
 export type RouteErrorBody = { error: string; code: string; errorId?: string };
 

@@ -1,4 +1,4 @@
-import type { AppErrorKind } from "./errors/app-error";
+import type { AppErrorKind } from "./errors/app-error.js";
 
 export type Ok<T> = { ok: true; data: T };
 export type Fail = { ok: false; error: string; code?: AppErrorKind; errorId?: string };

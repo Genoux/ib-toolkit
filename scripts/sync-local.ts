@@ -8,7 +8,8 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join, resolve } from "node:path";
-import { type ToolkitPackage, toolkitPackages } from "./packages";
+import { $ } from "bun";
+import { ROOT, type ToolkitPackage, toolkitPackages } from "./packages";
 
 const args = process.argv.slice(2);
 const watchMode = args.includes("--watch");
@@ -47,7 +48,10 @@ function syncEntryPoints(
     source[field],
   ]);
   const merged = { ...installed, ...Object.fromEntries(entryPoints) };
-  writeFileSync(join(target, "package.json"), `${JSON.stringify(merged, null, 2)}\n`);
+  const manifestPath = join(target, "package.json");
+  // bun hardlinks installs to its global cache; writing in place would corrupt the cached package.
+  rmSync(manifestPath);
+  writeFileSync(manifestPath, `${JSON.stringify(merged, null, 2)}\n`);
 }
 
 function copyPackage(appDir: string, pkg: ToolkitPackage): boolean {
@@ -82,13 +86,40 @@ function syncAll(): void {
 
 syncAll();
 
+let building = false;
+let rebuildQueued = false;
+
+// A change that lands mid-build queues exactly one more build instead of overlapping.
+async function rebuildAndSync(): Promise<void> {
+  if (building) {
+    rebuildQueued = true;
+    return;
+  }
+  building = true;
+  do {
+    rebuildQueued = false;
+    const { exitCode, stdout, stderr } = await $`bun run build:packages`
+      .cwd(ROOT)
+      .quiet()
+      .nothrow();
+    if (exitCode === 0) syncAll();
+    else console.error(`${stdout}${stderr}`);
+  } while (rebuildQueued);
+  building = false;
+}
+
+// `dist` and `.turbo` are build output; watching them would retrigger every build.
+function watchedPaths(pkg: ToolkitPackage): string[] {
+  const sources = ["src", "package.json", ...pkg.files.filter((entry) => entry !== "dist")];
+  return [...new Set(sources)].map((entry) => join(pkg.dir, entry)).filter(existsSync);
+}
+
 if (watchMode) {
   let timer: Timer | undefined;
-  for (const pkg of toolkitPackages()) {
-    watch(pkg.dir, { recursive: true }, (_event, file) => {
-      if (!file || file.includes("node_modules")) return;
+  for (const path of toolkitPackages().flatMap(watchedPaths)) {
+    watch(path, { recursive: true }, () => {
       clearTimeout(timer);
-      timer = setTimeout(syncAll, 100);
+      timer = setTimeout(rebuildAndSync, 100);
     });
   }
   console.info("watching ib-toolkit/packages …");

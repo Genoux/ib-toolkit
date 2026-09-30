@@ -1,8 +1,8 @@
 import { fail, type Result } from "@inbeat/core/result";
-import { revalidatePath } from "next/cache";
-import { unstable_rethrow } from "next/navigation";
+import { revalidatePath } from "next/cache.js";
+import { unstable_rethrow } from "next/navigation.js";
 import type { z } from "zod";
-import { captureAppError } from "./capture";
+import { captureAppError } from "./capture.js";
 
 export type ActionConfig<TSchema extends z.ZodType, TViewer, TData> = {
   name: string;

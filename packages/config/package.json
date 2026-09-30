@@ -7,16 +7,17 @@
     "tsconfig",
     "biome.json",
     "dependency-cruiser.cjs",
-    "vitest.ts",
+    "vitest.js",
     "commitlint.js"
   ],
   "exports": {
     "./tsconfig/base.json": "./tsconfig/base.json",
     "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
     "./tsconfig/library.json": "./tsconfig/library.json",
+    "./tsconfig/compiled.json": "./tsconfig/compiled.json",
     "./biome": "./biome.json",
     "./dependency-cruiser": "./dependency-cruiser.cjs",
-    "./vitest": "./vitest.ts",
+    "./vitest": "./vitest.js",
     "./commitlint": "./commitlint.js"
   },
   "scripts": {

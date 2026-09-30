@@ -2,20 +2,30 @@
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/config/tsconfig/*.json"]
     },
     "test": {
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "lint:arch": {
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "build": {
+      "dependsOn": ["^build"],
       "env": ["NEXT_PUBLIC_*", "SENTRY_*", "SKIP_ENV_VALIDATION"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/config/tsconfig/*.json"]
     },
     "build-storybook": {
       "outputs": ["storybook-static/**"]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
     }
   }
 }

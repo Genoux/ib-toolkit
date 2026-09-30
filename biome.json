@@ -9,6 +9,7 @@
       "!**/.packs",
       "!!**/storybook-static",
       "!!**/.next",
+      "!!**/dist",
       "!**/next-env.d.ts",
       "!!packages/ui/src/components"
     ]
