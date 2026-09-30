@@ -30,7 +30,7 @@ jobs:
     timeout-minutes: 15
     env:
       SKIP_ENV_VALIDATION: "1"
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ZHVtbXkuY2xlcmsuYWNjb3VudHMuZGV2JA
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ZHVtbXkuY2xlcmsuYWNjb3VudHMuZGV2JA # gitleaks:allow dummy key, decodes to dummy.clerk.accounts.dev
       CLERK_SECRET_KEY: sk_test_dummy
       ADMIN_EMAIL_DOMAINS: inbeat.agency
     steps:
