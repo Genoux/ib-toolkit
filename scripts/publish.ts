@@ -14,4 +14,3 @@ for (const pkg of toolkitPackages()) {
   }
   console.info(`published ${pkg.name}`);
 }
-
