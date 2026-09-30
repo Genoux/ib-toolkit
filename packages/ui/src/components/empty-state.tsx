@@ -8,7 +8,7 @@ export type EmptyStateProps = {
   description?: string;
   icon?: LucideIcon;
   action?: {
-    label?: string;
+    label: string;
     onClick: () => void;
     variant?: ComponentProps<typeof Button>["variant"];
     icon?: LucideIcon;
@@ -41,7 +41,7 @@ export function EmptyState({ title, description, icon: Icon, action, className }
       </div>
       {action ? (
         <Button
-          size={action.label ? "sm" : "icon-sm"}
+          size="sm"
           variant={action.variant ?? "secondary"}
           disabled={action.disabled}
           onClick={action.onClick}

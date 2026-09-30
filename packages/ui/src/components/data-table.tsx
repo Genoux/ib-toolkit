@@ -1,12 +1,11 @@
 "use client";
 
-/// <reference path="../types/tanstack-table.d.ts" />
-
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
   type Row,
+  type RowData,
   type TableOptions,
   useReactTable,
 } from "@tanstack/react-table";
@@ -21,6 +20,16 @@ import {
   TableRow,
 } from "./table";
 import { cn } from "../lib/utils";
+
+// Declared here rather than in a sibling .d.ts: consumers type-check this source from node_modules
+// and never load the .d.ts, so `meta.headerClassName` would not exist for them.
+declare module "@tanstack/react-table" {
+  // biome-ignore lint/correctness/noUnusedVariables: parameters must match the library declaration
+  interface ColumnMeta<TData extends RowData, TValue> {
+    headerClassName?: string;
+    cellClassName?: string;
+  }
+}
 
 const interactiveRowClassName = "cursor-pointer focus-visible:outline-none";
 

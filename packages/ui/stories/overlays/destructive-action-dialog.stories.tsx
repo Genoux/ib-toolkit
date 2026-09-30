@@ -3,10 +3,10 @@ import { useState } from "react";
 import { Button } from "../../src/components/button";
 import { DestructiveActionDialog } from "../../src/components/destructive-action-dialog";
 
-type DemoArgs = { typed: boolean; isPending: boolean };
+type DemoArgs = { typed: boolean; isPending: boolean; startOpen?: boolean };
 
-function DestructiveActionDialogDemo({ typed, isPending }: DemoArgs) {
-  const [open, setOpen] = useState(false);
+function DestructiveActionDialogDemo({ typed, isPending, startOpen = false }: DemoArgs) {
+  const [open, setOpen] = useState(startOpen);
   const shared = {
     open,
     onOpenChange: setOpen,
@@ -42,4 +42,5 @@ export const Default: Story = {};
 
 export const Typed: Story = { args: { typed: true } };
 
-export const Pending: Story = { args: { isPending: true } };
+// Confirm never closes the dialog itself; while pending it stays open with the pending label.
+export const Pending: Story = { args: { isPending: true, startOpen: true } };

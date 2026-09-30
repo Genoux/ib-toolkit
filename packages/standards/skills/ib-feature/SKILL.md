@@ -16,14 +16,14 @@ description: Scaffold or extend a feature slice in an inBeat app following the t
    Pure DB/domain logic, takes validated input plus the viewer id, returns data or throws
    `AppError`. Policies: `assert-can-<verb>.ts`.
 4. **Queries.** `src/features/<f>/queries/get-<noun>.ts` / `list-<nouns>.ts`, `import "server-only"`,
-   authorize first (`await requireAdmin()`), called from Server Components.
+   authorize first when the app has auth (`await requireAdmin()`), called from Server Components.
 5. **Actions.** `src/features/<f>/actions/<verb>-<noun>.ts` with `"use server"` and `action()`.
    One export per file. `revalidate` the pages that show the data.
 6. **Routes** only for client polling, infinite lists, webhooks, presign: `route()` in
    `src/app/api/<f>/.../route.ts`.
 7. **UI.** Page in `src/app/.../page.tsx` (Server Component) renders feature components from
    `src/features/<f>/components`. Client leaves call actions and handle `Result`.
-8. **Tests.** Colocated `*.test.ts` for every `server/` command, policy and `lib/` helper.
+8. **Tests.** Colocated `*.test.ts` for every `server/` command and policy and every `lib/` helper, including `src/shared/lib`.
 9. **Check.** `bun run lint && bunx tsc --noEmit && bun run test && bun run lint:arch`.
 
 ## Naming
