@@ -16,10 +16,29 @@ Shared packages for inBeat apps: config, server building blocks, UI and agent st
 
 ## Start a project
 
-```sh
-export NODE_AUTH_TOKEN=$(gh auth token)   # needs read:packages
-bunx --package @inbeat/standards ib create my-app --no-auth     # or: --auth clerk
+One-time setup. `bunx` and `bun add -g` ignore a project `.npmrc`, so the scope goes in bun's
+global config:
+
+```toml
+# ~/.bunfig.toml
+[install.scopes]
+"@inbeat" = { url = "https://npm.pkg.github.com", token = "$NODE_AUTH_TOKEN" }
 ```
+
+```sh
+export NODE_AUTH_TOKEN=$(gh auth token)   # in your shell profile; needs read:packages
+bun add -g @inbeat/standards              # installs `ib`; ~/.bun/bin must be on PATH
+```
+
+Then, for every project:
+
+```sh
+ib create my-app              # asks about Clerk; or pass --auth clerk / --no-auth
+cd my-app && bun dev
+```
+
+Open any AI tool in the project and describe what to build. `AGENTS.md` tells it to record the
+brief and which guides to read, so no extra context is needed.
 
 `ib create <dir> [--auth clerk | --no-auth] [--local]` copies the template, sets the package name, runs `git init` and `bun install`, and syncs the managed `AGENTS.md` block. `<dir>` may be `.` or an existing folder as long as none of the template's paths exist in it.
 

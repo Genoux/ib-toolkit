@@ -1,5 +1,9 @@
 ## This app
 
+### Product brief
+
+- 
+
 ### Stack deltas
 
 - 

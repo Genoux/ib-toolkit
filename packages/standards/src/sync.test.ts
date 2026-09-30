@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -7,6 +7,7 @@ import {
   BLOCK_END,
   BLOCK_START,
   claudeFilesIgnoringAgents,
+  PACKAGE_ROOT,
   staleFiles,
   write,
 } from "./sync";
@@ -79,5 +80,18 @@ describe("claudeFilesIgnoringAgents", () => {
       "CLAUDE.local.md": "mine",
     });
     expect(claudeFilesIgnoringAgents(dir)).toEqual(["CLAUDE.md", "CLAUDE.local.md"]);
+  });
+});
+
+describe("standard guide pointers", () => {
+  it("points only at skills the package ships", () => {
+    const standard = readFileSync(join(PACKAGE_ROOT, "agents", "standard.md"), "utf8");
+    const referenced = [...standard.matchAll(/\.claude\/skills\/([\w-]+)\/SKILL\.md/g)].map(
+      ([, name]) => name,
+    );
+    expect(referenced.length).toBeGreaterThan(0);
+    for (const name of referenced) {
+      expect(existsSync(join(PACKAGE_ROOT, "skills", name, "SKILL.md"))).toBe(true);
+    }
   });
 });
