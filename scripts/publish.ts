@@ -1,12 +1,10 @@
 import { $ } from "bun";
-import { toolkitPackages } from "./packages";
+import { toolkitPackages, withWorkspaceRanges } from "./packages";
 
-// `bun publish` rewrites `workspace:*` to real versions; `npm publish` would not.
 for (const pkg of toolkitPackages()) {
-  const { exitCode, stderr } = await $`bun publish --access restricted`
-    .cwd(pkg.dir)
-    .nothrow()
-    .quiet();
+  const { exitCode, stderr } = await withWorkspaceRanges(pkg, () =>
+    $`bun publish --access restricted`.cwd(pkg.dir).nothrow().quiet(),
+  );
   const output = stderr.toString();
   if (exitCode !== 0 && !output.includes("previously published")) {
     console.error(output);

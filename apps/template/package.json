@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.6",
-    "@inbeat/core": "workspace:*",
-    "@inbeat/next": "workspace:*",
-    "@inbeat/ui": "workspace:*",
+    "@inbeat/core": "workspace:^",
+    "@inbeat/next": "workspace:^",
+    "@inbeat/ui": "workspace:^",
     "@sentry/nextjs": "^10",
     "@t3-oss/env-nextjs": "^0.13.8",
     "class-variance-authority": "^0.7.1",
@@ -33,8 +33,8 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@inbeat/config": "workspace:*",
-    "@inbeat/standards": "workspace:*",
+    "@inbeat/config": "workspace:^",
+    "@inbeat/standards": "workspace:^",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22",
     "@types/react": "^19",
