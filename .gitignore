@@ -11,6 +11,5 @@ next-env.d.ts
 .DS_Store
 .atl
 .cursor
-!apps/template/.cursor
 dist
 packages/standards/template

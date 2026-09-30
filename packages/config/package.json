@@ -4,6 +4,7 @@
   "description": "Shared tsconfig, Biome, dependency-cruiser, Vitest and commitlint presets for inBeat apps",
   "type": "module",
   "files": [
+    "CHANGELOG.md",
     "tsconfig",
     "biome.json",
     "dependency-cruiser.cjs",

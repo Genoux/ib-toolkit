@@ -1,4 +1,12 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -34,41 +42,37 @@ export function applyManagedBlock(existing: string | null): string {
   return existing.slice(0, start) + block + existing.slice(end + BLOCK_END.length);
 }
 
-function parseSkill(raw: string): { description: string; body: string } {
-  const match = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) throw new Error("Skill is missing frontmatter");
-  const description = match[1].match(/^description:\s*(.+)$/m)?.[1]?.trim() ?? "";
-  return { description, body: match[2].trim() };
+function skillNames(): string[] {
+  return readdirSync(join(PACKAGE_ROOT, "skills"));
 }
 
 function skillFiles(): PlannedFile[] {
-  const skillsDir = join(PACKAGE_ROOT, "skills");
-  return readdirSync(skillsDir).flatMap((name) => {
-    const raw = readAsset("skills", name, "SKILL.md");
-    const { description, body } = parseSkill(raw);
-    const rule = [
-      "---",
-      `description: ${description}`,
-      "alwaysApply: false",
-      "---",
-      "",
-      body,
-      "",
-    ].join("\n");
-    return [
-      {
-        path: join(".cursor", "skills", name, "SKILL.md"),
-        contents: raw,
-        mode: "replace" as const,
-      },
-      {
-        path: join(".claude", "skills", name, "SKILL.md"),
-        contents: raw,
-        mode: "replace" as const,
-      },
-      { path: join(".cursor", "rules", `${name}.mdc`), contents: rule, mode: "replace" as const },
-    ];
-  });
+  return skillNames().map((name) => ({
+    path: join(".agents", "skills", name, "SKILL.md"),
+    contents: readAsset("skills", name, "SKILL.md"),
+    mode: "replace" as const,
+  }));
+}
+
+// Paths earlier versions generated for Claude Code and Cursor; sync deletes them.
+function legacyPaths(): string[] {
+  return skillNames().flatMap((name) => [
+    join(".claude", "skills", name, "SKILL.md"),
+    join(".cursor", "skills", name, "SKILL.md"),
+    join(".cursor", "rules", `${name}.mdc`),
+  ]);
+}
+
+function removeLegacyFiles(appDir: string): string[] {
+  const removed = legacyPaths().filter((path) => existsSync(join(appDir, path)));
+  for (const path of removed) {
+    rmSync(join(appDir, path));
+    for (let dir = dirname(join(appDir, path)); dir !== appDir; dir = dirname(dir)) {
+      if (readdirSync(dir).length > 0) break;
+      rmdirSync(dir);
+    }
+  }
+  return removed;
 }
 
 export function plan(appDir: string): PlannedFile[] {
@@ -86,17 +90,19 @@ export function staleFiles(appDir: string): string[] {
       const target = join(appDir, path);
       return !existsSync(target) || readFileSync(target, "utf8") !== contents;
     })
-    .map(({ path }) => path);
+    .map(({ path }) => path)
+    .concat(legacyPaths().filter((path) => existsSync(join(appDir, path))));
 }
 
 export function write(appDir: string): string[] {
   const stale = new Set(staleFiles(appDir));
-  for (const file of plan(appDir).filter(({ path }) => stale.has(path))) {
+  const written = plan(appDir).filter(({ path }) => stale.has(path));
+  for (const file of written) {
     const target = join(appDir, file.path);
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, file.contents);
   }
-  return [...stale];
+  return [...written.map(({ path }) => path), ...removeLegacyFiles(appDir)];
 }
 
 const CLAUDE_FILES = ["CLAUDE.md", join(".claude", "CLAUDE.md"), "CLAUDE.local.md"];

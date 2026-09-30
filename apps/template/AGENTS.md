@@ -11,10 +11,9 @@ file into the app; change it in ib-toolkit.
 
 - If "Product brief" under "This app" is empty, write the user's brief there first (problem,
   users, core flows), then build.
-- Read the matching guide before the work, whatever tool you are: `.claude/skills/ib-ui/SKILL.md`
-  (component catalog, UI rules) before any UI, `.claude/skills/ib-feature/SKILL.md` for a new
-  feature, `.claude/skills/ib-toolkit/SKILL.md` for actions, routes, auth, env and rate limits.
-  `.cursor/skills/` holds the same files.
+- Read the matching guide before the work, whatever tool you are: `.agents/skills/ib-ui/SKILL.md`
+  (component catalog, UI rules) before any UI, `.agents/skills/ib-feature/SKILL.md` for a new
+  feature, `.agents/skills/ib-toolkit/SKILL.md` for actions, routes, auth, env and rate limits.
 
 ### Two tiers
 
