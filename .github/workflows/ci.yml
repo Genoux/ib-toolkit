@@ -23,7 +23,23 @@ jobs:
           bun-version: 1.3.5
       - run: bun install --frozen-lockfile
       - run: bunx biome ci .
-      - run: bunx turbo run typecheck test lint:arch build-storybook
+      - run: bunx turbo run typecheck test lint:arch lint ib:check build-storybook
+
+  template-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SKIP_ENV_VALIDATION: "1"
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ZHVtbXkuY2xlcmsuYWNjb3VudHMuZGV2JA # gitleaks:allow dummy key, decodes to dummy.clerk.accounts.dev
+      CLERK_SECRET_KEY: sk_test_dummy
+      ADMIN_EMAIL_DOMAINS: inbeat.agency
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.5
+      - run: bun install --frozen-lockfile
+      - run: bunx turbo run build --filter=@inbeat/template
 
   secrets-scan:
     runs-on: ubuntu-latest

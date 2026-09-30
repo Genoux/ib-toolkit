@@ -4,7 +4,7 @@ import { env } from "@/shared/config/env";
 import { ROUTES } from "@/shared/config/routes";
 import { resolveRoleFromDomains } from "@/shared/lib/roles";
 
-const isPublicRoute = createRouteMatcher(["/sign-in(.*)"]);
+const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/api/health", "/robots.txt"]);
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {

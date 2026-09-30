@@ -7,6 +7,7 @@ export const vitestPreset = /** @satisfies {ViteUserConfig} */ (
       include: ["src/**/*.test.{ts,tsx}"],
       exclude: ["**/node_modules/**", "**/*.integration.test.ts", "tests/e2e/**"],
       restoreMocks: true,
+      server: { deps: { inline: [/\/node_modules\/@inbeat\//] } },
     },
   })
 );
