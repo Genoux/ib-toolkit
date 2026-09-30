@@ -26,6 +26,13 @@ describe("applyManagedBlock", () => {
     expect(updated).toContain("## This app\n- fact");
   });
 
+  it("keeps the version out of the block so a release alone never makes apps stale", () => {
+    const header = applyManagedBlock(null)
+      .split("\n")
+      .find((line) => line.startsWith(BLOCK_START));
+    expect(header).not.toMatch(/v\d+\.\d+\.\d+/);
+  });
+
   it("prepends the block when markers are missing", () => {
     expect(applyManagedBlock("# mine\n").endsWith("# mine\n")).toBe(true);
   });
