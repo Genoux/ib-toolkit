@@ -7,6 +7,15 @@ Stack: Next.js App Router, TypeScript strict, React 19, Drizzle + Neon, Clerk (o
 Shared code comes from `@inbeat/*` (ui ships source via `transpilePackages`; core and next ship compiled JS). Never fork a toolkit
 file into the app; change it in ib-toolkit.
 
+### Before you build
+
+- If "Product brief" under "This app" is empty, write the user's brief there first (problem,
+  users, core flows), then build.
+- Read the matching guide before the work, whatever tool you are: `.claude/skills/ib-ui/SKILL.md`
+  (component catalog, UI rules) before any UI, `.claude/skills/ib-feature/SKILL.md` for a new
+  feature, `.claude/skills/ib-toolkit/SKILL.md` for actions, routes, auth, env and rate limits.
+  `.cursor/skills/` holds the same files.
+
 ### Two tiers
 
 - **Required** (CI enforces): `@inbeat/config` presets, the action/route error contract,
