@@ -1,12 +1,17 @@
 import { existsSync, mkdirSync, readdirSync, realpathSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-import { ROOT, type ToolkitPackage, toolkitPackages, withWorkspaceRanges } from "./packages";
+import {
+  PACKS_DIR,
+  packTarballPath,
+  type ToolkitPackage,
+  toolkitPackages,
+  withWorkspaceRanges,
+} from "./packages";
 
 // Tarballs, not `link:`/`file:` folders: Bun symlinks those back into ib-toolkit, so the app
 // would load ib-toolkit's copies of react, @clerk/nextjs and @sentry/nextjs and break context.
-const destination = join(ROOT, ".packs");
-mkdirSync(destination, { recursive: true });
+mkdirSync(PACKS_DIR, { recursive: true });
 
 const bunCacheDir = (await $`bun pm cache`.quiet().text()).trim().split("\n").at(-1) ?? "";
 
@@ -24,7 +29,7 @@ function evictCachedTarball(pkg: ToolkitPackage): void {
 }
 
 for (const pkg of toolkitPackages()) {
-  const tarball = join(destination, `inbeat-${pkg.shortName}.tgz`);
+  const tarball = packTarballPath(pkg);
   await withWorkspaceRanges(pkg, () => $`bun pm pack --filename ${tarball} --quiet`.cwd(pkg.dir));
   evictCachedTarball(pkg);
   console.info(`packed ${pkg.name}`);

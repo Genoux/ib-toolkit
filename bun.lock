@@ -16,7 +16,6 @@
       "version": "0.0.0",
       "dependencies": {
         "@base-ui/react": "^1.2.0",
-        "@clerk/nextjs": "^7.0.6",
         "@inbeat/core": "workspace:^",
         "@inbeat/next": "workspace:^",
         "@inbeat/ui": "workspace:^",
@@ -188,6 +187,9 @@
       ],
     },
   },
+  "trustedDependencies": [
+    "@sentry/cli",
+  ],
   "packages": {
     "@adobe/css-tools": ["@adobe/css-tools@4.5.0", "", {}, "sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q=="],
 

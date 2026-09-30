@@ -22,7 +22,7 @@ export default clerkMiddleware(async (auth, req) => {
 export const config = {
   matcher: [
     // `monitoring` is the Sentry tunnel route; running Clerk on it would drop browser events.
-    "/((?!_next|monitoring|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|webmanifest)).*)",
+    "/((?!_next(?:/|$)|monitoring(?:/|$)|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|webmanifest)).*)",
     "/(api|trpc)(.*)",
   ],
 };

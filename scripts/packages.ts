@@ -59,3 +59,9 @@ export async function withWorkspaceRanges<T>(
     writeFileSync(manifestPath, original);
   }
 }
+
+export const PACKS_DIR = join(ROOT, ".packs");
+
+export function packTarballPath(pkg: Pick<ToolkitPackage, "shortName">): string {
+  return join(PACKS_DIR, `inbeat-${pkg.shortName}.tgz`);
+}

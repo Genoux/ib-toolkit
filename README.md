@@ -12,7 +12,21 @@ Shared packages for inBeat apps: config, server building blocks, UI and agent st
 | `@inbeat/ui` | Design tokens and components (Radix + Tailwind v4), shipped as source |
 | `@inbeat/standards` | The `ib` CLI and the agent rules and skills every app shares |
 
-`apps/template` is the reference app. When in doubt about how something is wired, look there.
+`apps/template` is the base app (no authentication). When in doubt about how something is wired, look there.
+
+## Start a project
+
+```sh
+export NODE_AUTH_TOKEN=$(gh auth token)   # needs read:packages
+bunx --package @inbeat/standards ib create my-app --no-auth     # or: --auth clerk
+```
+
+`ib create <dir> [--auth clerk | --no-auth] [--local]` copies the template, sets the package name, runs `git init` and `bun install`, and syncs the managed `AGENTS.md` block. `<dir>` may be `.` or an existing folder as long as none of the template's paths exist in it.
+
+- `--auth clerk` overlays the Clerk add-on (sign-in, proxy, roles, admin page); `--no-auth` starts with no authentication. Without either flag a terminal is asked; non-interactive runs (CI, AI agents) must pass one.
+- `--local` is for developing the toolkit: it runs `bun run pack:local` and points `@inbeat/*` at `.packs/*.tgz` by absolute path, so never commit that `package.json`.
+- `bunx ib add clerk` (from an existing app) applies an add-on later, using the app's installed `@inbeat/standards`. It records applied add-ons under `"ib": { "addons": [] }` in `package.json`, replaces `layout.tsx`, `env.ts` and `.env.example` only while they still match the template, and otherwise writes nothing and lists each file with the add-on version to merge by hand; rerun after merging.
+- Add-ons live in `packages/standards/addons/<name>/`: a `files/` overlay (new files and whole-file replacements) plus `addon.json` with dependencies to merge.
 
 ## Use it in an app
 
