@@ -43,7 +43,8 @@ export function contentSecurityPolicy({
   dev = false,
 }: SecurityHeadersOptions = {}): string {
   const clerkOrigin = clerk && `https://${clerk}`;
-  const turnstile = "https://challenges.cloudflare.com";
+  const clerkImages = clerk && "https://img.clerk.com";
+  const turnstile = clerk && "https://challenges.cloudflare.com";
 
   return [
     directive("default-src", ["'self'"]),
@@ -57,13 +58,7 @@ export function contentSecurityPolicy({
       ...(sources.script ?? []),
     ]),
     directive("style-src", ["'self'", "'unsafe-inline'", ...(sources.style ?? [])]),
-    directive("img-src", [
-      "'self'",
-      "data:",
-      "blob:",
-      "https://img.clerk.com",
-      ...(sources.img ?? []),
-    ]),
+    directive("img-src", ["'self'", "data:", "blob:", clerkImages, ...(sources.img ?? [])]),
     directive("font-src", ["'self'", "data:", ...(sources.font ?? [])]),
     directive("connect-src", ["'self'", clerkOrigin, dev && "ws:", ...(sources.connect ?? [])]),
     directive("media-src", ["'self'", "blob:", ...(sources.media ?? [])]),

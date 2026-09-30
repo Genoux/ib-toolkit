@@ -28,7 +28,14 @@ export const createClient = action({
 
 Client side: `const result = await createClient(values); if (!result.ok) toast.error(result.error);`
 
-Public action: `authorize: publicAccess`, then `await rateLimiter.enforce(\`apply:${ip}\`, { limit: 5, window: "10 m" })` first thing in `run`.
+Public action: `authorize: publicAccess`, then first thing in `run`:
+`await rateLimiter.enforce(\`apply:${clientIp(await headers())}\`, { limit: 5, window: "10 m" })`.
+The limiter is one shared instance in `src/shared/lib/rate-limit.ts` (`createRateLimiter({ prefix, upstash })`
+with the `upstashEnv` values) imported by every action and route. Get the IP only from `clientIp` in
+`@inbeat/next/rate-limit` (routes pass `request.headers`); never write your own header parsing.
+`clientIp` is reliable on Vercel only; self-hosted apps behind a proxy pass `{ trustedProxyHops: n }`,
+otherwise it returns `"unknown"`. Public forms using Turnstile without Clerk must add its hosts via
+`securityHeaders({ sources: { script: ["https://challenges.cloudflare.com"], frame: ["https://challenges.cloudflare.com"] } })`.
 
 ## Route handler
 

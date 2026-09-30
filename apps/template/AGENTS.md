@@ -81,12 +81,21 @@ Server actions are queued per client; never use them for reads.
 
 ### UI
 
+- UI comes only from `@inbeat/ui` (catalog in the `ib-ui` skill) plus layouts composed from it. If a
+  component or variant is missing, stop and flag it for ib-toolkit; never invent, copy or patch
+  one (a workaround needs the user's OK and a `// toolkit-gap:` comment).
 - Primitives and generic blocks from `@inbeat/ui/components/*`; tokens from
   `@inbeat/ui/theme.css`. A block moves to the toolkit only once an app actually uses it.
 - Buttons are `rounded-full` with no destructive variant; destructive flows use
   `DestructiveActionDialog` from `@inbeat/ui`. Icon-only buttons get a tooltip. Lists use
   `DataTableShell` + `DataTable`; empty lists use `EmptyState`.
 - Radix via `radix-ui`; animation via `motion` only.
+
+### Simplicity
+
+- Reuse before writing: the `ib-ui` catalog, `@inbeat/*`, the stdlib, then the platform. No speculative abstractions, config or "for later" scaffolding.
+- Comments carry only what code cannot. A deliberate shortcut is marked `// shortcut: <ceiling>; <upgrade path>`.
+- Claude Code reads `AGENTS.md` only when the app has no `CLAUDE.md`; if one exists it must contain an `@AGENTS.md` line (`ib check` fails otherwise).
 
 ### Tests and CI
 

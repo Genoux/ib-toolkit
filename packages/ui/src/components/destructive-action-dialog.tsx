@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -12,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./alert-dialog";
+import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
 
@@ -37,6 +37,10 @@ export type DestructiveActionDialogProps =
       resourceName: string;
     });
 
+/**
+ * The confirm button does not close the dialog: the caller closes it through `onOpenChange`
+ * once the action succeeds, so a pending or failed action keeps it open.
+ */
 export function DestructiveActionDialog({
   open,
   onOpenChange,
@@ -55,6 +59,7 @@ export function DestructiveActionDialog({
   const canConfirm = !isPending && (variant === "simple" || typed === requiredPhrase);
 
   function handleOpenChange(next: boolean) {
+    if (!next && isPending) return;
     if (!next) setTyped("");
     onOpenChange(next);
   }
@@ -93,9 +98,9 @@ export function DestructiveActionDialog({
         ) : null}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>{cancelLabel}</AlertDialogCancel>
-          <AlertDialogAction disabled={!canConfirm} onClick={onConfirm}>
+          <Button disabled={!canConfirm} onClick={onConfirm}>
             {isPending ? pendingLabel : confirmLabel}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -98,3 +98,14 @@ export function write(appDir: string): string[] {
   }
   return [...stale];
 }
+
+const CLAUDE_FILES = ["CLAUDE.md", join(".claude", "CLAUDE.md"), "CLAUDE.local.md"];
+const AGENTS_IMPORT = /^@AGENTS\.md\s*$/m;
+
+// Claude Code reads AGENTS.md only when none of these files exist; otherwise it is ignored.
+export function claudeFilesIgnoringAgents(appDir: string): string[] {
+  return CLAUDE_FILES.filter((file) => {
+    const path = join(appDir, file);
+    return existsSync(path) && !AGENTS_IMPORT.test(readFileSync(path, "utf8"));
+  });
+}

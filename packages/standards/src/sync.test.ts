@@ -1,8 +1,15 @@
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { applyManagedBlock, BLOCK_END, BLOCK_START, staleFiles, write } from "./sync";
+import {
+  applyManagedBlock,
+  BLOCK_END,
+  BLOCK_START,
+  claudeFilesIgnoringAgents,
+  staleFiles,
+  write,
+} from "./sync";
 
 describe("applyManagedBlock", () => {
   it("creates AGENTS.md with the block and an app section", () => {
@@ -36,5 +43,34 @@ describe("write / staleFiles", () => {
 
     writeFileSync(join(dir, ".cursor/skills/ib-ui/SKILL.md"), "edited");
     expect(staleFiles(dir)).toEqual([join(".cursor", "skills", "ib-ui", "SKILL.md")]);
+  });
+});
+
+describe("claudeFilesIgnoringAgents", () => {
+  function app(files: Record<string, string>): string {
+    const dir = mkdtempSync(join(tmpdir(), "ib-claude-"));
+    for (const [path, contents] of Object.entries(files)) {
+      mkdirSync(join(dir, path, ".."), { recursive: true });
+      writeFileSync(join(dir, path), contents);
+    }
+    return dir;
+  }
+
+  it("is empty without CLAUDE files", () => {
+    expect(claudeFilesIgnoringAgents(app({ "AGENTS.md": "x" }))).toEqual([]);
+  });
+
+  it("accepts CLAUDE files that import AGENTS.md", () => {
+    const dir = app({ "CLAUDE.md": "# Claude\n@AGENTS.md\n", ".claude/CLAUDE.md": "@AGENTS.md" });
+    expect(claudeFilesIgnoringAgents(dir)).toEqual([]);
+  });
+
+  it("lists every CLAUDE file that lacks the import", () => {
+    const dir = app({
+      "CLAUDE.md": "see AGENTS.md",
+      ".claude/CLAUDE.md": "@AGENTS.md",
+      "CLAUDE.local.md": "mine",
+    });
+    expect(claudeFilesIgnoringAgents(dir)).toEqual(["CLAUDE.md", "CLAUDE.local.md"]);
   });
 });

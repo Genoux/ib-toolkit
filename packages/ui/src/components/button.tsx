@@ -19,7 +19,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         dots: "self-center border-0 text-muted-foreground hover:bg-muted hover:text-foreground in-data-row:opacity-0 [[data-row]:hover_&]:opacity-100 focus-visible:opacity-100 data-[state=open]:opacity-100 data-[state=open]:bg-muted data-[state=open]:text-foreground [&_svg:not([class*='size-'])]:size-3.5",
       },
-      // ponytail: CSS can't see text nodes, so an icon is assumed to lead; adopt shadcn's data-icon="inline-end" once trailing icons exist
+      // shortcut: an icon is assumed to lead because CSS can't see text nodes; adopt shadcn's data-icon="inline-end" once trailing icons exist
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:pl-3",
         xs: "h-6 gap-1 px-2 text-xs has-[>svg]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",

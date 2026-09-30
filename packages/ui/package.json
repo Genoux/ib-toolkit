@@ -49,9 +49,6 @@
     "embla-carousel-react": {
       "optional": true
     },
-    "motion": {
-      "optional": true
-    },
     "next-themes": {
       "optional": true
     },

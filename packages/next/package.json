@@ -88,6 +88,9 @@
     "zod": "^4"
   },
   "peerDependenciesMeta": {
+    "@clerk/nextjs": {
+      "optional": true
+    },
     "@neondatabase/serverless": {
       "optional": true
     },
