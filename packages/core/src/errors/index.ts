@@ -1,3 +1,3 @@
-export * from "./app-error";
-export * from "./classify-error";
-export * from "./pg";
+export * from "./app-error.js";
+export * from "./classify-error.js";
+export * from "./pg.js";

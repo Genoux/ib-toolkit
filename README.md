@@ -34,7 +34,8 @@ bun add -d @inbeat/config @inbeat/standards
 Then:
 
 - `tsconfig.json` extends `@inbeat/config/tsconfig/nextjs.json`
-- `next.config.ts` has `transpilePackages: ["@inbeat/core", "@inbeat/next", "@inbeat/ui"]`
+- `next.config.ts` has `transpilePackages: ["@inbeat/ui"]` (core and next ship compiled JS)
+- vitest configs set `execArgv: ["--conditions=react-server"]` so `server-only` in `@inbeat/next` resolves in Node
 - `globals.css` imports `@inbeat/ui/theme.css`
 - the root layout puts `fontVariables` from `@inbeat/next/fonts` on `<html>`
 - `bunx ib sync` writes the shared agent rules; `bunx ib check` fails CI when they drift

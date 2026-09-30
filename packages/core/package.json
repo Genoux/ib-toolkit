@@ -5,19 +5,41 @@
   "type": "module",
   "sideEffects": false,
   "files": [
-    "src",
-    "!src/**/*.test.ts"
+    "dist"
   ],
   "exports": {
-    "./errors": "./src/errors/index.ts",
-    "./result": "./src/result.ts",
-    "./logger": "./src/logger.ts",
-    "./env": "./src/env.ts",
-    "./email": "./src/email.ts",
-    "./events": "./src/events.ts",
-    "./signature": "./src/signature.ts"
+    "./errors": {
+      "types": "./dist/errors/index.d.ts",
+      "default": "./dist/errors/index.js"
+    },
+    "./result": {
+      "types": "./dist/result.d.ts",
+      "default": "./dist/result.js"
+    },
+    "./logger": {
+      "types": "./dist/logger.d.ts",
+      "default": "./dist/logger.js"
+    },
+    "./env": {
+      "types": "./dist/env.d.ts",
+      "default": "./dist/env.js"
+    },
+    "./email": {
+      "types": "./dist/email.d.ts",
+      "default": "./dist/email.js"
+    },
+    "./events": {
+      "types": "./dist/events.d.ts",
+      "default": "./dist/events.js"
+    },
+    "./signature": {
+      "types": "./dist/signature.d.ts",
+      "default": "./dist/signature.js"
+    }
   },
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

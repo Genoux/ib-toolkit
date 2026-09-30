@@ -1,7 +1,7 @@
 ## inBeat toolkit standard
 
 Stack: Next.js App Router, TypeScript strict, React 19, Drizzle + Neon, Clerk, Sentry, Vercel, Bun.
-Shared code comes from `@inbeat/*` (source-shipped, `transpilePackages`). Never fork a toolkit
+Shared code comes from `@inbeat/*` (ui ships source via `transpilePackages`; core and next ship compiled JS). Never fork a toolkit
 file into the app; change it in ib-toolkit.
 
 ### Two tiers

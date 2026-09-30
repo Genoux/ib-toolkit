@@ -1,9 +1,9 @@
 import * as Sentry from "@sentry/nextjs";
-import { type SentryInitOptions, type SentryPresetOptions, sentryServerOptions } from "./sentry";
+import { type SentryInitOptions, type SentryPresetOptions, sentryServerOptions } from "./sentry.js";
 
 export function sentryClientOptions(
   options: SentryPresetOptions & { replaysOnErrorSampleRate?: number },
-) {
+): SentryInitOptions {
   return {
     ...sentryServerOptions(options),
     integrations: [
@@ -16,5 +16,5 @@ export function sentryClientOptions(
     ],
     replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: options.replaysOnErrorSampleRate ?? 1,
-  } satisfies SentryInitOptions;
+  };
 }

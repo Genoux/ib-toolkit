@@ -1,5 +1,5 @@
-import { APP_ERROR_MESSAGES, type AppErrorKind, isAppError } from "./app-error";
-import { errorChain, findPgError, PG_CODES, type PgErrorLike, TRANSIENT_PG_CODES } from "./pg";
+import { APP_ERROR_MESSAGES, type AppErrorKind, isAppError } from "./app-error.js";
+import { errorChain, findPgError, PG_CODES, type PgErrorLike, TRANSIENT_PG_CODES } from "./pg.js";
 
 export type ClassifiedError = {
   kind: AppErrorKind;
