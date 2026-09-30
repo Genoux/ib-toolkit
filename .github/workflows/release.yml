@@ -6,7 +6,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
   pull-requests: write
 
 concurrency:
@@ -18,22 +17,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
+      # A personal token, not GITHUB_TOKEN: PRs opened with GITHUB_TOKEN do not trigger CI, and
+      # main requires CI to pass. The same token publishes, because @inbeat belongs to the inBeat
+      # org while this repo is owned by Genoux.
+      - id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.INBEAT_PACKAGES_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - if: steps.release.outputs.releases_created == 'true'
+        uses: actions/checkout@v4
+      - if: steps.release.outputs.releases_created == 'true'
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.5
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://npm.pkg.github.com
-          scope: "@inbeat"
-      - run: bun install --frozen-lockfile
-      - run: bunx turbo run typecheck test
-      - uses: changesets/action@v1
-        with:
-          publish: bun run release
+      - if: steps.release.outputs.releases_created == 'true'
+        run: bun install --frozen-lockfile
+      - if: steps.release.outputs.releases_created == 'true'
+        run: bunx turbo run typecheck test
+      - if: steps.release.outputs.releases_created == 'true'
+        run: bun run release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # @inbeat packages belong to the inBeat org while this repo is owned by Genoux, so the
-          # repo-scoped GITHUB_TOKEN cannot publish them; a classic PAT with write:packages can.
           NODE_AUTH_TOKEN: ${{ secrets.INBEAT_PACKAGES_TOKEN }}

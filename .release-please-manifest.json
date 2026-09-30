@@ -1,0 +1,7 @@
+{
+  "packages/config": "0.1.0",
+  "packages/core": "0.1.0",
+  "packages/next": "0.1.0",
+  "packages/ui": "0.1.0",
+  "packages/standards": "0.1.0"
+}

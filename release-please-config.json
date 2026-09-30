@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "bootstrap-sha": "d05e792e61d2667ebb798badffd0d86f7904514d",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": false,
+  "separate-pull-requests": false,
+  "pull-request-title-pattern": "chore: release ${version}",
+  "packages": {
+    "packages/config": {
+      "component": "config",
+      "package-name": "@inbeat/config"
+    },
+    "packages/core": {
+      "component": "core",
+      "package-name": "@inbeat/core"
+    },
+    "packages/next": {
+      "component": "next",
+      "package-name": "@inbeat/next"
+    },
+    "packages/ui": {
+      "component": "ui",
+      "package-name": "@inbeat/ui"
+    },
+    "packages/standards": {
+      "component": "standards",
+      "package-name": "@inbeat/standards"
+    }
+  },
+  "plugins": [
+    {
+      "type": "linked-versions",
+      "groupName": "inbeat",
+      "components": ["config", "core", "next", "ui", "standards"]
+    }
+  ]
+}
