@@ -20,7 +20,7 @@ One-time setup. `bunx` and `bun add -g` ignore a project `.npmrc`, so the scope 
 global config:
 
 ```toml
-# ~/.bunfig.toml
+# $XDG_CONFIG_HOME/.bunfig.toml if XDG_CONFIG_HOME is set (often ~/.config), else ~/.bunfig.toml
 [install.scopes]
 "@inbeat" = { url = "https://npm.pkg.github.com", token = "$NODE_AUTH_TOKEN" }
 ```
