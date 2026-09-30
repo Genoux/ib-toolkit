@@ -72,7 +72,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@inbeat/core": "workspace:*",
+    "@inbeat/core": "workspace:^",
     "@upstash/ratelimit": "^2.0.6",
     "@upstash/redis": "^1.35.3",
     "server-only": "^0.0.1"
@@ -96,7 +96,7 @@
   },
   "devDependencies": {
     "@clerk/nextjs": "^7.0.6",
-    "@inbeat/config": "workspace:*",
+    "@inbeat/config": "workspace:^",
     "@neondatabase/serverless": "^1.0.2",
     "@sentry/nextjs": "^10",
     "@types/react": "^19",
