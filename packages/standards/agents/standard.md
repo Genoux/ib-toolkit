@@ -62,7 +62,7 @@ Server actions are queued per client; never use them for reads.
 
 ### Auth
 
-- Authentication is an add-on (`ib create --auth clerk`); an app without it has no roles or
+- Authentication is an add-on (`ib add clerk`); an app without it has no roles or
   `requireViewer`, and the rest of this section applies once it is added. `authorize` is required on every `action()` and `route()`;
   `publicAccess` is an explicit choice and must be rate limited.
 - Roles are a pure function of session claims (`defineAuth({ resolveRole })`): verified email

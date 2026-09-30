@@ -9,7 +9,6 @@ import {
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
-import { ADDONS_DIR, addonNextSteps, applyAddon, overlayEntries } from "./addons";
 import { PACKAGE_ROOT, VERSION, write } from "./sync";
 import { restoreDotfileName } from "./template";
 
@@ -153,20 +152,12 @@ function resolveToolkitRoot(
 
 export type CreateOptions = {
   local: boolean;
-  addons?: string[];
-  addonsDir?: string;
   templateDir?: string;
   run?: Runner;
   env?: NodeJS.ProcessEnv;
 };
 
-function populate(
-  targetDir: string,
-  templateDir: string,
-  manifest: Manifest,
-  addonDirs: string[],
-  run: Runner,
-): void {
+function populate(targetDir: string, templateDir: string, manifest: Manifest, run: Runner): void {
   for (const entry of readdirSync(templateDir)) {
     cpSync(join(templateDir, entry), join(targetDir, restoreDotfileName(entry)), {
       recursive: true,
@@ -174,7 +165,6 @@ function populate(
   }
   const manifestPath = join(targetDir, "package.json");
   writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-  for (const addonDir of addonDirs) applyAddon(targetDir, addonDir, templateDir);
 
   const envLocalPath = join(targetDir, ".env.local");
   if (!existsSync(envLocalPath)) cpSync(join(targetDir, ".env.example"), envLocalPath);
@@ -201,10 +191,6 @@ function assertNoConflicts(targetDir: string, plannedEntries: string[]): void {
   }
 }
 
-function plannedEntries(templateDir: string, addonDirs: string[]): string[] {
-  return [...new Set([...readdirSync(templateDir), ...addonDirs.flatMap(overlayEntries)])];
-}
-
 export function locationStep(cwd: string, targetDir: string): string | null {
   const location = relative(cwd, targetDir);
   if (!location) return null;
@@ -215,8 +201,8 @@ export function formatNextSteps(steps: string[]): string {
   return ["Next steps:", ...[...steps, "bun dev"].map((step) => `  ${step}`)].join("\n");
 }
 
-/** Everything that can be rejected without knowing the chosen addons or building the template. */
-export function preflight(
+/** Everything that can be rejected before the template is built or anything is written. */
+function preflight(
   dir: string,
   options: Pick<CreateOptions, "local" | "templateDir" | "env">,
 ): { targetDir: string; name: string; toolkitRoot: string | null } {
@@ -230,17 +216,12 @@ export function preflight(
   const name = projectName(targetDir);
   validateProjectName(name);
   const toolkitRoot = resolveToolkitRoot(local, targetDir, env);
-  if (existsSync(templateDir)) assertNoConflicts(targetDir, plannedEntries(templateDir, []));
+  if (existsSync(templateDir)) assertNoConflicts(targetDir, readdirSync(templateDir));
   return { targetDir, name, toolkitRoot };
 }
 
 export async function create(dir: string, options: CreateOptions): Promise<void> {
-  const {
-    addons = [],
-    addonsDir = ADDONS_DIR,
-    templateDir = TEMPLATE_DIR,
-    run = runCommand,
-  } = options;
+  const { templateDir = TEMPLATE_DIR, run = runCommand } = options;
   const { targetDir, name, toolkitRoot } = preflight(dir, options);
   if (toolkitRoot) run("bun", ["run", "pack:local"], toolkitRoot);
 
@@ -249,8 +230,7 @@ export async function create(dir: string, options: CreateOptions): Promise<void>
       "template missing from @inbeat/standards; run `bun run build:packages` in ib-toolkit.",
     );
   }
-  const addonDirs = addons.map((addon) => join(addonsDir, addon));
-  assertNoConflicts(targetDir, plannedEntries(templateDir, addonDirs));
+  assertNoConflicts(targetDir, readdirSync(templateDir));
 
   const manifest = rewriteManifest(
     JSON.parse(readFileSync(join(templateDir, "package.json"), "utf8")),
@@ -262,14 +242,14 @@ export async function create(dir: string, options: CreateOptions): Promise<void>
   );
   const preexisting = existsSync(targetDir) ? new Set(readdirSync(targetDir)) : null;
   try {
-    populate(targetDir, templateDir, manifest, addonDirs, run);
+    populate(targetDir, templateDir, manifest, run);
   } catch (error) {
     const cleanup = removeWrittenPaths(targetDir, preexisting);
     throw new Error(`create failed: ${error instanceof Error ? error.message : error}\n${cleanup}`);
   }
 
   const location = locationStep(process.cwd(), targetDir);
-  const steps = [...(location ? [location] : []), ...addonDirs.flatMap(addonNextSteps)];
+  const steps = location ? [location] : [];
   console.info(
     `\nSuccess! Created ${name} at ${realpathSync(targetDir)}\n\n${formatNextSteps(steps)}`,
   );

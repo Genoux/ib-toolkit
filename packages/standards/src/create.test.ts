@@ -14,7 +14,6 @@ import {
   findConflicts,
   findToolkitRoot,
   locationStep,
-  preflight,
   projectName,
   rewriteManifest,
   validateProjectName,
@@ -149,22 +148,6 @@ describe("create", () => {
     return template;
   }
 
-  function fixtureAddons(): string {
-    const addons = mkdtempSync(join(tmpdir(), "ib-create-addons-"));
-    mkdirSync(join(addons, "demo", "files", "src"), { recursive: true });
-    mkdirSync(join(addons, "demo", "files", "extra"));
-    writeFileSync(join(addons, "demo", "files", "src", "page.ts"), "demo page");
-    writeFileSync(join(addons, "demo", "files", "extra", "x.ts"), "x");
-    writeFileSync(
-      join(addons, "demo", "addon.json"),
-      JSON.stringify({
-        dependencies: { "demo-sdk": "^1.0.0" },
-        nextSteps: ["fill the demo keys in .env.local"],
-      }),
-    );
-    return addons;
-  }
-
   const env = { NODE_AUTH_TOKEN: "token" };
   const succeed = () => {};
   const failInstall = (command: string) => {
@@ -182,24 +165,7 @@ describe("create", () => {
     expect(manifest.dependencies["@inbeat/core"]).toMatch(/^\^\d/);
   });
 
-  it("applies the chosen addons over the template", async () => {
-    const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "app");
-    await create(target, {
-      local: false,
-      templateDir: fixtureTemplate(),
-      addonsDir: fixtureAddons(),
-      addons: ["demo"],
-      run: succeed,
-      env,
-    });
-    expect(readFileSync(join(target, "src", "page.ts"), "utf8")).toBe("demo page");
-    const manifest = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
-    expect(manifest.dependencies["demo-sdk"]).toBe("^1.0.0");
-    expect(manifest.dependencies["@inbeat/core"]).toMatch(/^\^\d/);
-    expect(manifest.ib).toEqual({ addons: ["demo"] });
-  });
-
-  it("records an empty addon list without addons", async () => {
+  it("records an empty addon list", async () => {
     const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "plain");
     await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env });
     expect(JSON.parse(readFileSync(join(target, "package.json"), "utf8")).ib).toEqual({
@@ -207,50 +173,15 @@ describe("create", () => {
     });
   });
 
-  it("prints next steps per variant", async () => {
+  it("prints the location and next steps", async () => {
     const info = vi.spyOn(console, "info").mockImplementation(() => {});
-    const printed = () => info.mock.calls.map(([message]) => message).join("\n");
-    const base = { local: false, templateDir: fixtureTemplate(), run: succeed, env } as const;
-
-    await create(join(mkdtempSync(join(tmpdir(), "ib-create-")), "plain"), base);
-    expect(printed()).toMatch(
+    const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "plain");
+    await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env });
+    const printed = info.mock.calls.map(([message]) => message).join("\n");
+    expect(printed).toMatch(
       /Success! Created plain at .*plain\n\nNext steps:\n {2}cd .*plain\n {2}bun dev/,
     );
-    expect(printed()).not.toContain("demo keys");
-    expect(printed()).not.toContain("AI");
-
-    info.mockClear();
-    await create(join(mkdtempSync(join(tmpdir(), "ib-create-")), "with-demo"), {
-      ...base,
-      addonsDir: fixtureAddons(),
-      addons: ["demo"],
-    });
-    expect(printed()).toMatch(/fill the demo keys in \.env\.local[\s\S]*bun dev/);
-  });
-
-  it("preflight rejects base conflicts before anything is chosen", () => {
-    const target = mkdtempSync(join(tmpdir(), "ib-create-"));
-    writeFileSync(join(target, "package.json"), "{}");
-    expect(() => preflight(target, { local: false, templateDir: fixtureTemplate(), env })).toThrow(
-      "package.json",
-    );
-    expect(() => preflight(target, { local: false, env: {} })).toThrow("NODE_AUTH_TOKEN");
-  });
-
-  it("counts addon paths as conflicts", async () => {
-    const target = mkdtempSync(join(tmpdir(), "ib-create-"));
-    mkdirSync(join(target, "extra"));
-    await expect(
-      create(target, {
-        local: false,
-        templateDir: fixtureTemplate(),
-        addonsDir: fixtureAddons(),
-        addons: ["demo"],
-        run: succeed,
-        env,
-      }),
-    ).rejects.toThrow("extra");
-    expect(readdirSync(target)).toEqual(["extra"]);
+    expect(printed).not.toContain("Clerk");
   });
 
   it("refuses conflicts without writing anything", async () => {

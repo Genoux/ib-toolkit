@@ -26,10 +26,6 @@ export function listAddons(addonsDir: string = ADDONS_DIR): string[] {
   return readdirSync(addonsDir);
 }
 
-export function overlayEntries(addonDir: string): string[] {
-  return readdirSync(join(addonDir, "files"));
-}
-
 function overlayFiles(addonDir: string): string[] {
   const filesDir = join(addonDir, "files");
   return readdirSync(filesDir, { recursive: true, encoding: "utf8" }).filter((path) =>
