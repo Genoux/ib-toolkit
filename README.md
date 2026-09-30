@@ -33,19 +33,16 @@ bun add -g @inbeat/standards              # installs `ib`; ~/.bun/bin must be on
 Then, for every project:
 
 ```sh
-ib create my-app              # base app, no authentication
+ib create my-app              # base app
 cd my-app && bun dev
-ib add clerk                  # optional, from inside the app: adds Clerk authentication
 ```
 
 Open any AI tool in the project and describe what to build. `AGENTS.md` tells it to record the
 brief and which guides to read, so no extra context is needed.
 
-`ib create <dir> [--local]` always creates the base app without authentication. It copies the template, sets the package name, runs `git init` and `bun install`, and syncs the managed `AGENTS.md` block. `<dir>` may be `.` or an existing folder as long as none of the template's paths exist in it.
+`ib create <dir> [--local]` creates the base app. It copies the template, sets the package name, runs `git init` and `bun install`, and syncs the managed `AGENTS.md` block. `<dir>` may be `.` or an existing folder as long as none of the template's paths exist in it.
 
 - `--local` is for developing the toolkit: it runs `bun run pack:local` and points `@inbeat/*` at `.packs/*.tgz` by absolute path, so never commit that `package.json`.
-- `ib add <addon>` (from inside an app) is the only way to apply an add-on, e.g. `ib add clerk` for sign-in, proxy, roles and an admin page. It uses the app's installed `@inbeat/standards`. It records applied add-ons under `"ib": { "addons": [] }` in `package.json`, replaces `layout.tsx`, `env.ts` and `.env.example` only while they still match the template, and otherwise writes nothing and lists each file with the add-on version to merge by hand; rerun after merging.
-- Add-ons live in `packages/standards/addons/<name>/`: a `files/` overlay (new files and whole-file replacements) plus `addon.json` with dependencies to merge.
 
 ## Use it in an app
 

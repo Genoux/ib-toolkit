@@ -1,15 +1,12 @@
 #!/usr/bin/env bun
 import { resolve } from "node:path";
-import { add } from "./add";
 import { create } from "./create";
 import { parseCreateArgs } from "./create-args";
 import { claudeFilesIgnoringAgents, staleFiles, write } from "./sync";
 
 const USAGE = [
-  "usage: ib <create <dir> [--local] | add <addon> | sync [app-dir] | check [app-dir]>",
-  "  create <dir>   start a new app (no authentication); add features afterwards with `ib add`",
-  "  add <addon>    apply an addon (e.g. clerk) to the app in the current directory; if it lists files to",
-  "                 merge by hand, merge them and run it again",
+  "usage: ib <create <dir> [--local] | sync [app-dir] | check [app-dir]>",
+  "  create <dir>   start a new app",
   "  --local        write absolute file: paths to ib-toolkit tarballs; for toolkit development and CI only,",
   "                 never commit that package.json",
 ].join("\n");
@@ -31,15 +28,6 @@ const commands: Record<string, () => number | Promise<number>> = {
       return 1;
     }
     await create(parsed.dir, { local: parsed.local });
-    return 0;
-  },
-  add: async () => {
-    const [addon] = args;
-    if (!addon) {
-      console.error(USAGE);
-      return 1;
-    }
-    await add(addon);
     return 0;
   },
   sync: () => {
@@ -69,8 +57,11 @@ const commands: Record<string, () => number | Promise<number>> = {
   },
 };
 
+const handler = commands[command];
+if (!handler) console.error(USAGE);
+
 try {
-  process.exit(await (commands[command] ?? commands.help)());
+  process.exit(handler ? await handler() : 1);
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);

@@ -1,6 +1,6 @@
 ## inBeat toolkit standard
 
-Stack: Next.js App Router, TypeScript strict, React 19, Drizzle + Neon, Clerk (optional add-on), Sentry, Vercel, Bun.
+Stack: Next.js App Router, TypeScript strict, React 19, Drizzle + Neon, Clerk, Sentry, Vercel, Bun.
 Shared code comes from `@inbeat/*` (ui ships source via `transpilePackages`; core and next ship compiled JS). Never fork a toolkit
 file into the app; change it in ib-toolkit.
 
@@ -16,7 +16,7 @@ file into the app; change it in ib-toolkit.
 
 - **Required** (CI enforces): `@inbeat/config` presets, the action/route error contract,
   `securityHeaders()`, Sentry presets, rate limiting on public entry points, this block.
-- **Opt-in**: `@inbeat/ui` blocks, `defineAuth`, events, extra layer rules.
+- **Opt-in**: `@inbeat/ui` blocks, events, extra layer rules.
 - A deliberate departure is allowed when the app states it under **Deliberate deviations**
   in its own section of this file (what, why, owner). Undeclared drift is a bug.
 
@@ -61,12 +61,9 @@ Server actions are queued per client; never use them for reads.
 
 ### Auth
 
-- Authentication is an add-on (`ib add clerk`); an app without it has no roles or
-  `requireViewer`, and the rest of this section applies once it is added. `authorize` is required on every `action()` and `route()`;
-  `publicAccess` is an explicit choice and must be rate limited.
-- Roles are a pure function of session claims (`defineAuth({ resolveRole })`): verified email
-  domain (`readVerifiedEmail`) or `publicMetadata.role` (`readMetadataRole`). Missing claims
-  fail closed.
+- New apps start without authentication; set it up per "Integrations" in the `ib-toolkit` skill.
+- `authorize` is required on every `action()` and `route()`, and it is the app's own check
+  (session, roles, ownership). `publicAccess` is an explicit choice and must be rate limited.
 - Redirect targets go through `safeRedirectPath`. `APP_URL` comes from env, never `Host`.
 
 ### Security baseline

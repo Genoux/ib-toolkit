@@ -77,7 +77,6 @@ export function rewriteManifest(
     ...manifest,
     ...resolved,
     name,
-    ib: { addons: [] },
     ...(tarballs && { overrides: tarballs }),
   };
 }
