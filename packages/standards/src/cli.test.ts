@@ -1,4 +1,6 @@
 import { spawnSync } from "node:child_process";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -28,6 +30,13 @@ describe("ib cli", () => {
     const result = run(command, "--help");
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("usage: ib");
+  });
+
+  it("check fails with one message per missing preset", () => {
+    const result = run("check", mkdtempSync(join(tmpdir(), "ib-check-")));
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("biome.json must extend @inbeat/config/biome");
+    expect(result.stderr).toContain("vitest.config.ts must import from @inbeat/config/vitest");
   });
 
   it("prints usage and succeeds on help", () => {

@@ -17,7 +17,8 @@ file into the app; change it in ib-toolkit.
 
 ### Two tiers
 
-- **Required** (CI enforces): `@inbeat/config` presets, the action/route error contract,
+- **Required** (CI enforces): `@inbeat/config` presets (extend them: biome, tsconfig, dependency-cruiser, vitest; `ib check`
+  enforces it), the action/route error contract,
   `securityHeaders()`, Sentry presets, rate limiting on public entry points, this block.
 - **Opt-in**: `@inbeat/ui` blocks, extra layer rules.
 - A deliberate departure is allowed when the app states it under **Deliberate deviations**

@@ -2,6 +2,7 @@
 import { resolve } from "node:path";
 import { create } from "./create";
 import { parseCreateArgs } from "./create-args";
+import { foundationProblems } from "./foundation";
 import { runMcp } from "./mcp";
 import { claudeFilesIgnoringAgents, staleFiles, write } from "./sync";
 
@@ -40,6 +41,7 @@ const commands: Record<string, () => number | Promise<number>> = {
   check: () => {
     const stale = staleFiles(appDir);
     const ignoring = claudeFilesIgnoringAgents(appDir);
+    const problems = foundationProblems(appDir);
     if (stale.length > 0) {
       console.error(
         `out of date with @inbeat/standards, run \`ib sync\`:\n  ${stale.join("\n  ")}`,
@@ -51,7 +53,10 @@ const commands: Record<string, () => number | Promise<number>> = {
           `  ${ignoring.join("\n  ")}`,
       );
     }
-    return stale.length + ignoring.length === 0 ? 0 : 1;
+    if (problems.length > 0) {
+      console.error(`not on the shared foundation:\n  ${problems.join("\n  ")}`);
+    }
+    return stale.length + ignoring.length + problems.length === 0 ? 0 : 1;
   },
   mcp: () =>
     runMcp(args, {
