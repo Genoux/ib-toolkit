@@ -35,7 +35,7 @@ describe("ib cli", () => {
   it("check fails with one message per missing preset", () => {
     const result = run("check", mkdtempSync(join(tmpdir(), "ib-check-")));
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("biome.json must extend @inbeat/config/biome");
+    expect(result.stderr).toContain("biome.json (or biome.jsonc) must extend @inbeat/config/biome");
     expect(result.stderr).toContain("vitest.config.ts must import from @inbeat/config/vitest");
   });
 

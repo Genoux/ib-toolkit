@@ -29,9 +29,13 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "peerDependencies": {
+    "@biomejs/biome": "^2.5",
     "vitest": "^4"
   },
   "peerDependenciesMeta": {
+    "@biomejs/biome": {
+      "optional": true
+    },
     "vitest": {
       "optional": true
     }

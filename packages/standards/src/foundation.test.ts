@@ -45,7 +45,7 @@ export default { test: { ...vitestPreset.test, restoreMocks: false } };`,
   });
 
   it.each([
-    ["biome.json", "biome.json must extend @inbeat/config/biome"],
+    ["biome.json", "biome.json (or biome.jsonc) must extend @inbeat/config/biome"],
     ["tsconfig.json", "tsconfig.json must extend @inbeat/config/tsconfig/nextjs.json"],
     [
       ".dependency-cruiser.cjs",
@@ -75,9 +75,17 @@ export default { test: { ...vitestPreset.test, restoreMocks: false } };`,
     expect(foundationProblems(dir)).toEqual([]);
   });
 
+  it("accepts biome.jsonc in place of biome.json", () => {
+    const dir = appWith({
+      "biome.json": null,
+      "biome.jsonc": '{\n  // shared rules\n  "extends": ["@inbeat/config/biome"]\n}',
+    });
+    expect(foundationProblems(dir)).toEqual([]);
+  });
+
   it("reports a config that is not JSON and names no preset", () => {
     expect(foundationProblems(appWith({ "biome.json": "{ nope" }))).toEqual([
-      "biome.json must extend @inbeat/config/biome",
+      "biome.json (or biome.jsonc) must extend @inbeat/config/biome",
     ]);
   });
 });
