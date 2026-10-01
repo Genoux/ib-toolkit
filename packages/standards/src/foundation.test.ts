@@ -66,7 +66,16 @@ export default { test: { ...vitestPreset.test, restoreMocks: false } };`,
     expect(foundationProblems(dir)).toHaveLength(4);
   });
 
-  it("reports unparseable JSON instead of throwing", () => {
+  it("accepts biome.json and tsconfig.json with comments and trailing commas", () => {
+    const dir = appWith({
+      "biome.json": '{\n  // shared rules\n  "extends": ["@inbeat/config/biome",],\n}',
+      "tsconfig.json":
+        '{\n  /* preset */ "extends": "@inbeat/config/tsconfig/nextjs.json",\n  "compilerOptions": {},\n}',
+    });
+    expect(foundationProblems(dir)).toEqual([]);
+  });
+
+  it("reports a config that is not JSON and names no preset", () => {
     expect(foundationProblems(appWith({ "biome.json": "{ nope" }))).toEqual([
       "biome.json must extend @inbeat/config/biome",
     ]);

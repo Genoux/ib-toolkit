@@ -3,28 +3,20 @@ import { join } from "node:path";
 
 type Requirement = { file: string; message: string; satisfiedBy: (contents: string) => boolean };
 
-const extendsPreset = (preset: string) => (contents: string) => {
-  try {
-    return [(JSON.parse(contents) as { extends?: string | string[] }).extends ?? []]
-      .flat()
-      .includes(preset);
-  } catch {
-    return false;
-  }
-};
-
+// biome.json and tsconfig.json are JSONC (comments, trailing commas), so match the quoted preset
+// name instead of parsing.
 const mentionsPreset = (preset: string) => (contents: string) => contents.includes(`"${preset}"`);
 
 const REQUIREMENTS: Requirement[] = [
   {
     file: "biome.json",
     message: "biome.json must extend @inbeat/config/biome",
-    satisfiedBy: extendsPreset("@inbeat/config/biome"),
+    satisfiedBy: mentionsPreset("@inbeat/config/biome"),
   },
   {
     file: "tsconfig.json",
     message: "tsconfig.json must extend @inbeat/config/tsconfig/nextjs.json",
-    satisfiedBy: extendsPreset("@inbeat/config/tsconfig/nextjs.json"),
+    satisfiedBy: mentionsPreset("@inbeat/config/tsconfig/nextjs.json"),
   },
   {
     file: ".dependency-cruiser.cjs",
