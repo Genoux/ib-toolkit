@@ -14,7 +14,7 @@ import { applyServers, configuredServers, type Prompts, parseMcpArgs, runMcp } f
 import { CURATED_SERVERS } from "./mcp-servers";
 
 const vercel = CURATED_SERVERS.vercel;
-const github = CURATED_SERVERS.github;
+const neon = CURATED_SERVERS.neon;
 
 const apply = (tool: string, text: string | null, names: string[]) =>
   applyServers(tool, text, names).text;
@@ -35,7 +35,7 @@ describe("applyServers json formats", () => {
       theme: "dark",
       mcpServers: {
         mine: { type: "http", url: "https://mine.test" },
-        github: { type: "http", url: github },
+        neon: { type: "http", url: neon },
       },
     });
     const result = JSON.parse(apply("claude", existing, ["vercel"]));
@@ -79,7 +79,7 @@ describe("applyServers json formats", () => {
   it("only manages connection fields and keeps the rest on rerun", () => {
     const existing = JSON.stringify({
       mcpServers: {
-        github: {
+        neon: {
           type: "sse",
           url: "old",
           headers: { Authorization: "Bearer x" },
@@ -87,10 +87,10 @@ describe("applyServers json formats", () => {
         },
       },
     });
-    const { text } = applyServers("claude", existing, ["github"]);
-    expect(JSON.parse(text).mcpServers.github).toEqual({
+    const { text } = applyServers("claude", existing, ["neon"]);
+    expect(JSON.parse(text).mcpServers.neon).toEqual({
       type: "http",
-      url: github,
+      url: neon,
       headers: { Authorization: "Bearer x" },
       env: { A: "1" },
     });
@@ -98,11 +98,11 @@ describe("applyServers json formats", () => {
 
   it("keeps a deselected entry with custom settings and says so", () => {
     const existing = JSON.stringify({
-      mcpServers: { github: { type: "http", url: github, headers: { A: "1" } } },
+      mcpServers: { neon: { type: "http", url: neon, headers: { A: "1" } } },
     });
     const { text, notes } = applyServers("claude", existing, []);
-    expect(JSON.parse(text).mcpServers.github.headers).toEqual({ A: "1" });
-    expect(notes.join("\n")).toMatch(/github.*custom settings.*kept/);
+    expect(JSON.parse(text).mcpServers.neon.headers).toEqual({ A: "1" });
+    expect(notes.join("\n")).toMatch(/neon.*custom settings.*kept/);
   });
 });
 
@@ -121,8 +121,8 @@ describe("applyServers codex toml", () => {
 
   it("removes deselected tables holding only the url, keeps the rest", () => {
     const existing = [
-      `[mcp_servers.github]`,
-      `url = "${github}"`,
+      `[mcp_servers.neon]`,
+      `url = "${neon}"`,
       ``,
       `[mcp_servers.mine]`,
       `command = "x"`,
@@ -161,33 +161,33 @@ describe("applyServers codex toml", () => {
 
   it("updates only the url and keeps custom fields and subtables on rerun", () => {
     const existing = [
-      `[mcp_servers.github]`,
+      `[mcp_servers.neon]`,
       `url = "old"`,
       `bearer_token_env_var = "GH"`,
       ``,
-      `[mcp_servers.github.http_headers]`,
+      `[mcp_servers.neon.http_headers]`,
       `X = "1"`,
       ``,
     ].join("\n");
-    const result = apply("codex", existing, ["github"]);
-    expect(result).toBe(existing.replace('"old"', `"${github}"`));
-    expect(apply("codex", result, ["github"])).toBe(result);
+    const result = apply("codex", existing, ["neon"]);
+    expect(result).toBe(existing.replace('"old"', `"${neon}"`));
+    expect(apply("codex", result, ["neon"])).toBe(result);
   });
 
   it("keeps a deselected table with custom settings and says so", () => {
-    const existing = `[mcp_servers.github]\nurl = "${github}"\nbearer_token_env_var = "GH"\n`;
+    const existing = `[mcp_servers.neon]\nurl = "${neon}"\nbearer_token_env_var = "GH"\n`;
     const { text, notes } = applyServers("codex", existing, []);
     expect(text).toBe(existing);
-    expect(notes.join("\n")).toMatch(/github.*custom settings.*kept/);
+    expect(notes.join("\n")).toMatch(/neon.*custom settings.*kept/);
   });
 
   it("keeps a deselected table that has a subtable", () => {
-    const existing = `[mcp_servers.github]\nurl = "${github}"\n[mcp_servers.github.http_headers]\nX = "1"\n`;
+    const existing = `[mcp_servers.neon]\nurl = "${neon}"\n[mcp_servers.neon.http_headers]\nX = "1"\n`;
     expect(apply("codex", existing, [])).toBe(existing);
   });
 
   it("does not swallow the comment above the next table when removing", () => {
-    const existing = `[mcp_servers.github]\nurl = "${github}"\n# mine\n[mcp_servers.mine]\ncommand = "x"\n`;
+    const existing = `[mcp_servers.neon]\nurl = "${neon}"\n# mine\n[mcp_servers.mine]\ncommand = "x"\n`;
     expect(apply("codex", existing, [])).toBe(`# mine\n[mcp_servers.mine]\ncommand = "x"\n`);
   });
 
@@ -204,24 +204,22 @@ describe("configuredServers", () => {
     const json = JSON.stringify({ mcpServers: { vercel: {}, mine: {} } });
     expect(configuredServers("claude", json)).toEqual(["vercel"]);
     expect(
-      configuredServers("codex", `[mcp_servers.github]\nurl = "x"\n[mcp_servers.mine]\n`),
-    ).toEqual(["github"]);
+      configuredServers("codex", `[mcp_servers.neon]\nurl = "x"\n[mcp_servers.mine]\n`),
+    ).toEqual(["neon"]);
     expect(configuredServers("claude", null)).toEqual([]);
   });
 
   it("sees dotted and inline toml definitions", () => {
     expect(configuredServers("codex", `mcp_servers.vercel.url = "a"\n`)).toEqual(["vercel"]);
-    expect(configuredServers("codex", `[mcp_servers]\ngithub = { url = "a" }\n`)).toEqual([
-      "github",
-    ]);
+    expect(configuredServers("codex", `[mcp_servers]\nneon = { url = "a" }\n`)).toEqual(["neon"]);
   });
 });
 
 describe("parseMcpArgs", () => {
   it("accepts space and equals forms", () => {
-    expect(parseMcpArgs(["--tools", "claude,cursor", "--servers=vercel,github"])).toEqual({
+    expect(parseMcpArgs(["--tools", "claude,cursor", "--servers=vercel,neon"])).toEqual({
       tools: ["claude", "cursor"],
-      servers: ["vercel", "github"],
+      servers: ["vercel", "neon"],
     });
   });
 
@@ -322,18 +320,18 @@ describe("runMcp", () => {
   });
 
   it("writes every selected tool file and reports them", async () => {
-    expect(await run(["--tools", "claude,codex", "--servers", "vercel,github"])).toBe(0);
+    expect(await run(["--tools", "claude,codex", "--servers", "vercel,neon"])).toBe(0);
     const claude = JSON.parse(readFileSync(join(cwd, ".mcp.json"), "utf8"));
-    expect(Object.keys(claude.mcpServers)).toEqual(["vercel", "github"]);
+    expect(Object.keys(claude.mcpServers)).toEqual(["vercel", "neon"]);
     expect(readFileSync(join(cwd, ".codex", "config.toml"), "utf8")).toContain(
-      "[mcp_servers.github]",
+      "[mcp_servers.neon]",
     );
     expect(stdout).toContain(".mcp.json");
     expect(stdout).toContain("authenticate");
   });
 
   it("selection is the truth for curated names across reruns", async () => {
-    await run(["--tools", "claude", "--servers", "vercel,github"]);
+    await run(["--tools", "claude", "--servers", "vercel,neon"]);
     const path = join(cwd, ".mcp.json");
     const edited = JSON.parse(readFileSync(path, "utf8"));
     edited.mcpServers.mine = { type: "http", url: "https://mine.test" };
@@ -376,13 +374,13 @@ describe("runMcp", () => {
   });
 
   it("keeps custom codex settings and notes the kept server on deselect", async () => {
-    const original = `[mcp_servers.github]\nurl = "${github}"\nbearer_token_env_var = "GH"\n`;
+    const original = `[mcp_servers.neon]\nurl = "${neon}"\nbearer_token_env_var = "GH"\n`;
     write(".codex/config.toml", original);
     expect(await run(["--tools", "codex", "--servers", "vercel"])).toBe(0);
     expect(read(".codex/config.toml")).toBe(
       `${original}\n[mcp_servers.vercel]\nurl = "${vercel}"\n`,
     );
-    expect(stdout).toMatch(/github.*custom settings.*kept/);
+    expect(stdout).toMatch(/neon.*custom settings.*kept/);
   });
 
   it("prints usage only for argument errors", async () => {
@@ -413,8 +411,8 @@ describe("runMcp", () => {
     expect(asked.map(({ message }) => message)).toEqual(["AI tools", "MCP servers"]);
     expect(asked[0].values).toEqual(["claude", "cursor", "vscode", "codex", "gemini"]);
     expect(asked[0].hints[0]).toBe(".mcp.json");
-    expect(asked[1].values).toEqual(["vercel", "github", "sentry", "neon", "clerk", "cloudflare"]);
-    expect(asked[1].hints[1]).toBe("GitHub (read-only)");
+    expect(asked[1].values).toEqual(["vercel", "sentry", "neon", "clerk", "cloudflare"]);
+    expect(asked[1].hints[1]).toBe("Sentry issues and errors");
     expect(asked.map(({ required }) => required)).toEqual([true, false]);
     expect(read(".mcp.json")).toContain(vercel);
     expect(read(".cursor/mcp.json")).toContain(vercel);
@@ -433,7 +431,7 @@ describe("runMcp", () => {
   });
 
   it("an empty server selection removes curated servers", async () => {
-    write(".mcp.json", JSON.stringify({ mcpServers: { github: { type: "http", url: github } } }));
+    write(".mcp.json", JSON.stringify({ mcpServers: { neon: { type: "http", url: neon } } }));
     expect(await run([], [["claude"], []], true)).toBe(0);
     expect(JSON.parse(read(".mcp.json")).mcpServers).toEqual({});
   });

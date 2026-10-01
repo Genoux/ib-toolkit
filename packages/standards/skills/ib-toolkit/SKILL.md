@@ -64,7 +64,7 @@ export const GET = route({
 
 Sentry is already wired in the template.
 
-Run `ib mcp` to give your AI tool access to Vercel, GitHub, Sentry, Neon, Clerk, Cloudflare.
+Run `ib mcp` to give your AI tool access to Vercel, Sentry, Neon, Clerk, Cloudflare. For GitHub use the `gh` CLI.
 
 ### Auth (Clerk)
 
