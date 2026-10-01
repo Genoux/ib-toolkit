@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/Genoux/ib-toolkit/compare/standards-v0.7.0...standards-v0.7.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* **standards:** unknown roles get the app's least access, not always none ([#31](https://github.com/Genoux/ib-toolkit/issues/31)) ([34114ee](https://github.com/Genoux/ib-toolkit/commit/34114ee3da0fdfd14c663bf5ff93a52e9b4c3953))
+
 ## [0.7.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.6.1...standards-v0.7.0) (2026-10-01)
 
 
