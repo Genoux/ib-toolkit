@@ -3,7 +3,8 @@ name: Release packages
 on:
   push:
     branches: [main]
-  # Recovers a release when GitHub drops the push event (it did for #21).
+  # Manual runs publish whatever isn't on npm yet: recovers a dropped push event (#21) or a
+  # failed publish (0.7.0); publish.ts skips versions that already exist.
   workflow_dispatch:
 
 permissions:
@@ -29,25 +30,25 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
-      - if: steps.release.outputs.releases_created == 'true'
+      - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/checkout@v4
-      - if: steps.release.outputs.releases_created == 'true'
+      - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.5
-      - if: steps.release.outputs.releases_created == 'true'
+      - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           registry-url: https://registry.npmjs.org
       # Trusted publishing needs npm >= 11.5.1 (https://docs.npmjs.com/trusted-publishers)
-      - if: steps.release.outputs.releases_created == 'true'
+      - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
         run: npm install -g npm@latest
-      - if: steps.release.outputs.releases_created == 'true'
+      - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
         run: bun install --frozen-lockfile
-      - if: steps.release.outputs.releases_created == 'true'
+      - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
         run: bunx turbo run typecheck test
-      - if: steps.release.outputs.releases_created == 'true'
+      - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
         run: bun run release
         env:
           # First publish only; ignored once each package uses trusted publishing (OIDC).
