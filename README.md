@@ -44,6 +44,18 @@ brief and which guides to read, so no extra context is needed.
 
 - `--local` is for developing the toolkit: it runs `bun run pack:local` and points `@inbeat/*` at `.packs/*.tgz` by absolute path, so never commit that `package.json`.
 
+### Ship it
+
+The app ships `.github/workflows/ci.yml`, which calls the toolkit's reusable `verify.yml` (biome, tsc, lint:arch, tests, `ib check`, gitleaks). CI and Vercel both install `@inbeat/*` from GitHub Packages, so each needs a classic token with `read:packages`:
+
+```sh
+gh repo create Genoux/my-app --private --source . --push
+gh secret set INBEAT_PACKAGES_READ_TOKEN        # paste the read:packages token
+npx vercel link && npx vercel env add NODE_AUTH_TOKEN
+```
+
+Apps with a database pass `with: { db-check: true }` to `verify.yml`.
+
 ### AI tool access (MCP)
 
 `ib mcp` writes MCP server config for the AI tools you pick, from a curated list of official remote servers: Vercel, GitHub (read-only), Sentry, Neon, Clerk, Cloudflare. Run it from the app directory and choose freely; nothing is detected or pre-selected beyond what is already configured.

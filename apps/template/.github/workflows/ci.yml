@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  verify:
+    uses: Genoux/ib-toolkit/.github/workflows/verify.yml@main
+    secrets:
+      packages-token: ${{ secrets.INBEAT_PACKAGES_READ_TOKEN }}
