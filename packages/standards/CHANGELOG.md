@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.6.1...standards-v0.7.0) (2026-10-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* consumers must drop the @inbeat registry line from .npmrc/bunfig and the NODE_AUTH_TOKEN setup.
+
+### Features
+
+* publish [@inbeat](https://github.com/inbeat) packages publicly on npm ([#27](https://github.com/Genoux/ib-toolkit/issues/27)) ([2bd9f53](https://github.com/Genoux/ib-toolkit/commit/2bd9f53c2d4dd030bdee037b8b1dce1e1bb828b5))
+
 ## [0.6.1](https://github.com/Genoux/ib-toolkit/compare/standards-v0.6.0...standards-v0.6.1) (2026-10-01)
 
 
