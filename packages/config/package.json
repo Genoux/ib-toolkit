@@ -1,6 +1,6 @@
 {
   "name": "@inbeat/config",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Shared tsconfig, Biome, dependency-cruiser, Vitest and commitlint presets for inBeat apps",
   "type": "module",
   "files": [
