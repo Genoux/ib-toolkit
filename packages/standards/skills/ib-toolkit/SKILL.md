@@ -81,7 +81,8 @@ dashboard step to both.
   sign-ups open and rely on roles.
 - Roles: `publicMetadata.role`, assigned in the Clerk dashboard (users cannot edit it). Expose it
   with the session token claim `{"metadata": "{{user.public_metadata}}"}`, read it from
-  `sessionClaims.metadata.role`. No role or an unknown one means no access.
+  `sessionClaims.metadata.role`. No role or an unknown one gets the least access the app has:
+  none, or its default role (e.g. member, creator). Never fall back to a privileged role.
 - Checks run on the server, twice: the proxy requires sign-in outside the public routes and blocks
   role-gated areas; every role-gated page, action and route checks again (`authorize`). Hiding UI
   is not access control.
