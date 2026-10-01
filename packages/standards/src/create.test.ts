@@ -165,12 +165,10 @@ describe("create", () => {
     expect(manifest.dependencies["@inbeat/core"]).toMatch(/^\^\d/);
   });
 
-  it("records an empty addon list", async () => {
+  it("writes no toolkit bookkeeping into the manifest", async () => {
     const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "plain");
     await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env });
-    expect(JSON.parse(readFileSync(join(target, "package.json"), "utf8")).ib).toEqual({
-      addons: [],
-    });
+    expect(JSON.parse(readFileSync(join(target, "package.json"), "utf8"))).not.toHaveProperty("ib");
   });
 
   it("prints the location and next steps", async () => {

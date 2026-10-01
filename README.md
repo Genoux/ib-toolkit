@@ -7,8 +7,8 @@ Shared packages for inBeat apps: config, server building blocks, UI and agent st
 | Package | What's in it |
 | --- | --- |
 | `@inbeat/config` | tsconfig, Biome, dependency-cruiser, Vitest and commitlint presets |
-| `@inbeat/core` | Framework-free primitives: errors, results, logger, env schemas, signed events |
-| `@inbeat/next` | Next.js pieces: `action()`, `route()`, auth guards, Sentry, rate limiting, security headers, fonts |
+| `@inbeat/core` | Framework-free primitives: errors, results, logger, env schemas |
+| `@inbeat/next` | Next.js pieces: `action()`, `route()`, Sentry, rate limiting, security headers, fonts |
 | `@inbeat/ui` | Design tokens and components (Radix + Tailwind v4), shipped as source |
 | `@inbeat/standards` | The `ib` CLI and the agent rules and skills every app shares |
 
@@ -33,19 +33,27 @@ bun add -g @inbeat/standards              # installs `ib`; ~/.bun/bin must be on
 Then, for every project:
 
 ```sh
-ib create my-app              # base app, no authentication
+ib create my-app              # base app
 cd my-app && bun dev
-ib add clerk                  # optional, from inside the app: adds Clerk authentication
 ```
 
 Open any AI tool in the project and describe what to build. `AGENTS.md` tells it to record the
 brief and which guides to read, so no extra context is needed.
 
-`ib create <dir> [--local]` always creates the base app without authentication. It copies the template, sets the package name, runs `git init` and `bun install`, and syncs the managed `AGENTS.md` block. `<dir>` may be `.` or an existing folder as long as none of the template's paths exist in it.
+`ib create <dir> [--local]` creates the base app. It copies the template, sets the package name, runs `git init` and `bun install`, and syncs the managed `AGENTS.md` block. `<dir>` may be `.` or an existing folder as long as none of the template's paths exist in it.
 
 - `--local` is for developing the toolkit: it runs `bun run pack:local` and points `@inbeat/*` at `.packs/*.tgz` by absolute path, so never commit that `package.json`.
-- `ib add <addon>` (from inside an app) is the only way to apply an add-on, e.g. `ib add clerk` for sign-in, proxy, roles and an admin page. It uses the app's installed `@inbeat/standards`. It records applied add-ons under `"ib": { "addons": [] }` in `package.json`, replaces `layout.tsx`, `env.ts` and `.env.example` only while they still match the template, and otherwise writes nothing and lists each file with the add-on version to merge by hand; rerun after merging.
-- Add-ons live in `packages/standards/addons/<name>/`: a `files/` overlay (new files and whole-file replacements) plus `addon.json` with dependencies to merge.
+
+### AI tool access (MCP)
+
+`ib mcp` writes MCP server config for the AI tools you pick, from a curated list of official remote servers: Vercel, GitHub (read-only), Sentry, Neon, Clerk, Cloudflare. Run it from the app directory and choose freely; nothing is detected or pre-selected beyond what is already configured.
+
+```sh
+ib mcp                                               # pick tools, then servers
+ib mcp --tools claude,cursor --servers vercel,github # non-interactive
+```
+
+Tools: `claude` (`.mcp.json`), `cursor` (`.cursor/mcp.json`), `vscode` (`.vscode/mcp.json`), `codex` (`.codex/config.toml`), `gemini` (`.gemini/settings.json`). Only curated server entries are managed: your own entries and other keys are left alone, and curated servers you deselect are removed. No secrets are written; authenticate each server in your AI tool on first use.
 
 ## Use it in an app
 

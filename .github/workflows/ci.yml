@@ -26,18 +26,11 @@ jobs:
       - run: bunx turbo run typecheck test lint:arch lint ib:check build-storybook
 
   create-smoke:
-    name: create-smoke (${{ matrix.variant }})
+    name: create-smoke
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: [base, clerk]
     env:
       SKIP_ENV_VALIDATION: "1"
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ZHVtbXkuY2xlcmsuYWNjb3VudHMuZGV2JA # gitleaks:allow dummy key, decodes to dummy.clerk.accounts.dev
-      CLERK_SECRET_KEY: sk_test_dummy
-      ADMIN_EMAIL_DOMAINS: inbeat.agency
       SMOKE_APP: /tmp/smoke-app
       # the copied .npmrc references it; local tarballs never reach the registry
       NODE_AUTH_TOKEN: unused
@@ -48,9 +41,6 @@ jobs:
           bun-version: 1.3.5
       - run: bun install --frozen-lockfile
       - run: bun packages/standards/src/cli.ts create "$SMOKE_APP" --local
-      - run: bunx ib add clerk
-        if: matrix.variant == 'clerk'
-        working-directory: ${{ env.SMOKE_APP }}
       - run: bunx biome ci .
         working-directory: ${{ env.SMOKE_APP }}
       - run: bun run typecheck

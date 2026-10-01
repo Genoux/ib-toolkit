@@ -16,7 +16,7 @@ description: Scaffold or extend a feature slice in an inBeat app following the t
    Pure DB/domain logic, takes validated input plus the viewer id, returns data or throws
    `AppError`. Policies: `assert-can-<verb>.ts`.
 4. **Queries.** `src/features/<f>/queries/get-<noun>.ts` / `list-<nouns>.ts`, `import "server-only"`,
-   authorize first when the app has auth (`await requireAdmin()`), called from Server Components.
+   run the app's own authorize check first when the app has auth, called from Server Components.
 5. **Actions.** `src/features/<f>/actions/<verb>-<noun>.ts` with `"use server"` and `action()`.
    One export per file. `revalidate` the pages that show the data.
 6. **Routes** only for client polling, infinite lists, webhooks, presign: `route()` in

@@ -13,8 +13,7 @@
       "!**/next-env.d.ts",
       "!!packages/ui/src/components",
       "!apps/template",
-      "!!packages/standards/template",
-      "!packages/standards/addons"
+      "!!packages/standards/template"
     ]
   }
 }

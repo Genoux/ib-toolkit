@@ -54,4 +54,3 @@ export function hasPgCode(err: unknown, code: string): boolean {
 }
 
 export const isUniqueViolation = (err: unknown) => hasPgCode(err, PG_CODES.uniqueViolation);
-export const isForeignKeyViolation = (err: unknown) => hasPgCode(err, PG_CODES.foreignKeyViolation);

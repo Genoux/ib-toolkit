@@ -1,7 +1,7 @@
 {
   "name": "@inbeat/core",
   "version": "0.4.0",
-  "description": "Framework-free primitives for inBeat apps: errors, results, logging, env fragments, signed events",
+  "description": "Framework-free primitives for inBeat apps: errors, results, logging, env fragments",
   "type": "module",
   "sideEffects": false,
   "files": [
@@ -28,14 +28,6 @@
     "./email": {
       "types": "./dist/email.d.ts",
       "default": "./dist/email.js"
-    },
-    "./events": {
-      "types": "./dist/events.d.ts",
-      "default": "./dist/events.js"
-    },
-    "./signature": {
-      "types": "./dist/signature.d.ts",
-      "default": "./dist/signature.js"
     }
   },
   "scripts": {

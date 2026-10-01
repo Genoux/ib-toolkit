@@ -5,7 +5,7 @@ description: Use the inBeat toolkit (@inbeat/core, @inbeat/next, @inbeat/config)
 
 # ib-toolkit
 
-Read the "inBeat toolkit standard" block in `AGENTS.md` first. This skill is the how-to. Examples use `requireAdmin` from the Clerk add-on; without auth use `publicAccess` plus a rate limiter.
+Read the "inBeat toolkit standard" block in `AGENTS.md` first. This skill is the how-to. Examples use `authorizeStaff` as a stand-in for the app's own `authorize` check; public endpoints use `publicAccess` plus a rate limiter.
 
 ## Server action
 
@@ -13,14 +13,14 @@ Read the "inBeat toolkit standard" block in `AGENTS.md` first. This skill is the
 "use server";
 import { ok } from "@inbeat/core/result";
 import { action } from "@inbeat/next/action";
-import { requireAdmin } from "@/shared/lib/auth";
+import { authorizeStaff } from "@/shared/lib/auth";
 import { createClientSchema } from "../schemas";
 import { createClientRecord } from "../server/create-client-record";
 
 export const createClient = action({
   name: "clients.create",
   schema: createClientSchema,
-  authorize: requireAdmin,
+  authorize: authorizeStaff,
   run: async (input, viewer) => ok(await createClientRecord(input, viewer.userId)),
   revalidate: () => ["/clients"],
 });
@@ -43,7 +43,7 @@ otherwise it returns `"unknown"`. Public forms using Turnstile without Clerk mus
 import { route } from "@inbeat/next/route";
 export const GET = route({
   name: "clients.list",
-  authorize: requireAdmin,
+  authorize: authorizeStaff,
   query: z.object({ cursor: z.string().optional() }),
   handler: async ({ query }) => listClients(query.cursor),
 });
@@ -56,21 +56,28 @@ export const GET = route({
 - Anything else: let it throw. The wrapper classifies, reports to Sentry and returns `ERR_xxxx`.
 - Postgres: `isUniqueViolation(err)` from `@inbeat/core/errors`, never string matching.
 
-## Auth
+## Authorization
 
-Only once the app has the Clerk add-on; without it there is no `src/shared/lib/auth.ts`, so skip `requireAdmin` and `authorize` guards. To add auth run `bunx ib add clerk`; if it lists files to merge, merge them, then rerun.
+`authorize` is the app's own check: it returns the viewer or throws `AppError("auth" | "forbidden")`. Roles, admin rules and ownership are app decisions; write them in the app (for example `src/shared/lib/auth.ts`) and pass them to `action()` and `route()`. Do not use `defineAuth`, `requireViewer` or `requireRole` from `@inbeat/next/auth`; that module is legacy, kept for existing apps only.
 
-`src/shared/lib/auth.ts` owns the app's roles:
+## Integrations
 
-```ts
-import { defineAuth, readVerifiedEmail } from "@inbeat/next/auth";
-export const { getViewer, requireViewer, requireRole } = defineAuth({
-  resolveRole: (claims) => (isStaffEmail(readVerifiedEmail(claims)) ? "admin" : "creator"),
-});
-export const requireAdmin = requireRole("admin");
-```
+Sentry is already wired in the template.
 
-The proxy uses the same `resolveRole` with `auth().sessionClaims` so both layers agree.
+Run `ib mcp` to give your AI tool access to Vercel, GitHub, Sentry, Neon, Clerk, Cloudflare.
+
+### Auth (Clerk)
+
+1. Run `npx -y clerk@latest init` (works with `bunx`). It detects Next.js and applies Clerk's setup; `npx -y clerk@latest doctor` verifies it.
+2. In `proxy.ts`, exclude `/monitoring` (the Sentry tunnel) from the matcher, and keep `/api/health` and `/robots.txt` public.
+3. Pass `clerkFrontendApi(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)` to `securityHeaders` (the base `next.config.ts` already does).
+4. Add `clerkServerEnv` and `clerkClientEnv` from `@inbeat/core/env` to `src/shared/config/env.ts` (see Env below).
+
+### Database (Neon + Drizzle)
+
+1. Run `npx neon@latest init` to link the Neon project and install the agent tooling.
+2. Set up Drizzle per its Neon guide: `drizzle-orm`, `@neondatabase/serverless`, `drizzle-kit`, and a `drizzle.config.ts` with `dialect: "postgresql"`.
+3. Conventions from the standard's Data section: tables in `src/db/schema/<table>.ts`, UUID primary keys, migrations generated with `drizzle-kit generate` and reviewed, and never run migrations or destructive SQL against production.
 
 ## Env
 
@@ -93,8 +100,6 @@ export const env = createEnv({
 | Clerk webhook | `createClerkWebhookHandler` from `@inbeat/next/clerk-webhook` |
 | Headers/CSP | `securityHeaders`, `clerkFrontendApi` from `@inbeat/next/security-headers` |
 | Sentry | `sentryServerOptions` from `@inbeat/next/sentry` (server, edge); `sentryClientOptions` from `@inbeat/next/sentry-client` (browser only) |
-| Signed outbound events | `createEventEmitter` from `@inbeat/core/events` |
-| Verify inbound signature | `verifyPayload` from `@inbeat/core/signature` |
 | Redirect param | `safeRedirectPath` from `@inbeat/next/safe-redirect` |
 
 ## Changing the toolkit

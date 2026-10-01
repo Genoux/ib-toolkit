@@ -1,15 +1,15 @@
 #!/usr/bin/env bun
 import { resolve } from "node:path";
-import { add } from "./add";
 import { create } from "./create";
 import { parseCreateArgs } from "./create-args";
+import { foundationProblems } from "./foundation";
+import { runMcp } from "./mcp";
 import { claudeFilesIgnoringAgents, staleFiles, write } from "./sync";
 
 const USAGE = [
-  "usage: ib <create <dir> [--local] | add <addon> | sync [app-dir] | check [app-dir]>",
-  "  create <dir>   start a new app (no authentication); add features afterwards with `ib add`",
-  "  add <addon>    apply an addon (e.g. clerk) to the app in the current directory; if it lists files to",
-  "                 merge by hand, merge them and run it again",
+  "usage: ib <create <dir> [--local] | sync [app-dir] | check [app-dir] | mcp>",
+  "  create <dir>   start a new app",
+  "  mcp            write MCP server config for your AI tools; run `ib mcp` for the picker",
   "  --local        write absolute file: paths to ib-toolkit tarballs; for toolkit development and CI only,",
   "                 never commit that package.json",
 ].join("\n");
@@ -33,15 +33,6 @@ const commands: Record<string, () => number | Promise<number>> = {
     await create(parsed.dir, { local: parsed.local });
     return 0;
   },
-  add: async () => {
-    const [addon] = args;
-    if (!addon) {
-      console.error(USAGE);
-      return 1;
-    }
-    await add(addon);
-    return 0;
-  },
   sync: () => {
     const written = write(appDir);
     console.info(written.length ? `updated:\n  ${written.join("\n  ")}` : "already up to date");
@@ -50,6 +41,7 @@ const commands: Record<string, () => number | Promise<number>> = {
   check: () => {
     const stale = staleFiles(appDir);
     const ignoring = claudeFilesIgnoringAgents(appDir);
+    const problems = foundationProblems(appDir);
     if (stale.length > 0) {
       console.error(
         `out of date with @inbeat/standards, run \`ib sync\`:\n  ${stale.join("\n  ")}`,
@@ -61,16 +53,32 @@ const commands: Record<string, () => number | Promise<number>> = {
           `  ${ignoring.join("\n  ")}`,
       );
     }
-    return stale.length + ignoring.length === 0 ? 0 : 1;
+    if (problems.length > 0) {
+      console.error(`not on the shared foundation:\n  ${problems.join("\n  ")}`);
+    }
+    return stale.length + ignoring.length + problems.length === 0 ? 0 : 1;
   },
+  mcp: () =>
+    runMcp(args, {
+      cwd: process.cwd(),
+      stdin: process.stdin,
+      output: process.stdout,
+      isTTY: Boolean(process.stdin.isTTY),
+      out: console.info,
+      err: console.error,
+    }),
   help: () => {
     console.info(USAGE);
     return 0;
   },
 };
 
+const wantsHelp = args.some((arg) => arg === "--help" || arg === "-h");
+const handler = wantsHelp && command !== "mcp" ? commands.help : commands[command];
+if (!handler) console.error(USAGE);
+
 try {
-  process.exit(await (commands[command] ?? commands.help)());
+  process.exit(handler ? await handler() : 1);
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);
