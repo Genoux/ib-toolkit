@@ -47,11 +47,11 @@ Apps with a database pass `with: { db-check: true }` to `verify.yml`.
 
 ### AI tool access (MCP)
 
-`ib mcp` writes MCP server config for the AI tools you pick, from a curated list of official remote servers: Vercel, GitHub (read-only), Sentry, Neon, Clerk, Cloudflare. Run it from the app directory and choose freely; pick with arrows and space, Enter confirms; what is already configured is pre-selected.
+`ib mcp` writes MCP server config for the AI tools you pick, from a curated list of official remote servers: Vercel, Sentry, Neon, Clerk, Cloudflare. GitHub is left out: its MCP server needs a personal access token outside VS Code, and the authenticated `gh` CLI covers the same ground. Run it from the app directory and choose freely; pick with arrows and space, Enter confirms; what is already configured is pre-selected.
 
 ```sh
 ib mcp                                               # arrow-key picker: tools, then servers
-ib mcp --tools claude,cursor --servers vercel,github # non-interactive
+ib mcp --tools claude,cursor --servers vercel,sentry # non-interactive
 ```
 
 Tools: `claude` (`.mcp.json`), `cursor` (`.cursor/mcp.json`), `vscode` (`.vscode/mcp.json`), `codex` (`.codex/config.toml`), `gemini` (`.gemini/settings.json`). Only curated server entries are managed: your own entries and other keys are left alone, and curated servers you deselect are removed. No secrets are written; authenticate each server in your AI tool on first use.
