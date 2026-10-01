@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/Genoux/ib-toolkit/compare/config-v0.5.0...config-v0.6.0) (2026-10-01)
+
+
+### Bug Fixes
+
+* **config:** require biome 2.5 and accept biome.jsonc ([#19](https://github.com/Genoux/ib-toolkit/issues/19)) ([178dc95](https://github.com/Genoux/ib-toolkit/commit/178dc95b4c9a041970458526c3985f5a225a7caf))
+
 ## [0.5.0](https://github.com/Genoux/ib-toolkit/compare/config-v0.4.0...config-v0.5.0) (2026-10-01)
 
 
