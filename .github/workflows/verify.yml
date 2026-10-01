@@ -4,7 +4,9 @@ name: Verify (reusable)
 #   jobs:
 #     verify:
 #       uses: Genoux/ib-toolkit/.github/workflows/verify.yml@main
-#       with: { arch-lint: true, db-check: true }
+#       with: { db-check: true }
+#       secrets:
+#         packages-token: ${{ secrets.INBEAT_PACKAGES_READ_TOKEN }}
 on:
   workflow_call:
     inputs:
@@ -16,9 +18,9 @@ on:
         type: boolean
         default: true
       db-check:
-        description: Run `bun run db:check` (Drizzle journal)
+        description: Run `bun run db:check` (Drizzle journal); apps with a database turn it on
         type: boolean
-        default: true
+        default: false
       standards-check:
         description: Run `bunx ib check` (managed AGENTS block, skills, rules)
         type: boolean
@@ -27,6 +29,10 @@ on:
         description: Optional extra step, e.g. `bun run test:uploads:db`
         type: string
         default: ""
+    secrets:
+      packages-token:
+        description: Token with read:packages, to install @inbeat/* from GitHub Packages
+        required: true
 
 permissions:
   contents: read
@@ -46,6 +52,8 @@ jobs:
           bun-version: ${{ inputs.bun-version }}
 
       - run: bun install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.packages-token }}
 
       - name: Biome
         run: bunx biome ci .
@@ -78,6 +86,10 @@ jobs:
   secrets-scan:
     name: Secret scan
     runs-on: ubuntu-latest
+    # gitleaks lists the PR commits through the API on pull_request events.
+    permissions:
+      contents: read
+      pull-requests: read
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
