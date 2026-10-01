@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.6.0](https://github.com/Genoux/ib-toolkit/compare/next-v0.5.0...next-v0.6.0) (2026-10-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove app logic and finish the toolkit ([#21](https://github.com/Genoux/ib-toolkit/issues/21))
+
+### Code Refactoring
+
+* remove app logic and finish the toolkit ([#21](https://github.com/Genoux/ib-toolkit/issues/21)) ([cecf25a](https://github.com/Genoux/ib-toolkit/commit/cecf25a670b2177f8b1e8cc3645023a1219a2626))
+
 ## [0.5.0](https://github.com/Genoux/ib-toolkit/compare/next-v0.4.0...next-v0.5.0) (2026-10-01)
 
 

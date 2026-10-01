@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.6.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.5.0...standards-v0.6.0) (2026-10-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove app logic and finish the toolkit ([#21](https://github.com/Genoux/ib-toolkit/issues/21))
+
+### Bug Fixes
+
+* **config:** require biome 2.5 and accept biome.jsonc ([#19](https://github.com/Genoux/ib-toolkit/issues/19)) ([178dc95](https://github.com/Genoux/ib-toolkit/commit/178dc95b4c9a041970458526c3985f5a225a7caf))
+
+
+### Code Refactoring
+
+* remove app logic and finish the toolkit ([#21](https://github.com/Genoux/ib-toolkit/issues/21)) ([cecf25a](https://github.com/Genoux/ib-toolkit/commit/cecf25a670b2177f8b1e8cc3645023a1219a2626))
+
 ## [0.5.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.4.0...standards-v0.5.0) (2026-10-01)
 
 
