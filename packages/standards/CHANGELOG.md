@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/Genoux/ib-toolkit/compare/standards-v0.6.0...standards-v0.6.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* **standards:** ship template changes in standards releases ([#25](https://github.com/Genoux/ib-toolkit/issues/25)) ([176a543](https://github.com/Genoux/ib-toolkit/commit/176a543499eac56cc131595bb9c011c6664f06cc))
+
 ## [0.6.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.5.0...standards-v0.6.0) (2026-10-01)
 
 
