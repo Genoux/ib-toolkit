@@ -17,14 +17,6 @@
       "types": "./dist/route.d.ts",
       "default": "./dist/route.js"
     },
-    "./auth": {
-      "types": "./dist/auth.d.ts",
-      "default": "./dist/auth.js"
-    },
-    "./claims": {
-      "types": "./dist/claims.d.ts",
-      "default": "./dist/claims.js"
-    },
     "./capture": {
       "types": "./dist/capture.d.ts",
       "default": "./dist/capture.js"
@@ -107,7 +99,7 @@
     "@types/react": "^19",
     "drizzle-orm": "^0.45.1",
     "geist": "^1.7.2",
-    "next": "16.1.6",
+    "next": "16.3.8",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "vitest": "^4.1.1",

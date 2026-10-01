@@ -1,27 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { readMetadataRole, readVerifiedEmail } from "./claims";
 import { isMaintenanceBlocking } from "./maintenance";
 import { clientIp, createRateLimiter } from "./rate-limit";
 import { safeRedirectPath } from "./safe-redirect";
 import { clerkFrontendApi, contentSecurityPolicy, securityHeaders } from "./security-headers";
-
-describe("claims", () => {
-  it("requires a verified primary email", () => {
-    expect(readVerifiedEmail({ primaryEmail: "A@inbeat.agency", emailVerified: true })).toBe(
-      "a@inbeat.agency",
-    );
-    expect(readVerifiedEmail({ primaryEmail: "a@inbeat.agency", emailVerified: false })).toBeNull();
-    expect(readVerifiedEmail({ primaryEmail: "a@inbeat.agency" })).toBeNull();
-    expect(readVerifiedEmail(null)).toBeNull();
-  });
-
-  it("reads only known metadata roles", () => {
-    const roles = ["admin", "member"] as const;
-    expect(readMetadataRole({ metadata: { role: "admin" } }, roles)).toBe("admin");
-    expect(readMetadataRole({ metadata: { role: "owner" } }, roles)).toBeNull();
-    expect(readMetadataRole({ metadata: "admin" }, roles)).toBeNull();
-  });
-});
 
 describe("safeRedirectPath", () => {
   it.each([

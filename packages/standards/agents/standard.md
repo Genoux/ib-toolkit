@@ -11,6 +11,7 @@ file into the app; change it in ib-toolkit.
 - Read the matching guide before the work, whatever tool you are: `.agents/skills/ib-ui/SKILL.md`
   (component catalog, UI rules) before any UI, `.agents/skills/ib-feature/SKILL.md` for a new
   feature, `.agents/skills/ib-toolkit/SKILL.md` for actions, routes, auth, env and rate limits.
+- Read the version-matched Next.js docs in `node_modules/next/dist/docs/` before Next.js work.
 
 ### Two tiers
 
