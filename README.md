@@ -44,6 +44,17 @@ brief and which guides to read, so no extra context is needed.
 
 - `--local` is for developing the toolkit: it runs `bun run pack:local` and points `@inbeat/*` at `.packs/*.tgz` by absolute path, so never commit that `package.json`.
 
+### AI tool access (MCP)
+
+`ib mcp` writes MCP server config for the AI tools you pick, from a curated list of official remote servers: Vercel, GitHub (read-only), Sentry, Neon, Clerk, Cloudflare. Run it from the app directory and choose freely; nothing is detected or pre-selected beyond what is already configured.
+
+```sh
+ib mcp                                               # pick tools, then servers
+ib mcp --tools claude,cursor --servers vercel,github # non-interactive
+```
+
+Tools: `claude` (`.mcp.json`), `cursor` (`.cursor/mcp.json`), `vscode` (`.vscode/mcp.json`), `codex` (`.codex/config.toml`), `gemini` (`.gemini/settings.json`). Only curated server entries are managed: your own entries and other keys are left alone, and curated servers you deselect are removed. No secrets are written; authenticate each server in your AI tool on first use.
+
 ## Use it in an app
 
 Packages are published to GitHub Packages under the `inBeat` org.

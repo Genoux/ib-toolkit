@@ -19,7 +19,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "bun --bun vitest run",
     "build": "bun scripts/build-template.ts"
   },
   "devDependencies": {

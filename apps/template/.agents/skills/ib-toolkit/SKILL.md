@@ -64,6 +64,8 @@ export const GET = route({
 
 Sentry is already wired in the template.
 
+Run `ib mcp` to give your AI tool access to Vercel, GitHub, Sentry, Neon, Clerk, Cloudflare.
+
 ### Auth (Clerk)
 
 1. Run `npx -y clerk@latest init` (works with `bunx`). It detects Next.js and applies Clerk's setup; `npx -y clerk@latest doctor` verifies it.
