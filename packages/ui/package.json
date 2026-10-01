@@ -94,7 +94,7 @@
     "directory": "packages/ui"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "license": "UNLICENSED"
 }

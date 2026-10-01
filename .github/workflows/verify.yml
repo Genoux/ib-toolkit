@@ -5,8 +5,6 @@ name: Verify (reusable)
 #     verify:
 #       uses: Genoux/ib-toolkit/.github/workflows/verify.yml@main
 #       with: { db-check: true }
-#       secrets:
-#         packages-token: ${{ secrets.INBEAT_PACKAGES_READ_TOKEN }}
 on:
   workflow_call:
     inputs:
@@ -29,10 +27,6 @@ on:
         description: Optional extra step, e.g. `bun run test:uploads:db`
         type: string
         default: ""
-    secrets:
-      packages-token:
-        description: Token with read:packages, to install @inbeat/* from GitHub Packages
-        required: true
 
 permissions:
   contents: read
@@ -52,8 +46,6 @@ jobs:
           bun-version: ${{ inputs.bun-version }}
 
       - run: bun install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.packages-token }}
 
       - name: Biome
         run: bunx biome ci .

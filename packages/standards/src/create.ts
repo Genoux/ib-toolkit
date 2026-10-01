@@ -123,11 +123,7 @@ function isInsideGitRepo(dir: string): boolean {
   );
 }
 
-function resolveToolkitRoot(
-  local: boolean,
-  targetDir: string,
-  env: NodeJS.ProcessEnv,
-): string | null {
+function resolveToolkitRoot(local: boolean, targetDir: string): string | null {
   if (findToolkitRoot(targetDir)) {
     throw new Error(`${targetDir} is inside the ib-toolkit checkout; create projects elsewhere.`);
   }
@@ -140,12 +136,6 @@ function resolveToolkitRoot(
     }
     return toolkitRoot;
   }
-  if (!env.NODE_AUTH_TOKEN) {
-    throw new Error(
-      "NODE_AUTH_TOKEN is not set; @inbeat packages live on GitHub Packages.\n" +
-        "  export NODE_AUTH_TOKEN=$(gh auth token)   # token needs the read:packages scope",
-    );
-  }
   return null;
 }
 
@@ -153,7 +143,6 @@ export type CreateOptions = {
   local: boolean;
   templateDir?: string;
   run?: Runner;
-  env?: NodeJS.ProcessEnv;
 };
 
 function populate(targetDir: string, templateDir: string, manifest: Manifest, run: Runner): void {
@@ -204,18 +193,13 @@ export function formatNextSteps(steps: string[]): string {
 /** Everything that can be rejected before the template is built or anything is written. */
 function preflight(
   dir: string,
-  options: Pick<CreateOptions, "local" | "templateDir" | "env">,
+  options: Pick<CreateOptions, "local" | "templateDir">,
 ): { targetDir: string; name: string; toolkitRoot: string | null } {
-  const {
-    local,
-    templateDir = TEMPLATE_DIR,
-    // biome-ignore lint/style/noProcessEnv: a CLI reads the caller environment directly
-    env = process.env,
-  } = options;
+  const { local, templateDir = TEMPLATE_DIR } = options;
   const targetDir = resolve(dir);
   const name = projectName(targetDir);
   validateProjectName(name);
-  const toolkitRoot = resolveToolkitRoot(local, targetDir, env);
+  const toolkitRoot = resolveToolkitRoot(local, targetDir);
   if (existsSync(templateDir)) assertNoConflicts(targetDir, templateEntries(templateDir));
   return { targetDir, name, toolkitRoot };
 }

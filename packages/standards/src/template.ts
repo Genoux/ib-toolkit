@@ -1,11 +1,10 @@
 import { readdirSync } from "node:fs";
 import { basename, sep } from "node:path";
 
-// npm and bun drop files named .gitignore and .npmrc from tarballs
+// npm and bun drop files named .gitignore from tarballs
 // (https://docs.npmjs.com/cli/configuring-npm/package-json#files), so the template commits them renamed.
 export const TARBALL_SAFE_NAMES: Record<string, string> = {
   ".gitignore": "_gitignore",
-  ".npmrc": "_npmrc",
 };
 
 export function restoreDotfileName(name: string): string {

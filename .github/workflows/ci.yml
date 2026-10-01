@@ -32,8 +32,6 @@ jobs:
     env:
       SKIP_ENV_VALIDATION: "1"
       SMOKE_APP: /tmp/smoke-app
-      # the copied .npmrc references it; local tarballs never reach the registry
-      NODE_AUTH_TOKEN: unused
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2

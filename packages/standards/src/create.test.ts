@@ -41,7 +41,6 @@ describe("projectName", () => {
 describe("restoreDotfileName", () => {
   it("renames tarball-safe names back to dotfiles", () => {
     expect(restoreDotfileName("_gitignore")).toBe(".gitignore");
-    expect(restoreDotfileName("_npmrc")).toBe(".npmrc");
   });
 
   it("leaves other names alone", () => {
@@ -148,7 +147,6 @@ describe("create", () => {
     return template;
   }
 
-  const env = { NODE_AUTH_TOKEN: "token" };
   const succeed = () => {};
   const failInstall = (command: string) => {
     if (command === "bun") throw new Error("`bun install` failed");
@@ -156,7 +154,7 @@ describe("create", () => {
 
   it("copies the template, restores dotfiles, rewrites the manifest and seeds .env.local", async () => {
     const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "My App");
-    await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env });
+    await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed });
     expect(readFileSync(join(target, ".gitignore"), "utf8")).toBe("node_modules");
     expect(existsSync(join(target, "_gitignore"))).toBe(false);
     expect(readFileSync(join(target, ".env.local"), "utf8")).toBe("KEY=");
@@ -177,7 +175,7 @@ describe("create", () => {
       writeFileSync(join(template, file), "dev");
     }
     const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "clean");
-    await create(target, { local: false, templateDir: template, run: succeed, env });
+    await create(target, { local: false, templateDir: template, run: succeed });
     const written = readdirSync(target, { recursive: true });
     expect(written).toEqual(expect.arrayContaining(["src/page.ts", ".gitignore"]));
     expect(written).not.toContain(".next");
@@ -188,14 +186,14 @@ describe("create", () => {
 
   it("writes no toolkit bookkeeping into the manifest", async () => {
     const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "plain");
-    await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env });
+    await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed });
     expect(JSON.parse(readFileSync(join(target, "package.json"), "utf8"))).not.toHaveProperty("ib");
   });
 
   it("prints the location and next steps", async () => {
     const info = vi.spyOn(console, "info").mockImplementation(() => {});
     const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "plain");
-    await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env });
+    await create(target, { local: false, templateDir: fixtureTemplate(), run: succeed });
     const printed = info.mock.calls.map(([message]) => message).join("\n");
     expect(printed).toMatch(
       /Success! Created plain at .*plain\n\nNext steps:\n {2}cd .*plain\n {2}bun dev/,
@@ -207,17 +205,9 @@ describe("create", () => {
     const target = mkdtempSync(join(tmpdir(), "ib-create-"));
     writeFileSync(join(target, "package.json"), "{}");
     await expect(
-      create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env }),
+      create(target, { local: false, templateDir: fixtureTemplate(), run: succeed }),
     ).rejects.toThrow("package.json");
     expect(readdirSync(target)).toEqual(["package.json"]);
-  });
-
-  it("refuses without NODE_AUTH_TOKEN in registry mode", async () => {
-    const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "app");
-    await expect(
-      create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env: {} }),
-    ).rejects.toThrow("NODE_AUTH_TOKEN");
-    expect(existsSync(target)).toBe(false);
   });
 
   it("refuses targets inside an ib-toolkit checkout", async () => {
@@ -227,7 +217,7 @@ describe("create", () => {
     writeFileSync(join(root, "scripts", "pack-local.ts"), "");
     const target = join(root, "apps", "x");
     await expect(
-      create(target, { local: false, templateDir: fixtureTemplate(), run: succeed, env }),
+      create(target, { local: false, templateDir: fixtureTemplate(), run: succeed }),
     ).rejects.toThrow("ib-toolkit");
     expect(existsSync(target)).toBe(false);
   });
@@ -235,7 +225,7 @@ describe("create", () => {
   it("removes a directory it created when a later step fails", async () => {
     const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "app");
     await expect(
-      create(target, { local: false, templateDir: fixtureTemplate(), run: failInstall, env }),
+      create(target, { local: false, templateDir: fixtureTemplate(), run: failInstall }),
     ).rejects.toThrow("bun install");
     expect(existsSync(target)).toBe(false);
   });
@@ -245,7 +235,7 @@ describe("create", () => {
     mkdirSync(join(target, ".git"));
     writeFileSync(join(target, "brief.md"), "notes");
     await expect(
-      create(target, { local: false, templateDir: fixtureTemplate(), run: failInstall, env }),
+      create(target, { local: false, templateDir: fixtureTemplate(), run: failInstall }),
     ).rejects.toThrow("bun install");
     expect(readdirSync(target).sort()).toEqual([".git", "brief.md"]);
   });

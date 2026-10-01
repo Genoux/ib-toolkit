@@ -9,6 +9,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 concurrency:
   group: release
@@ -20,8 +21,7 @@ jobs:
     timeout-minutes: 15
     steps:
       # A personal token, not GITHUB_TOKEN: PRs opened with GITHUB_TOKEN do not trigger CI, and
-      # main requires CI to pass. The same token publishes, because @inbeat belongs to the inBeat
-      # org while this repo is owned by Genoux.
+      # main requires CI to pass. Publishing authenticates separately, below.
       - id: release
         uses: googleapis/release-please-action@v4
         with:
@@ -36,10 +36,19 @@ jobs:
         with:
           bun-version: 1.3.5
       - if: steps.release.outputs.releases_created == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          registry-url: https://registry.npmjs.org
+      # Trusted publishing needs npm >= 11.5.1 (https://docs.npmjs.com/trusted-publishers)
+      - if: steps.release.outputs.releases_created == 'true'
+        run: npm install -g npm@latest
+      - if: steps.release.outputs.releases_created == 'true'
         run: bun install --frozen-lockfile
       - if: steps.release.outputs.releases_created == 'true'
         run: bunx turbo run typecheck test
       - if: steps.release.outputs.releases_created == 'true'
         run: bun run release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.INBEAT_PACKAGES_TOKEN }}
+          # First publish only; ignored once each package uses trusted publishing (OIDC).
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

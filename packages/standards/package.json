@@ -40,7 +40,7 @@
     "directory": "packages/standards"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "license": "UNLICENSED"
 }
