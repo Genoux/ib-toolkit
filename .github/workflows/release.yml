@@ -3,6 +3,8 @@ name: Release packages
 on:
   push:
     branches: [main]
+  # Recovers a release when GitHub drops the push event (it did for #21).
+  workflow_dispatch:
 
 permissions:
   contents: write
