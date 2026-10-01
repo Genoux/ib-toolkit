@@ -73,6 +73,23 @@ Run `ib mcp` to give your AI tool access to Vercel, GitHub, Sentry, Neon, Clerk,
 3. Pass `clerkFrontendApi(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)` to `securityHeaders` (the base `next.config.ts` already does).
 4. Add `clerkServerEnv` and `clerkClientEnv` from `@inbeat/core/env` to `src/shared/config/env.ts` (see Env below).
 
+Access pattern. Clerk's development and production instances are configured separately: apply every
+dashboard step to both.
+
+- Who gets in: a staff-only app turns on the Clerk allowlist (`*@inbeat.agency`, …). It only blocks
+  new sign-ups, so review existing users once after enabling it. Apps with external users keep
+  sign-ups open and rely on roles.
+- Roles: `publicMetadata.role`, assigned in the Clerk dashboard (users cannot edit it). Expose it
+  with the session token claim `{"metadata": "{{user.public_metadata}}"}`, read it from
+  `sessionClaims.metadata.role`. No role or an unknown one means no access.
+- Checks run on the server, twice: the proxy requires sign-in outside the public routes and blocks
+  role-gated areas; every role-gated page, action and route checks again (`authorize`). Hiding UI
+  is not access control.
+- Stays in the app: users table (if joins need it), ownership ("owner or admin"), rate limits,
+  maintenance mode.
+- Deviation: deriving a role from a verified email domain is allowed when the app documents it in
+  AGENTS.md "Deliberate deviations".
+
 ### Database (Neon + Drizzle)
 
 1. Run `npx neon@latest init` to link the Neon project and install the agent tooling.
