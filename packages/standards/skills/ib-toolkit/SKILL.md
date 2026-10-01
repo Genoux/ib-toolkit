@@ -58,7 +58,7 @@ export const GET = route({
 
 ## Authorization
 
-`authorize` is the app's own check: it returns the viewer or throws `AppError("auth" | "forbidden")`. Roles, admin rules and ownership are app decisions; write them in the app (for example `src/shared/lib/auth.ts`) and pass them to `action()` and `route()`. Do not use `defineAuth`, `requireViewer` or `requireRole` from `@inbeat/next/auth`; that module is legacy, kept for existing apps only.
+`authorize` is the app's own check: it returns the viewer or throws `AppError("auth" | "forbidden")`. Roles, admin rules and ownership are app decisions; write them in the app (for example `src/shared/lib/auth.ts`) and pass them to `action()` and `route()`.
 
 ## Integrations
 
