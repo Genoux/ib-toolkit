@@ -42,5 +42,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@clack/prompts": "^1.8.1"
+  }
 }

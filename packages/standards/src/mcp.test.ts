@@ -9,9 +9,8 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, sep } from "node:path";
-import { PassThrough, Writable } from "node:stream";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { applyServers, configuredServers, parseMcpArgs, runMcp } from "./mcp";
+import { applyServers, configuredServers, type Prompts, parseMcpArgs, runMcp } from "./mcp";
 import { CURATED_SERVERS } from "./mcp-servers";
 
 const vercel = CURATED_SERVERS.vercel;
@@ -247,14 +246,41 @@ describe("runMcp", () => {
   let stdout: string;
   let stderr: string;
 
-  const runWith = (args: string[], stdin: PassThrough, isTTY: boolean) => {
+  type Asked = {
+    message: string;
+    values: string[];
+    hints: string[];
+    initialValues: string[];
+    required: boolean;
+  };
+  let asked: Asked[];
+  let events: string[];
+
+  const run = (args: string[], answers: (string[] | null)[] = [], isTTY = false) => {
     stdout = "";
     stderr = "";
+    asked = [];
+    events = [];
+    const queue = [...answers];
+    const prompts: Prompts = {
+      intro: () => void events.push("intro"),
+      outro: (message) => void events.push(`outro:${message}`),
+      cancel: (message) => void events.push(`cancel:${message}`),
+      select: async ({ message, choices, initialValues, required }) => {
+        asked.push({
+          message,
+          values: choices.map(({ value }) => value),
+          hints: choices.map(({ hint }) => hint),
+          initialValues,
+          required,
+        });
+        return queue.shift() ?? null;
+      },
+    };
     return runMcp(args, {
       cwd,
-      stdin,
-      output: new Writable({ write: (_chunk, _encoding, done) => done() }),
       isTTY,
+      prompts,
       out: (text) => {
         stdout += `${text}\n`;
       },
@@ -262,12 +288,6 @@ describe("runMcp", () => {
         stderr += `${text}\n`;
       },
     });
-  };
-
-  const run = (args: string[], input = "", isTTY = false) => {
-    const stdin = new PassThrough();
-    stdin.end(input);
-    return runWith(args, stdin, isTTY);
   };
 
   const write = (file: string, text: string) => {
@@ -388,62 +408,62 @@ describe("runMcp", () => {
     }
   });
 
-  it("aborts with 130 and writes nothing on Ctrl-C", async () => {
-    const stdin = new PassThrough();
-    const result = runWith([], stdin, true);
-    stdin.write("claude\n");
-    await new Promise((resolve) => setTimeout(resolve, 20));
-    stdin.write("\x03");
-    expect(await result).toBe(130);
-    expect(existsSync(join(cwd, ".mcp.json"))).toBe(false);
-  });
-
-  it("re-prompts once with the valid choices on invalid input", async () => {
-    expect(await run([], "emacs\nclaude\nvercel\n", true)).toBe(0);
-    expect(stderr).toContain("unknown tool emacs; valid: claude");
+  it("asks tools then servers with config-file and description hints", async () => {
+    expect(await run([], [["claude", "cursor"], ["vercel"]], true)).toBe(0);
+    expect(asked.map(({ message }) => message)).toEqual(["AI tools", "MCP servers"]);
+    expect(asked[0].values).toEqual(["claude", "cursor", "vscode", "codex", "gemini"]);
+    expect(asked[0].hints[0]).toBe(".mcp.json");
+    expect(asked[1].values).toEqual(["vercel", "github", "sentry", "neon", "clerk", "cloudflare"]);
+    expect(asked[1].hints[1]).toBe("GitHub (read-only)");
+    expect(asked.map(({ required }) => required)).toEqual([true, false]);
     expect(read(".mcp.json")).toContain(vercel);
+    expect(read(".cursor/mcp.json")).toContain(vercel);
+    expect(events[0]).toBe("intro");
+    expect(events.at(-1)).toMatch(/^outro:/);
   });
 
-  it.each(["0x1", "0", "9", "1.0"])("rejects %s as an index after the retry", async (token) => {
-    expect(await run([], `${token}\n${token}\n`, true)).toBe(1);
+  it("preselects what is already configured", async () => {
+    write(
+      ".cursor/mcp.json",
+      JSON.stringify({ mcpServers: { sentry: { url: CURATED_SERVERS.sentry } } }),
+    );
+    await run([], [["cursor"], ["sentry"]], true);
+    expect(asked[0].initialValues).toEqual(["cursor"]);
+    expect(asked[1].initialValues).toEqual(["sentry"]);
+  });
+
+  it("an empty server selection removes curated servers", async () => {
+    write(".mcp.json", JSON.stringify({ mcpServers: { github: { type: "http", url: github } } }));
+    expect(await run([], [["claude"], []], true)).toBe(0);
+    expect(JSON.parse(read(".mcp.json")).mcpServers).toEqual({});
+  });
+
+  it("prompts only for the missing part", async () => {
+    expect(await run(["--tools", "claude"], [["vercel"]], true)).toBe(0);
+    expect(asked.map(({ message }) => message)).toEqual(["MCP servers"]);
+    expect(await run(["--servers", "vercel"], [["claude"]], true)).toBe(0);
+    expect(asked.map(({ message }) => message)).toEqual(["AI tools"]);
+  });
+
+  it("does not prompt when both flags are given", async () => {
+    expect(await run(["--tools", "claude", "--servers", "vercel"], [], true)).toBe(0);
+    expect(asked).toEqual([]);
+    expect(events).toEqual([]);
+  });
+
+  it.each([
+    ["tools", []],
+    ["servers", [["claude"]]],
+  ])("aborts with 130 and writes nothing when cancelled at %s", async (_step, answers) => {
+    expect(await run([], answers, true)).toBe(130);
+    expect(events.at(-1)).toBe("cancel:aborted");
     expect(existsSync(join(cwd, ".mcp.json"))).toBe(false);
-  });
-
-  it("says Enter keeps none when nothing is configured", async () => {
-    await run([], "\n\n", true);
-    expect(stdout).toContain("Enter keeps: none");
   });
 
   it("prompts even when a tool file is unparseable", async () => {
     write(".cursor/mcp.json", "{ // nope\n}");
     write(".codex/config.toml", "url = ");
-    expect(await run([], "claude\nvercel\n", true)).toBe(0);
+    expect(await run([], [["claude"], ["vercel"]], true)).toBe(0);
     expect(read(".mcp.json")).toContain(vercel);
-  });
-
-  it("prompts for tools then servers in a tty", async () => {
-    expect(await run([], "1,2\nvercel\n", true)).toBe(0);
-    expect(
-      JSON.parse(readFileSync(join(cwd, ".mcp.json"), "utf8")).mcpServers.vercel,
-    ).toBeDefined();
-    expect(
-      JSON.parse(readFileSync(join(cwd, ".cursor", "mcp.json"), "utf8")).mcpServers.vercel,
-    ).toBeDefined();
-  });
-
-  it("preselects what is already configured when the answer is empty", async () => {
-    mkdirSync(join(cwd, ".cursor"));
-    writeFileSync(
-      join(cwd, ".cursor", "mcp.json"),
-      JSON.stringify({ mcpServers: { sentry: { url: CURATED_SERVERS.sentry } } }),
-    );
-    expect(await run([], "\n\n", true)).toBe(0);
-    const cursor = JSON.parse(readFileSync(join(cwd, ".cursor", "mcp.json"), "utf8"));
-    expect(Object.keys(cursor.mcpServers)).toEqual(["sentry"]);
-  });
-
-  it("aborts with 130 and writes nothing on EOF", async () => {
-    expect(await run([], "claude\n", true)).toBe(130);
-    expect(() => readFileSync(join(cwd, ".mcp.json"))).toThrow();
   });
 });

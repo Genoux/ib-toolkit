@@ -61,8 +61,6 @@ const commands: Record<string, () => number | Promise<number>> = {
   mcp: () =>
     runMcp(args, {
       cwd: process.cwd(),
-      stdin: process.stdin,
-      output: process.stdout,
       isTTY: Boolean(process.stdin.isTTY),
       out: console.info,
       err: console.error,

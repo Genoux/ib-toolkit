@@ -1,9 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { createInterface } from "node:readline";
-import type { Readable, Writable } from "node:stream";
 import { isDeepStrictEqual } from "node:util";
-import { CURATED_SERVERS } from "./mcp-servers";
+import * as clack from "@clack/prompts";
+import { CURATED_SERVERS, SERVER_HINTS } from "./mcp-servers";
 
 type Entry = (url: string) => Record<string, string>;
 type Applied = { text: string; notes: string[] };
@@ -192,7 +191,6 @@ export const USAGE = [
 ].join("\n");
 
 class UsageError extends Error {}
-class Aborted extends Error {}
 
 const FLAG = /^--(tools|servers)(?:=(.*))?$/;
 const splitList = (value: string) =>
@@ -227,53 +225,41 @@ function validate(label: string, names: string[], valid: string[]) {
   if (problem) throw new UsageError(problem);
 }
 
+export type Choice = { value: string; hint: string };
+export type Prompts = {
+  intro: (title: string) => void;
+  outro: (message: string) => void;
+  cancel: (message: string) => void;
+  select: (request: {
+    message: string;
+    choices: Choice[];
+    initialValues: string[];
+    required: boolean;
+  }) => Promise<string[] | null>;
+};
+
+const clackPrompts: Prompts = {
+  intro: clack.intro,
+  outro: clack.outro,
+  cancel: clack.cancel,
+  select: async ({ message, choices, initialValues, required }) => {
+    const picked = await clack.multiselect({
+      message,
+      options: choices.map(({ value, hint }) => ({ value, label: value, hint })),
+      initialValues,
+      required,
+    });
+    return clack.isCancel(picked) ? null : picked;
+  },
+};
+
 export type McpIo = {
   cwd: string;
-  stdin: Readable;
-  output: Writable;
   isTTY: boolean;
+  prompts?: Prompts;
   out: (text: string) => void;
   err: (text: string) => void;
 };
-
-const ATTEMPTS = 2;
-const PLAIN_INTEGER = /^\d+$/;
-
-function prompter(io: McpIo) {
-  const lines = createInterface({ input: io.stdin, output: io.output, terminal: true });
-  const nextLine = lines[Symbol.asyncIterator]();
-  // The workspace resolves two @types/node majors; readline's Interface loses its EventEmitter methods.
-  const emitter = lines as unknown as { once(event: "SIGINT", listener: () => void): void };
-  const interrupted = new Promise<never>((_, reject) =>
-    emitter.once("SIGINT", () => reject(new Aborted())),
-  );
-  interrupted.catch(() => {});
-
-  const ask = async (label: string, valid: string[], preselected: string[]) => {
-    let problem = "";
-    for (let attempt = 0; attempt < ATTEMPTS; attempt++) {
-      io.out(`${label}:`);
-      for (const [index, name] of valid.entries())
-        io.out(`  ${index + 1}) [${preselected.includes(name) ? "x" : " "}] ${name}`);
-      io.out(
-        `numbers or names, comma-separated; Enter keeps: ${preselected.join(", ") || "none"}; "none" clears`,
-      );
-      const { value, done } = await Promise.race([nextLine.next(), interrupted]);
-      if (done) throw new Aborted();
-      const answer = value.trim();
-      if (!answer) return preselected;
-      if (answer === "none") return [];
-      const names = splitList(answer).map((token) =>
-        PLAIN_INTEGER.test(token) ? (valid[Number(token) - 1] ?? token) : token,
-      );
-      problem = unknownNames(label, names, valid) ?? "";
-      if (!problem) return names;
-      io.err(problem);
-    }
-    throw new UsageError(problem);
-  };
-  return { ask, close: () => lines.close() };
-}
 
 const readIfExists = (path: string) => (existsSync(path) ? readFileSync(path, "utf8") : null);
 
@@ -333,7 +319,8 @@ export async function runMcp(args: string[], io: McpIo): Promise<number> {
     io.out(USAGE);
     return 0;
   }
-  let prompt: ReturnType<typeof prompter> | undefined;
+  const prompts = io.prompts ?? clackPrompts;
+  let interactive = false;
   try {
     const { tools: toolFlag, servers: serverFlag } = parseMcpArgs(args);
     if (!io.isTTY && !(toolFlag && serverFlag)) {
@@ -348,10 +335,29 @@ export async function runMcp(args: string[], io: McpIo): Promise<number> {
     let tools = toolFlag;
     let servers = serverFlag;
     if (!tools || !servers) {
+      interactive = true;
+      prompts.intro("ib mcp");
       const configured = currentlyConfigured(io.cwd);
-      prompt = prompter(io);
-      tools ??= await prompt.ask("tool", toolNames, configured.tools);
-      servers ??= await prompt.ask("server", curatedNames, configured.servers);
+      tools ??=
+        (await prompts.select({
+          message: "AI tools",
+          choices: toolNames.map((value) => ({ value, hint: TOOLS[value].file })),
+          initialValues: configured.tools,
+          required: true,
+        })) ?? undefined;
+      servers ??=
+        tools &&
+        ((await prompts.select({
+          message: "MCP servers",
+          choices: curatedNames.map((value) => ({ value, hint: SERVER_HINTS[value] })),
+          initialValues: configured.servers,
+          required: false,
+        })) ??
+          undefined);
+      if (!tools || !servers) {
+        prompts.cancel("aborted");
+        return 130;
+      }
     }
 
     const { planned, failures } = plan(io.cwd, tools, servers);
@@ -367,17 +373,13 @@ export async function runMcp(args: string[], io: McpIo): Promise<number> {
         ? `updated:\n  ${changed.map(({ file }) => file).join("\n  ")}`
         : "already up to date",
     );
-    io.out("authenticate each server in your AI tool on first use");
+    const reminder = "authenticate each server in your AI tool on first use";
+    if (interactive) prompts.outro(reminder);
+    else io.out(reminder);
     return 0;
   } catch (error) {
-    if (error instanceof Aborted) {
-      io.err("aborted");
-      return 130;
-    }
     const message = error instanceof Error ? error.message : String(error);
     io.err(error instanceof UsageError ? `${message}\n${USAGE}` : message);
     return 1;
-  } finally {
-    prompt?.close();
   }
 }

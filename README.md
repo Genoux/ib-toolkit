@@ -47,10 +47,10 @@ Apps with a database pass `with: { db-check: true }` to `verify.yml`.
 
 ### AI tool access (MCP)
 
-`ib mcp` writes MCP server config for the AI tools you pick, from a curated list of official remote servers: Vercel, GitHub (read-only), Sentry, Neon, Clerk, Cloudflare. Run it from the app directory and choose freely; nothing is detected or pre-selected beyond what is already configured.
+`ib mcp` writes MCP server config for the AI tools you pick, from a curated list of official remote servers: Vercel, GitHub (read-only), Sentry, Neon, Clerk, Cloudflare. Run it from the app directory and choose freely; pick with arrows and space, Enter confirms; what is already configured is pre-selected.
 
 ```sh
-ib mcp                                               # pick tools, then servers
+ib mcp                                               # arrow-key picker: tools, then servers
 ib mcp --tools claude,cursor --servers vercel,github # non-interactive
 ```
 
