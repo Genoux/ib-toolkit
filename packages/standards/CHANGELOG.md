@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.7.1...standards-v0.8.0) (2026-10-01)
+
+
+### Features
+
+* **standards:** arrow-key picker for ib mcp ([#34](https://github.com/Genoux/ib-toolkit/issues/34)) ([5349a74](https://github.com/Genoux/ib-toolkit/commit/5349a74c0bd8f828c19c845b6c33414558f3f3d3))
+
 ## [0.7.1](https://github.com/Genoux/ib-toolkit/compare/standards-v0.7.0...standards-v0.7.1) (2026-10-01)
 
 
