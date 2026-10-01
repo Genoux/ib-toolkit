@@ -11,7 +11,84 @@
         "typescript": "^5.9.3",
       },
     },
-    "apps/template": {
+    "packages/config": {
+      "name": "@inbeat/config",
+      "version": "0.6.0",
+      "devDependencies": {
+        "vitest": "^4.1.1",
+      },
+      "peerDependencies": {
+        "@biomejs/biome": "^2.5",
+        "vitest": "^4",
+      },
+      "optionalPeers": [
+        "@biomejs/biome",
+        "vitest",
+      ],
+    },
+    "packages/core": {
+      "name": "@inbeat/core",
+      "version": "0.6.0",
+      "devDependencies": {
+        "@inbeat/config": "workspace:^",
+        "vitest": "^4.1.1",
+        "zod": "^4.3.6",
+      },
+      "peerDependencies": {
+        "zod": "^4",
+      },
+    },
+    "packages/next": {
+      "name": "@inbeat/next",
+      "version": "0.6.0",
+      "dependencies": {
+        "@inbeat/core": "workspace:^",
+        "@upstash/ratelimit": "^2.0.6",
+        "@upstash/redis": "^1.35.3",
+        "server-only": "^0.0.1",
+      },
+      "devDependencies": {
+        "@clerk/nextjs": "^7.0.6",
+        "@inbeat/config": "workspace:^",
+        "@neondatabase/serverless": "^1.0.2",
+        "@sentry/nextjs": "^10",
+        "@types/react": "^19",
+        "drizzle-orm": "^0.45.1",
+        "geist": "^1.7.2",
+        "next": "16.3.8",
+        "react": "19.2.3",
+        "react-dom": "19.2.3",
+        "vitest": "^4.1.1",
+        "zod": "^4.3.6",
+      },
+      "peerDependencies": {
+        "@clerk/nextjs": "^7",
+        "@neondatabase/serverless": "^1",
+        "@sentry/nextjs": "^10",
+        "drizzle-orm": ">=0.44",
+        "geist": "^1",
+        "next": ">=16",
+        "react": "^19",
+        "zod": "^4",
+      },
+      "optionalPeers": [
+        "@clerk/nextjs",
+        "@neondatabase/serverless",
+        "drizzle-orm",
+      ],
+    },
+    "packages/standards": {
+      "name": "@inbeat/standards",
+      "version": "0.6.0",
+      "bin": {
+        "ib": "./src/cli.ts",
+      },
+      "devDependencies": {
+        "@inbeat/config": "workspace:^",
+        "vitest": "^4.1.1",
+      },
+    },
+    "packages/standards/template": {
       "name": "@inbeat/template",
       "version": "0.0.0",
       "dependencies": {
@@ -53,86 +130,9 @@
         "vitest": "^4.1.1",
       },
     },
-    "packages/config": {
-      "name": "@inbeat/config",
-      "version": "0.5.0",
-      "devDependencies": {
-        "vitest": "^4.1.1",
-      },
-      "peerDependencies": {
-        "@biomejs/biome": "^2.5",
-        "vitest": "^4",
-      },
-      "optionalPeers": [
-        "@biomejs/biome",
-        "vitest",
-      ],
-    },
-    "packages/core": {
-      "name": "@inbeat/core",
-      "version": "0.5.0",
-      "devDependencies": {
-        "@inbeat/config": "workspace:^",
-        "vitest": "^4.1.1",
-        "zod": "^4.3.6",
-      },
-      "peerDependencies": {
-        "zod": "^4",
-      },
-    },
-    "packages/next": {
-      "name": "@inbeat/next",
-      "version": "0.5.0",
-      "dependencies": {
-        "@inbeat/core": "workspace:^",
-        "@upstash/ratelimit": "^2.0.6",
-        "@upstash/redis": "^1.35.3",
-        "server-only": "^0.0.1",
-      },
-      "devDependencies": {
-        "@clerk/nextjs": "^7.0.6",
-        "@inbeat/config": "workspace:^",
-        "@neondatabase/serverless": "^1.0.2",
-        "@sentry/nextjs": "^10",
-        "@types/react": "^19",
-        "drizzle-orm": "^0.45.1",
-        "geist": "^1.7.2",
-        "next": "16.3.8",
-        "react": "19.2.3",
-        "react-dom": "19.2.3",
-        "vitest": "^4.1.1",
-        "zod": "^4.3.6",
-      },
-      "peerDependencies": {
-        "@clerk/nextjs": "^7",
-        "@neondatabase/serverless": "^1",
-        "@sentry/nextjs": "^10",
-        "drizzle-orm": ">=0.44",
-        "geist": "^1",
-        "next": ">=16",
-        "react": "^19",
-        "zod": "^4",
-      },
-      "optionalPeers": [
-        "@clerk/nextjs",
-        "@neondatabase/serverless",
-        "drizzle-orm",
-      ],
-    },
-    "packages/standards": {
-      "name": "@inbeat/standards",
-      "version": "0.5.0",
-      "bin": {
-        "ib": "./src/cli.ts",
-      },
-      "devDependencies": {
-        "@inbeat/config": "workspace:^",
-        "vitest": "^4.1.1",
-      },
-    },
     "packages/ui": {
       "name": "@inbeat/ui",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "dependencies": {
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -426,7 +426,7 @@
 
     "@inbeat/standards": ["@inbeat/standards@workspace:packages/standards"],
 
-    "@inbeat/template": ["@inbeat/template@workspace:apps/template"],
+    "@inbeat/template": ["@inbeat/template@workspace:packages/standards/template"],
 
     "@inbeat/ui": ["@inbeat/ui@workspace:packages/ui"],
 
