@@ -100,8 +100,6 @@ export const env = createEnv({
 | Clerk webhook | `createClerkWebhookHandler` from `@inbeat/next/clerk-webhook` |
 | Headers/CSP | `securityHeaders`, `clerkFrontendApi` from `@inbeat/next/security-headers` |
 | Sentry | `sentryServerOptions` from `@inbeat/next/sentry` (server, edge); `sentryClientOptions` from `@inbeat/next/sentry-client` (browser only) |
-| Signed outbound events | `createEventEmitter` from `@inbeat/core/events` |
-| Verify inbound signature | `verifyPayload` from `@inbeat/core/signature` |
 | Redirect param | `safeRedirectPath` from `@inbeat/next/safe-redirect` |
 
 ## Changing the toolkit

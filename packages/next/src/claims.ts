@@ -1,8 +1,11 @@
 import { normalizeEmail } from "@inbeat/core/email";
 
+/** @deprecated App logic; move it into the app. */
 export type SessionClaims = Record<string, unknown> | null | undefined;
 
 /**
+ * @deprecated App logic; move it into the app.
+ *
  * Reads the verified primary email from custom session claims. Requires, in
  * Clerk → Sessions → Customize session token:
  * `{ "primaryEmail": "{{user.primary_email_address}}", "emailVerified": "{{user.email_verified}}" }`.
@@ -15,12 +18,17 @@ export function readVerifiedEmail(claims: SessionClaims): string | null {
   return verified ? normalizeEmail(email) : null;
 }
 
+/** @deprecated App logic; move it into the app. */
 export function readEmail(claims: SessionClaims): string | null {
   const email = claims?.primaryEmail;
   return typeof email === "string" && email.length > 0 ? normalizeEmail(email) : null;
 }
 
-/** Reads `publicMetadata.role` exposed as `{ "metadata": "{{user.public_metadata}}" }`. */
+/**
+ * @deprecated App logic; move it into the app.
+ *
+ * Reads `publicMetadata.role` exposed as `{ "metadata": "{{user.public_metadata}}" }`.
+ */
 export function readMetadataRole<TRole extends string>(
   claims: SessionClaims,
   roles: readonly TRole[],

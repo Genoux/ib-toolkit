@@ -19,7 +19,7 @@ file into the app; change it in ib-toolkit.
 
 - **Required** (CI enforces): `@inbeat/config` presets, the action/route error contract,
   `securityHeaders()`, Sentry presets, rate limiting on public entry points, this block.
-- **Opt-in**: `@inbeat/ui` blocks, events, extra layer rules.
+- **Opt-in**: `@inbeat/ui` blocks, extra layer rules.
 - A deliberate departure is allowed when the app states it under **Deliberate deviations**
   in its own section of this file (what, why, owner). Undeclared drift is a bug.
 
@@ -73,7 +73,7 @@ Server actions are queued per client; never use them for reads.
 
 - `securityHeaders()` in `next.config.ts`; CSP report-only until a clean week, then enforce.
 - `createRateLimiter()` (Upstash in prod) on every unauthenticated entry, presign and LLM call.
-- Outbound webhooks signed with `signPayload`, inbound verified. Secrets only in Vercel env.
+- Webhooks verify the sender's signature. Secrets only in Vercel env.
 - `import "server-only"` in every module touching secrets or the DB.
 - Env through `@t3-oss/env-nextjs` + `@inbeat/core/env` fragments; no `process.env` elsewhere.
 

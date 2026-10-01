@@ -4,19 +4,23 @@ import { AppError } from "@inbeat/core/errors";
 import { cache } from "react";
 import type { SessionClaims } from "./claims.js";
 
+/** @deprecated App logic; move it into the app. */
 export { readEmail, readMetadataRole, readVerifiedEmail, type SessionClaims } from "./claims.js";
 
+/** @deprecated App logic; move it into the app. */
 export type Viewer<TRole extends string> = {
   userId: string;
   role: TRole | null;
   claims: NonNullable<SessionClaims>;
 };
 
+/** @deprecated App logic; move it into the app. */
 export type AuthConfig<TRole extends string> = {
   /** Pure function of the session token, so the proxy and the server agree without a DB hit. */
   resolveRole: (claims: SessionClaims) => TRole | null;
 };
 
+/** @deprecated App logic; move it into the app. */
 export function defineAuth<TRole extends string>({ resolveRole }: AuthConfig<TRole>) {
   const getViewer = cache(async (): Promise<Viewer<TRole> | null> => {
     const { userId, sessionClaims } = await auth();

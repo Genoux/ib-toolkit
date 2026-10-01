@@ -9,7 +9,7 @@ export const csv = () =>
       .filter(Boolean),
   );
 
-export const booleanFlag = () =>
+const booleanFlag = () =>
   z
     .enum(["true", "false", "1", "0"])
     .optional()
@@ -74,9 +74,4 @@ export const r2Env = {
 export const maintenanceEnv = {
   MAINTENANCE_MODE: booleanFlag(),
   MAINTENANCE_BYPASS_EMAILS: csv().optional().default([]),
-};
-
-export const eventsEnv = {
-  EVENTS_WEBHOOK_URL: z.url().optional(),
-  EVENTS_WEBHOOK_SECRET: z.string().min(32).optional(),
 };

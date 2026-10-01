@@ -27,7 +27,7 @@ export type RouteConfig<
   }) => Promise<Response | unknown>;
 };
 
-export function errorResponse(err: unknown, name: string): NextResponse<RouteErrorBody> {
+function errorResponse(err: unknown, name: string): NextResponse<RouteErrorBody> {
   const captured = captureAppError(err, { tags: { route: name } });
   return NextResponse.json(
     {

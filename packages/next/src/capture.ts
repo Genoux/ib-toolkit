@@ -7,7 +7,7 @@ export type CapturedError = ClassifiedError & { errorId?: string };
 const logger = createLogger();
 
 /** Short id shown to users so support can find the Sentry event or the log line. */
-export function toErrorId(eventId: string | undefined): string | undefined {
+function toErrorId(eventId: string | undefined): string | undefined {
   return eventId ? `ERR_${eventId.slice(0, 8).toUpperCase()}` : undefined;
 }
 

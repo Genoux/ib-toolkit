@@ -25,7 +25,7 @@ function hasExtensionFrame(event: ErrorEvent): boolean {
   );
 }
 
-export function createBeforeSend(ignore?: (hint: EventHint) => boolean) {
+function createBeforeSend(ignore?: (hint: EventHint) => boolean) {
   return (event: ErrorEvent, hint: EventHint): ErrorEvent | null => {
     if (ignore?.(hint)) return null;
     if (

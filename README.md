@@ -7,8 +7,8 @@ Shared packages for inBeat apps: config, server building blocks, UI and agent st
 | Package | What's in it |
 | --- | --- |
 | `@inbeat/config` | tsconfig, Biome, dependency-cruiser, Vitest and commitlint presets |
-| `@inbeat/core` | Framework-free primitives: errors, results, logger, env schemas, signed events |
-| `@inbeat/next` | Next.js pieces: `action()`, `route()`, auth guards, Sentry, rate limiting, security headers, fonts |
+| `@inbeat/core` | Framework-free primitives: errors, results, logger, env schemas |
+| `@inbeat/next` | Next.js pieces: `action()`, `route()`, Sentry, rate limiting, security headers, fonts |
 | `@inbeat/ui` | Design tokens and components (Radix + Tailwind v4), shipped as source |
 | `@inbeat/standards` | The `ib` CLI and the agent rules and skills every app shares |
 
