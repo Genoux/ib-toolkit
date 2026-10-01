@@ -1,7 +1,7 @@
 {
-  "packages/config": "0.7.0",
-  "packages/core": "0.7.0",
-  "packages/next": "0.7.0",
-  "packages/ui": "0.7.0",
-  "packages/standards": "0.7.0"
+  "packages/config": "0.7.1",
+  "packages/core": "0.7.1",
+  "packages/next": "0.7.1",
+  "packages/ui": "0.7.1",
+  "packages/standards": "0.7.1"
 }
