@@ -16,24 +16,14 @@ Shared packages for inBeat apps: config, server building blocks, UI and agent st
 
 ## Start a project
 
-One-time setup. `bunx` and `bun add -g` ignore a project `.npmrc`, so the scope goes in bun's
-global config:
-
-```toml
-# $XDG_CONFIG_HOME/.bunfig.toml if XDG_CONFIG_HOME is set (often ~/.config), else ~/.bunfig.toml
-[install.scopes]
-"@inbeat" = { url = "https://npm.pkg.github.com", token = "$NODE_AUTH_TOKEN" }
-```
-
 ```sh
-export NODE_AUTH_TOKEN=$(gh auth token)   # in your shell profile; needs read:packages
-bun add -g @inbeat/standards              # installs `ib`; ~/.bun/bin must be on PATH
+bun add -g @inbeat/standards   # installs `ib`; ~/.bun/bin must be on PATH
 ```
 
 Then, for every project:
 
 ```sh
-ib create my-app              # base app
+ib create my-app              # or: bunx @inbeat/standards create my-app
 cd my-app && bun dev
 ```
 
@@ -46,12 +36,11 @@ brief and which guides to read, so no extra context is needed.
 
 ### Ship it
 
-The app ships `.github/workflows/ci.yml`, which calls the toolkit's reusable `verify.yml` (biome, tsc, lint:arch, tests, `ib check`, gitleaks). CI and Vercel both install `@inbeat/*` from GitHub Packages, so each needs a classic token with `read:packages`:
+The app ships `.github/workflows/ci.yml`, which calls the toolkit's reusable `verify.yml` (biome, tsc, lint:arch, tests, `ib check`, gitleaks).
 
 ```sh
 gh repo create Genoux/my-app --private --source . --push
-gh secret set INBEAT_PACKAGES_READ_TOKEN        # paste the read:packages token
-npx vercel link && npx vercel env add NODE_AUTH_TOKEN
+npx vercel link
 ```
 
 Apps with a database pass `with: { db-check: true }` to `verify.yml`.
@@ -69,15 +58,7 @@ Tools: `claude` (`.mcp.json`), `cursor` (`.cursor/mcp.json`), `vscode` (`.vscode
 
 ## Use it in an app
 
-Packages are published to GitHub Packages under the `inBeat` org.
-
-```ini
-# .npmrc
-@inbeat:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-```
-
-`NODE_AUTH_TOKEN` is a classic token with `read:packages`. Set it locally, in CI and on Vercel.
+Packages are public on npmjs.org; no registry config or token is needed.
 
 ```sh
 bun add @inbeat/core @inbeat/next @inbeat/ui geist

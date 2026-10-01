@@ -49,7 +49,7 @@
     "directory": "packages/config"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "license": "UNLICENSED"
 }
