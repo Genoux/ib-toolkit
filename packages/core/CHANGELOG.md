@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.0](https://github.com/Genoux/ib-toolkit/compare/core-v0.4.0...core-v0.5.0) (2026-10-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **standards:** `ib add` is removed (use the vendor init CLIs); `ib check` now requires the shared config presets.
+
+### Features
+
+* **standards:** drop add-ons, add ib mcp, enforce shared presets ([#17](https://github.com/Genoux/ib-toolkit/issues/17)) ([9eb8410](https://github.com/Genoux/ib-toolkit/commit/9eb84108432dda5e2a2da312a7bc70299e09c0c9))
+
 ## [0.4.0](https://github.com/Genoux/ib-toolkit/compare/core-v0.3.0...core-v0.4.0) (2026-09-30)
 
 
