@@ -7,7 +7,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import {
   create,
@@ -163,6 +163,27 @@ describe("create", () => {
     const manifest = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
     expect(manifest.name).toBe("my-app");
     expect(manifest.dependencies["@inbeat/core"]).toMatch(/^\^\d/);
+  });
+
+  it("leaves dev output and secrets of a checkout's template folder behind", async () => {
+    const template = fixtureTemplate();
+    for (const file of [
+      ".next/cache",
+      "node_modules/a/index.js",
+      "src/app.tsbuildinfo",
+      ".env.local",
+    ]) {
+      mkdirSync(dirname(join(template, file)), { recursive: true });
+      writeFileSync(join(template, file), "dev");
+    }
+    const target = join(mkdtempSync(join(tmpdir(), "ib-create-")), "clean");
+    await create(target, { local: false, templateDir: template, run: succeed, env });
+    const written = readdirSync(target, { recursive: true });
+    expect(written).toEqual(expect.arrayContaining(["src/page.ts", ".gitignore"]));
+    expect(written).not.toContain(".next");
+    expect(written).not.toContain("node_modules");
+    expect(written).not.toContain("src/app.tsbuildinfo");
+    expect(readFileSync(join(target, ".env.local"), "utf8")).toBe("KEY=");
   });
 
   it("writes no toolkit bookkeeping into the manifest", async () => {

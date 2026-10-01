@@ -12,7 +12,7 @@ Shared packages for inBeat apps: config, server building blocks, UI and agent st
 | `@inbeat/ui` | Design tokens and components (Radix + Tailwind v4), shipped as source |
 | `@inbeat/standards` | The `ib` CLI and the agent rules and skills every app shares |
 
-`apps/template` is the base app (no authentication). When in doubt about how something is wired, look there.
+`packages/standards/template` is the base app (no authentication). When in doubt about how something is wired, look there.
 
 ## Start a project
 

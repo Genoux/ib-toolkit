@@ -12,15 +12,23 @@
     "agents",
     "skills",
     "template",
-    "!src/**/*.test.ts"
+    "!src/**/*.test.ts",
+    "!template/**/node_modules",
+    "!template/.next",
+    "!template/.turbo",
+    "!template/coverage",
+    "!template/.vercel",
+    "!template/next-env.d.ts",
+    "!template/*.tsbuildinfo",
+    "!template/**/.env",
+    "!template/**/.env.[!e]*"
   ],
   "exports": {
     "./sync": "./src/sync.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "bun --bun vitest run",
-    "build": "bun scripts/build-template.ts"
+    "test": "bun --bun vitest run"
   },
   "devDependencies": {
     "@inbeat/config": "workspace:^",

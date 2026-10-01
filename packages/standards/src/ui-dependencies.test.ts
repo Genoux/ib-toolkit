@@ -4,15 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const UI_DIR = join(import.meta.dirname, "..", "..", "ui");
-const TEMPLATE_MANIFEST = join(
-  import.meta.dirname,
-  "..",
-  "..",
-  "..",
-  "apps",
-  "template",
-  "package.json",
-);
+const TEMPLATE_MANIFEST = join(import.meta.dirname, "..", "template", "package.json");
 
 function packageName(specifier: string): string {
   const [scopeOrName, scopedName] = specifier.split("/");

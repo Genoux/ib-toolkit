@@ -4,7 +4,7 @@
   "packageManager": "bun@1.3.5",
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "packages/standards/template"
   ],
   "scripts": {
     "check": "turbo run typecheck test lint:arch lint ib:check && biome check .",

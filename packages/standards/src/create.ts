@@ -10,7 +10,7 @@ import {
 } from "node:fs";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import { PACKAGE_ROOT, VERSION, write } from "./sync";
-import { restoreDotfileName } from "./template";
+import { isShipped, restoreDotfileName, templateEntries } from "./template";
 
 const DEPENDENCY_FIELDS = ["dependencies", "devDependencies", "peerDependencies"] as const;
 
@@ -157,9 +157,10 @@ export type CreateOptions = {
 };
 
 function populate(targetDir: string, templateDir: string, manifest: Manifest, run: Runner): void {
-  for (const entry of readdirSync(templateDir)) {
+  for (const entry of templateEntries(templateDir)) {
     cpSync(join(templateDir, entry), join(targetDir, restoreDotfileName(entry)), {
       recursive: true,
+      filter: (path) => isShipped(relative(templateDir, path)),
     });
   }
   const manifestPath = join(targetDir, "package.json");
@@ -215,7 +216,7 @@ function preflight(
   const name = projectName(targetDir);
   validateProjectName(name);
   const toolkitRoot = resolveToolkitRoot(local, targetDir, env);
-  if (existsSync(templateDir)) assertNoConflicts(targetDir, readdirSync(templateDir));
+  if (existsSync(templateDir)) assertNoConflicts(targetDir, templateEntries(templateDir));
   return { targetDir, name, toolkitRoot };
 }
 
@@ -229,7 +230,7 @@ export async function create(dir: string, options: CreateOptions): Promise<void>
       "template missing from @inbeat/standards; run `bun run build:packages` in ib-toolkit.",
     );
   }
-  assertNoConflicts(targetDir, readdirSync(templateDir));
+  assertNoConflicts(targetDir, templateEntries(templateDir));
 
   const manifest = rewriteManifest(
     JSON.parse(readFileSync(join(templateDir, "package.json"), "utf8")),
