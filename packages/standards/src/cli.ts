@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
-import { resolve } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { create } from "./create";
 import { parseCreateArgs } from "./create-args";
 import { foundationProblems } from "./foundation";
@@ -16,6 +17,20 @@ const USAGE = [
 
 const [command = "help", ...args] = process.argv.slice(2);
 const appDir = resolve(args.find((arg) => !arg.startsWith("--")) ?? ".");
+
+// sync and check write or judge AGENTS.md; outside an app they would stamp the standard on any
+// folder, e.g. a home directory whose AGENTS.md is a personal, global agent file.
+function isInbeatApp(dir: string): boolean {
+  const manifestPath = join(dir, "package.json");
+  if (!existsSync(manifestPath)) return false;
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  return "@inbeat/standards" in { ...manifest.dependencies, ...manifest.devDependencies };
+}
+
+function refuseOutsideApp(): number {
+  console.error(`${appDir} is not an inBeat app (no @inbeat/standards in package.json)`);
+  return 1;
+}
 
 const commands: Record<string, () => number | Promise<number>> = {
   create: async () => {
@@ -34,11 +49,13 @@ const commands: Record<string, () => number | Promise<number>> = {
     return 0;
   },
   sync: () => {
+    if (!isInbeatApp(appDir)) return refuseOutsideApp();
     const written = write(appDir);
     console.info(written.length ? `updated:\n  ${written.join("\n  ")}` : "already up to date");
     return 0;
   },
   check: () => {
+    if (!isInbeatApp(appDir)) return refuseOutsideApp();
     const stale = staleFiles(appDir);
     const ignoring = claudeFilesIgnoringAgents(appDir);
     const problems = foundationProblems(appDir);
