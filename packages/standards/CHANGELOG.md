@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.8.0...standards-v0.9.0) (2026-10-02)
+
+
+### Features
+
+* **standards:** gate production on vercel deployment checks ([#39](https://github.com/Genoux/ib-toolkit/issues/39)) ([98effa0](https://github.com/Genoux/ib-toolkit/commit/98effa011a8704b8ec53c334867a5ac2676b28e9))
+
+
+### Bug Fixes
+
+* **standards:** drop github from the curated mcp servers ([#37](https://github.com/Genoux/ib-toolkit/issues/37)) ([093a632](https://github.com/Genoux/ib-toolkit/commit/093a6325033de84bb264ab9b42d37cbef5d4c3bb))
+
 ## [0.8.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.7.1...standards-v0.8.0) (2026-10-01)
 
 
