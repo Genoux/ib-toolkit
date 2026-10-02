@@ -1,0 +1,128 @@
+name: Release gate (reusable)
+
+# Produces the `release` commit status that a Vercel Deployment Check waits on.
+# Called from each app:
+#   on:
+#     repository_dispatch:
+#       types: [vercel.deployment.ready]
+#   permissions: { contents: read, pull-requests: read, statuses: write }
+#   jobs:
+#     release:
+#       if: github.event.client_payload.environment == 'production'
+#       uses: Genoux/ib-toolkit/.github/workflows/release-gate.yml@main
+#       with: { db-check: true, migrate: true }
+#       secrets: { DATABASE_URL: "${{ secrets.DATABASE_URL }}" }
+on:
+  workflow_call:
+    inputs:
+      bun-version:
+        type: string
+        default: "1.3.5"
+      arch-lint:
+        type: boolean
+        default: true
+      db-check:
+        type: boolean
+        default: false
+      standards-check:
+        type: boolean
+        default: true
+      extra-command:
+        type: string
+        default: ""
+      migrate:
+        description: Run `bun run db:migrate` before the release status turns green
+        type: boolean
+        default: false
+      environment:
+        description: GitHub environment for the release job, for environment-scoped secrets
+        type: string
+        default: ""
+    secrets:
+      DATABASE_URL:
+        required: false
+
+permissions:
+  contents: read
+  pull-requests: read
+  statuses: write
+
+env:
+  RELEASE_SHA: ${{ github.event.client_payload.git.sha }}
+
+jobs:
+  verify:
+    uses: Genoux/ib-toolkit/.github/workflows/verify.yml@main
+    with:
+      ref: ${{ github.event.client_payload.git.sha }}
+      bun-version: ${{ inputs.bun-version }}
+      arch-lint: ${{ inputs.arch-lint }}
+      db-check: ${{ inputs.db-check }}
+      standards-check: ${{ inputs.standards-check }}
+      extra-command: ${{ inputs.extra-command }}
+
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: ${{ inputs.environment }}
+    # GITHUB_SHA is the default-branch HEAD on repository_dispatch, so a
+    # missing payload sha must fail instead of falling back to it.
+    # Pending runs are replaced by newer ones; the superseded run is cancelled
+    # and report-failure keeps its deployment held.
+    concurrency:
+      group: release-${{ github.repository }}
+      cancel-in-progress: false
+    steps:
+      - name: Require a Vercel deployment sha
+        if: github.event_name != 'repository_dispatch' || env.RELEASE_SHA == ''
+        run: |
+          echo "release-gate.yml only runs on Vercel repository_dispatch events"
+          exit 1
+
+      - name: Mark pending
+        run: >
+          gh api repos/${{ github.repository }}/statuses/$RELEASE_SHA
+          -f state=pending -f context=release -f description="Releasing"
+          -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_SHA }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ inputs.bun-version }}
+
+      - run: bun install --frozen-lockfile
+
+      - name: Migrate
+        if: inputs.migrate
+        run: bun run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Mark released
+        run: >
+          gh api repos/${{ github.repository }}/statuses/$RELEASE_SHA
+          -f state=success -f context=release -f description="Verified and migrated"
+          -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  report-failure:
+    needs: [verify, release]
+    if: failure() || cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Mark failed
+        if: github.event_name == 'repository_dispatch' && env.RELEASE_SHA != ''
+        run: >
+          gh api repos/${{ github.repository }}/statuses/$RELEASE_SHA
+          -f state=failure -f context=release -f description="Release blocked"
+          -f target_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
