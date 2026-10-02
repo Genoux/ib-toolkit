@@ -43,7 +43,14 @@ gh repo create Genoux/my-app --private --source . --push
 npx vercel link
 ```
 
-Apps with a database pass `with: { db-check: true }` to `verify.yml`.
+Production is gated by a Vercel Deployment Check. On `vercel.deployment.ready` the app's `ci.yml` calls the reusable `release-gate.yml`, which re-verifies the deployed commit and sets the `release` commit status; Vercel holds the production deployment until it succeeds.
+
+One-time Vercel setup, in this order (until the check exists, production deploys ungated):
+
+1. Project → Settings → Build and Deployment → Deployment Checks → Add → GitHub → `release`.
+2. Keep production auto-aliasing on.
+
+Apps with a database pass `with: { db-check: true }` to `verify.yml`, and `with: { db-check: true, migrate: true }` plus `secrets: { DATABASE_URL: ... }` to `release-gate.yml` (add `environment:` to read environment-scoped secrets). Rollback is Vercel Instant Rollback.
 
 ### AI tool access (MCP)
 

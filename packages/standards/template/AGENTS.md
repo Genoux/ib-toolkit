@@ -110,6 +110,7 @@ Server actions are queued per client; never use them for reads.
 - Vitest colocated `*.test.ts` for every `server/` command, policy and `lib/` function;
   `*.integration.test.ts` against a Neon branch; Playwright in `tests/e2e` against previews.
 - CI: biome, tsc, dependency-cruiser, vitest, migration check, `ib check`, gitleaks.
+- Release: production holds on the Vercel Deployment Check `release`, set by the toolkit `release-gate.yml` after re-verifying (and migrating) the deployed commit.
 
 ### Commits
 

@@ -23,6 +23,10 @@ on:
         description: Run `bunx ib check` (managed AGENTS block, skills, rules)
         type: boolean
         default: true
+      ref:
+        description: Commit to verify; empty checks out the triggering ref
+        type: string
+        default: ""
       extra-command:
         description: Optional extra step, e.g. `bun run test:uploads:db`
         type: string
@@ -40,6 +44,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ inputs.ref }}
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -87,6 +92,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ inputs.ref }}
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ github.token }}
