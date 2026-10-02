@@ -82,6 +82,8 @@ jobs:
 
   secrets-scan:
     name: Secret scan
+    # gitleaks-action v2 rejects repository_dispatch; a release sha's changes were already scanned on its PR.
+    if: github.event_name != 'repository_dispatch'
     runs-on: ubuntu-latest
     # gitleaks lists the PR commits through the API on pull_request events.
     permissions:
