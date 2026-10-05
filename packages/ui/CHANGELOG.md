@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/Genoux/ib-toolkit/compare/ui-v0.9.0...ui-v0.9.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* **ui:** align sortable table headers with plain ones ([#41](https://github.com/Genoux/ib-toolkit/issues/41)) ([f2d794b](https://github.com/Genoux/ib-toolkit/commit/f2d794b66ed798208b2dfe9bf75c1f40332aaa77))
+
 ## [0.9.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.8.0...ui-v0.9.0) (2026-10-02)
 
 
