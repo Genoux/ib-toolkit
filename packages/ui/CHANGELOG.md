@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2](https://github.com/Genoux/ib-toolkit/compare/ui-v0.9.1...ui-v0.9.2) (2026-10-07)
+
+
+### Bug Fixes
+
+* **ui:** pad breadcrumb page like breadcrumb link ([#43](https://github.com/Genoux/ib-toolkit/issues/43)) ([b9c42c3](https://github.com/Genoux/ib-toolkit/commit/b9c42c39572ca89d1c940fdc1c62e705ecda64b2))
+
 ## [0.9.1](https://github.com/Genoux/ib-toolkit/compare/ui-v0.9.0...ui-v0.9.1) (2026-10-05)
 
 

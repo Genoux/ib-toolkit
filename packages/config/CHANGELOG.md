@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2](https://github.com/Genoux/ib-toolkit/compare/config-v0.9.1...config-v0.9.2) (2026-10-07)
+
+
+### Miscellaneous Chores
+
+* **config:** Synchronize inbeat versions
+
 ## [0.9.1](https://github.com/Genoux/ib-toolkit/compare/config-v0.9.0...config-v0.9.1) (2026-10-05)
 
 
