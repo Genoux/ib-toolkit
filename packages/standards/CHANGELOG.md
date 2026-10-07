@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2](https://github.com/Genoux/ib-toolkit/compare/standards-v0.9.1...standards-v0.9.2) (2026-10-07)
+
+
+### Miscellaneous Chores
+
+* **standards:** Synchronize inbeat versions
+
 ## [0.9.1](https://github.com/Genoux/ib-toolkit/compare/standards-v0.9.0...standards-v0.9.1) (2026-10-05)
 
 
