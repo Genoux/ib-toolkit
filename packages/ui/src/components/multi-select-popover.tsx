@@ -113,7 +113,7 @@ export function MultiSelectOptionList({
               onPointerDown={keepOpenOnToggle ? (event) => event.preventDefault() : undefined}
               className={cn(
                 "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm",
-                "hover:bg-muted/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-ring",
+                "hover:bg-muted/80 has-focus-visible:ring-2 has-focus-visible:ring-ring",
                 disabled && "pointer-events-none opacity-50",
               )}
             >
