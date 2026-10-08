@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.10.0...ui-v0.11.0) (2026-10-08)
+
+
+### Features
+
+* **ui:** custom trigger label and full list props on multi-select ([#52](https://github.com/Genoux/ib-toolkit/issues/52)) ([072c6bd](https://github.com/Genoux/ib-toolkit/commit/072c6bdf10201136e15379c699a804cc0b4e15e6))
+
 ## [0.10.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.9.4...ui-v0.10.0) (2026-10-08)
 
 
