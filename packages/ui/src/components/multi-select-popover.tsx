@@ -6,7 +6,7 @@ import { SearchInput } from "./search-input";
 import { selectTriggerClassName } from "./select";
 import { Spinner } from "./spinner";
 import { ChevronDownIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import { cn } from "../lib/utils";
 import { PersonAvatar } from "./person-identity";
 
@@ -50,6 +50,19 @@ export function getMultiSelectLabel({
   return `${placeholder} (${selectedValues.length})`;
 }
 
+export type MultiSelectOptionListProps = {
+  options: MultiSelectOption[];
+  selectedValues: string[];
+  onToggle: (value: string) => void;
+  disabled?: boolean;
+  emptyMessage?: string;
+  isPending?: boolean;
+  keepOpenOnToggle?: boolean;
+  idPrefix?: string;
+  searchable?: boolean;
+  searchPlaceholder?: string;
+};
+
 export function MultiSelectOptionList({
   options,
   selectedValues,
@@ -61,18 +74,7 @@ export function MultiSelectOptionList({
   idPrefix = "multi-select-option",
   searchable,
   searchPlaceholder = "Search…",
-}: {
-  options: MultiSelectOption[];
-  selectedValues: string[];
-  onToggle: (value: string) => void;
-  disabled?: boolean;
-  emptyMessage?: string;
-  isPending?: boolean;
-  keepOpenOnToggle?: boolean;
-  idPrefix?: string;
-  searchable?: boolean;
-  searchPlaceholder?: string;
-}) {
+}: MultiSelectOptionListProps) {
   const [query, setQuery] = useState("");
   const visibleOptions = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -144,27 +146,24 @@ export function MultiSelectOptionList({
 
 export function MultiSelectPopover({
   placeholder,
-  selectedValues,
-  options,
   onChange,
+  renderLabel,
   triggerClassName = "min-w-36 w-44 max-w-44",
   contentClassName = "w-72 overflow-hidden",
-  emptyMessage,
-  disabled,
-  idPrefix,
-}: {
+  ...listProps
+}: Omit<MultiSelectOptionListProps, "onToggle"> & {
   placeholder: string;
-  selectedValues: string[];
-  options: MultiSelectOption[];
   onChange: (values: string[]) => void;
+  renderLabel?: (selectedOptions: MultiSelectOption[]) => ReactNode;
   triggerClassName?: string;
   contentClassName?: string;
-  emptyMessage?: string;
-  disabled?: boolean;
-  idPrefix?: string;
 }) {
+  const { options, selectedValues, disabled } = listProps;
   const isActive = selectedValues.length > 0;
-  const triggerLabel = getMultiSelectLabel({ placeholder, selectedValues, options });
+  const triggerLabel =
+    isActive && renderLabel
+      ? renderLabel(options.filter((option) => selectedValues.includes(option.value)))
+      : getMultiSelectLabel({ placeholder, selectedValues, options });
 
   return (
     <Popover modal={false}>
@@ -191,12 +190,8 @@ export function MultiSelectPopover({
         onWheel={(event) => event.stopPropagation()}
       >
         <MultiSelectOptionList
-          options={options}
-          selectedValues={selectedValues}
+          {...listProps}
           onToggle={(value) => onChange(toggleMultiSelectValue(selectedValues, value))}
-          disabled={disabled}
-          emptyMessage={emptyMessage}
-          idPrefix={idPrefix}
         />
       </PopoverContent>
     </Popover>

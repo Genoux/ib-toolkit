@@ -28,6 +28,20 @@ export const WithAvatars: Story = {
   },
 };
 
+export const CustomLabel: Story = {
+  args: {
+    placeholder: "Select a person",
+    options: PEOPLE_OPTIONS,
+    selectedValues: [PEOPLE_OPTIONS[0]?.value ?? ""],
+    renderLabel: (selectedOptions) =>
+      `${selectedOptions.length} ${selectedOptions.length === 1 ? "person" : "people"} selected`,
+  },
+};
+
+export const Searchable: Story = {
+  args: { searchable: true, searchPlaceholder: "Search options…" },
+};
+
 export const WithDisabledOption: Story = {
   args: {
     options: OPTIONS.map((option, index) => (index === 1 ? { ...option, disabled: true } : option)),
