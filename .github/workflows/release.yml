@@ -24,20 +24,20 @@ jobs:
       # A personal token, not GITHUB_TOKEN: PRs opened with GITHUB_TOKEN do not trigger CI, and
       # main requires CI to pass. Publishing authenticates separately, below.
       - id: release
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@v5
         with:
           token: ${{ secrets.INBEAT_PACKAGES_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
       - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.5
       - if: steps.release.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22.x
           registry-url: https://registry.npmjs.org
