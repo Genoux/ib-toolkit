@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.9.4...standards-v0.10.0) (2026-10-08)
+
+
+### Features
+
+* **ui:** disable single multi-select options ([#50](https://github.com/Genoux/ib-toolkit/issues/50)) ([5be0d19](https://github.com/Genoux/ib-toolkit/commit/5be0d1918dab26cd08b2f46b7a26067bfe5cc9f4))
+
 ## [0.9.4](https://github.com/Genoux/ib-toolkit/compare/standards-v0.9.3...standards-v0.9.4) (2026-10-08)
 
 
