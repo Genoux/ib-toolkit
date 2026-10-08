@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/Genoux/ib-toolkit/compare/ui-v0.11.0...ui-v0.11.1) (2026-10-08)
+
+
+### Bug Fixes
+
+* **ui:** reduce table row radius to lg ([#54](https://github.com/Genoux/ib-toolkit/issues/54)) ([597ef96](https://github.com/Genoux/ib-toolkit/commit/597ef96327be82c562c0e616920f1ec09f888032))
+
 ## [0.11.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.10.0...ui-v0.11.0) (2026-10-08)
 
 
