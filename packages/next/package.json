@@ -87,7 +87,16 @@
     "@neondatabase/serverless": {
       "optional": true
     },
+    "@sentry/nextjs": {
+      "optional": true
+    },
     "drizzle-orm": {
+      "optional": true
+    },
+    "geist": {
+      "optional": true
+    },
+    "zod": {
       "optional": true
     }
   },
