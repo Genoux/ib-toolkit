@@ -28,7 +28,7 @@ cd my-app && bun dev
 ```
 
 Open any AI tool in the project and describe what to build. `AGENTS.md` tells it to record the
-brief and which guides to read, so no extra context is needed.
+brief and which guides to read, so you add no extra context.
 
 `ib create <dir> [--local]` creates the base app. It copies the template, sets the package name, runs `git init` and `bun install`, and syncs the managed `AGENTS.md` block. `<dir>` may be `.` or an existing folder as long as none of the template's paths exist in it.
 
@@ -96,7 +96,7 @@ To try a change inside an app before releasing it:
 bun run sync ../ugc-hub --watch
 ```
 
-This copies the package sources into the app's `node_modules` on every save. If you changed a dependency, run `bun run pack:local` and `bun install` in the app instead.
+This copies the package sources into the app's `node_modules` on every save. If you added a dependency to a package, `bun add` it in the app too; sync warns when that happens.
 
 ## Release
 
