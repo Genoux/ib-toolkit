@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.3](https://github.com/Genoux/ib-toolkit/compare/standards-v0.9.2...standards-v0.9.3) (2026-10-08)
+
+
+### Bug Fixes
+
+* alert radius, spacing rule and sync cleanup ([#47](https://github.com/Genoux/ib-toolkit/issues/47)) ([b9d1f5d](https://github.com/Genoux/ib-toolkit/commit/b9d1f5d3c4a46d01e4dca9c1485438d28210a3c9))
+
 ## [0.9.2](https://github.com/Genoux/ib-toolkit/compare/standards-v0.9.1...standards-v0.9.2) (2026-10-07)
 
 
