@@ -1,6 +1,6 @@
 {
   "name": "@inbeat/standards",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Agent standards for inBeat apps: managed AGENTS.md block, skills under .agents/skills, ib CLI",
   "type": "module",
   "bin": {

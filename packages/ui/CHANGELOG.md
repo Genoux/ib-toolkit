@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.3](https://github.com/Genoux/ib-toolkit/compare/ui-v0.9.2...ui-v0.9.3) (2026-10-08)
+
+
+### Bug Fixes
+
+* alert radius, spacing rule and sync cleanup ([#47](https://github.com/Genoux/ib-toolkit/issues/47)) ([b9d1f5d](https://github.com/Genoux/ib-toolkit/commit/b9d1f5d3c4a46d01e4dca9c1485438d28210a3c9))
+* **ui:** show multi-select row ring only on keyboard focus ([#45](https://github.com/Genoux/ib-toolkit/issues/45)) ([6c578a3](https://github.com/Genoux/ib-toolkit/commit/6c578a358dbd01ac3ac1631091dc977b2fca8515))
+
 ## [0.9.2](https://github.com/Genoux/ib-toolkit/compare/ui-v0.9.1...ui-v0.9.2) (2026-10-07)
 
 

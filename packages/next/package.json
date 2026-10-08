@@ -1,6 +1,6 @@
 {
   "name": "@inbeat/next",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Next.js App Router building blocks for inBeat apps: actions, routes, security, observability",
   "type": "module",
   "sideEffects": false,
