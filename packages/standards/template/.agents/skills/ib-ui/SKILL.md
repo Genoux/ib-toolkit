@@ -80,7 +80,7 @@ Every module of `@inbeat/ui`, imported as `@inbeat/ui/<path>`.
 - `components/checkbox`: Checkbox.
 - `components/select`: single-choice Select.
 - `components/combobox`: searchable Combobox with chips for multiple values.
-- `components/multi-select-popover`: popover multi-select over a list of options; `disabled` on an option locks that row.
+- `components/multi-select-popover`: popover multi-select over a list of options; `disabled` on an option locks that row; `renderLabel(selectedOptions)` sets the trigger text; takes every `MultiSelectOptionList` prop (`searchable`, `isPending`, …).
 - `components/toggle-pills`: pill buttons toggling a set of string options, for filters.
 - `components/input-group`: Input or Textarea with inline addons, buttons and text.
 - `components/search-input`: controlled search Input with a loading state.
