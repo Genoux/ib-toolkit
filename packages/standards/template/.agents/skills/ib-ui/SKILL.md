@@ -28,6 +28,12 @@ agreement, use a workaround and mark it `// toolkit-gap: <what is missing>` so i
 - Tokens only: `bg-background`, `text-muted-foreground`, `border-border`, `bg-primary`, radius
   scale `rounded-{sm..4xl}`, shadows `shadow-hairline|subtle|elevated`. No hex colors, no
   arbitrary spacing unless no token fits.
+- Spacing: nothing touches a border, divider or container edge. A row with a `border-b` gets
+  bottom padding at least as large as the gap between its items (`pb-3` minimum), and a bordered
+  box pads every bordered side. Space siblings with `gap-*` on the parent, not margins. Use one
+  step of the spacing scale per level: tighter inside a group (`gap-2`), looser between groups
+  (`gap-4`/`gap-6`). Before finishing, check every bordered or separated region for flush
+  content.
 - App shells: `AppShell` + `AppNav`, never Sidebar primitives. Links come in via `renderLink`;
   app sidebar content goes in the `sidebar` slot. Products differ only through `AppShell` props
   (`variant`, `collapsible`, `sidebarWidth`, `headerVariant`), never classes or local shell markup.
@@ -63,75 +69,75 @@ agreement, use a workaround and mark it `// toolkit-gap: <what is missing>` so i
 Every module of `@inbeat/ui`, imported as `@inbeat/ui/<path>`.
 
 ### Actions
-- `components/button` — Button with variants, sizes and `buttonVariants` for link styling.
-- `components/icon-button` — icon-only Button with a required label, tooltip and toggle state.
+- `components/button`: Button with variants, sizes and `buttonVariants` for link styling.
+- `components/icon-button`: icon-only Button with a required label, tooltip and toggle state.
 
 ### Forms
-- `components/field` — Field, FieldLabel, FieldDescription, FieldError, FieldGroup, FieldSet and friends for form layout.
-- `components/label` — accessible form Label.
-- `components/input` — text Input.
-- `components/textarea` — multi-line Textarea.
-- `components/checkbox` — Checkbox.
-- `components/select` — single-choice Select.
-- `components/combobox` — searchable Combobox with chips for multiple values.
-- `components/multi-select-popover` — popover multi-select over a list of options.
-- `components/toggle-pills` — pill buttons toggling a set of string options, for filters.
-- `components/input-group` — Input or Textarea with inline addons, buttons and text.
-- `components/search-input` — controlled search Input with a loading state.
-- `components/calendar` — date Calendar (react-day-picker) in the toolkit style.
+- `components/field`: Field, FieldLabel, FieldDescription, FieldError, FieldGroup, FieldSet and friends for form layout.
+- `components/label`: accessible form Label.
+- `components/input`: text Input.
+- `components/textarea`: multi-line Textarea.
+- `components/checkbox`: Checkbox.
+- `components/select`: single-choice Select.
+- `components/combobox`: searchable Combobox with chips for multiple values.
+- `components/multi-select-popover`: popover multi-select over a list of options.
+- `components/toggle-pills`: pill buttons toggling a set of string options, for filters.
+- `components/input-group`: Input or Textarea with inline addons, buttons and text.
+- `components/search-input`: controlled search Input with a loading state.
+- `components/calendar`: date Calendar (react-day-picker) in the toolkit style.
 
 ### Display
-- `components/avatar` — Avatar, AvatarImage, AvatarFallback, AvatarGroup and AvatarGroupCount.
-- `components/person-identity` — PersonAvatar, PersonName and PersonIdentity for a person's image and name.
-- `components/member-avatar-stack` — overlapping avatars of up to three members plus a remainder count.
-- `components/badge` — Badge chip.
-- `components/number-dot` — small count pill, renders nothing at zero.
-- `components/labeled-field` — read-only label and value pair.
-- `components/empty-state` — EmptyState with icon, title, description and an optional labelled action.
-- `components/separator` — horizontal or vertical Separator.
-- `components/carousel` — Embla Carousel, CarouselContent and CarouselItem.
-- `components/collapsible-section` — animated CollapsibleSection with trigger and content.
+- `components/avatar`: Avatar, AvatarImage, AvatarFallback, AvatarGroup and AvatarGroupCount.
+- `components/person-identity`: PersonAvatar, PersonName and PersonIdentity for a person's image and name.
+- `components/member-avatar-stack`: overlapping avatars of up to three members plus a remainder count.
+- `components/badge`: Badge chip.
+- `components/number-dot`: small count pill, renders nothing at zero.
+- `components/labeled-field`: read-only label and value pair.
+- `components/empty-state`: EmptyState with icon, title, description and an optional labelled action.
+- `components/separator`: horizontal or vertical Separator.
+- `components/carousel`: Embla Carousel, CarouselContent and CarouselItem.
+- `components/collapsible-section`: animated CollapsibleSection with trigger and content.
 
 ### Feedback
-- `components/alert` — Alert, AlertTitle and AlertDescription (default, destructive).
-- `components/sonner` — Toaster for `sonner` toasts; mount once in the root layout.
-- `components/spinner` — Spinner and SectionSpinner for loading states.
-- `components/skeleton` — Skeleton placeholder.
-- `components/progress` — Progress bar.
-- `components/platform-disclaimer` — dismissible notice whose dismissal is stored in a cookie.
+- `components/alert`: Alert, AlertTitle and AlertDescription (default, destructive).
+- `components/sonner`: Toaster for `sonner` toasts; mount once in the root layout.
+- `components/spinner`: Spinner and SectionSpinner for loading states.
+- `components/skeleton`: Skeleton placeholder.
+- `components/progress`: Progress bar.
+- `components/platform-disclaimer`: dismissible notice whose dismissal is stored in a cookie.
 
 ### Navigation
-- `components/app-nav` — sidebar navigation list driven by `items` and `renderLink`.
-- `components/nav-user` — sidebar user menu with name, email, avatar and dropdown.
-- `components/breadcrumb` — Breadcrumb trail.
-- `components/tabs` — Tabs, TabsList (pills from a `tabs` array) and TabsContent.
-- `components/sidebar` — Sidebar primitives that AppShell is built from; apps do not use them directly.
+- `components/app-nav`: sidebar navigation list driven by `items` and `renderLink`.
+- `components/nav-user`: sidebar user menu with name, email, avatar and dropdown.
+- `components/breadcrumb`: Breadcrumb trail.
+- `components/tabs`: Tabs, TabsList (pills from a `tabs` array) and TabsContent.
+- `components/sidebar`: Sidebar primitives that AppShell is built from; apps do not use them directly.
 
 ### Overlays
-- `components/dialog` — modal Dialog.
-- `components/alert-dialog` — AlertDialog for interrupting confirmations.
-- `components/destructive-action-dialog` — confirm step for destructive actions, optionally typed.
-- `components/sheet` — side Sheet panel.
-- `components/popover` — Popover.
-- `components/dropdown-menu` — DropdownMenu.
-- `components/tooltip` — Tooltip and TooltipProvider.
-- `components/portal-container` — PortalContainerProvider and usePortalContainer to portal overlays into a chosen element.
+- `components/dialog`: modal Dialog.
+- `components/alert-dialog`: AlertDialog for interrupting confirmations.
+- `components/destructive-action-dialog`: confirm step for destructive actions, optionally typed.
+- `components/sheet`: side Sheet panel.
+- `components/popover`: Popover.
+- `components/dropdown-menu`: DropdownMenu.
+- `components/tooltip`: Tooltip and TooltipProvider.
+- `components/portal-container`: PortalContainerProvider and usePortalContainer to portal overlays into a chosen element.
 
 ### Data
-- `components/data-table` — DataTable driven by TanStack `columns` and `data`.
-- `components/data-table-shell` — scrollable wrapper that holds a DataTable.
-- `components/data-table-sortable-header` — sortable column header for DataTable columns.
-- `components/table` — Table, TableHeader, TableBody, TableRow, TableHead and TableCell primitives.
-- `components/load-more-sentinel` — invisible marker that triggers infinite loading.
+- `components/data-table`: DataTable driven by TanStack `columns` and `data`.
+- `components/data-table-shell`: scrollable wrapper that holds a DataTable.
+- `components/data-table-sortable-header`: sortable column header for DataTable columns.
+- `components/table`: Table, TableHeader, TableBody, TableRow, TableHead and TableCell primitives.
+- `components/load-more-sentinel`: invisible marker that triggers infinite loading.
 
 ### Layout
-- `components/app-shell` — AppShell page frame with sidebar and header, and AppShellLogo.
+- `components/app-shell`: AppShell page frame with sidebar and header, and AppShellLogo.
 
 ### Hooks and lib
-- `hooks/use-mobile` — `useIsMobile()` breakpoint hook.
-- `lib/utils` — `cn()` class merging.
-- `lib/easing` — `EASING_FUNCTION` curves shared with motion animations.
-- `lib/initials` — `getInitials(name, fallback)`.
+- `hooks/use-mobile`: `useIsMobile()` breakpoint hook.
+- `lib/utils`: `cn()` class merging.
+- `lib/easing`: `EASING_FUNCTION` curves shared with motion animations.
+- `lib/initials`: `getInitials(name, fallback)`.
 
 ## Setup in an app
 

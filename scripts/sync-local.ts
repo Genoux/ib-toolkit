@@ -1,13 +1,15 @@
 import {
   cpSync,
   existsSync,
+  readdirSync,
   readFileSync,
   realpathSync,
   rmSync,
+  statSync,
   watch,
   writeFileSync,
 } from "node:fs";
-import { join, resolve } from "node:path";
+import { join, relative, resolve, sep } from "node:path";
 import { $ } from "bun";
 import { ROOT, type ToolkitPackage, toolkitPackages } from "./packages";
 
@@ -23,6 +25,15 @@ if (appDirs.length === 0) {
 function installedDir(appDir: string, pkg: ToolkitPackage): string | null {
   const target = join(appDir, "node_modules", pkg.name);
   return existsSync(target) ? realpathSync(target) : null;
+}
+
+// `template` is a runnable app with its own node_modules and .next; the packed tarball leaves
+// them out, so syncing must too.
+const LOCAL_ARTIFACTS = new Set(["node_modules", ".next", ".turbo"]);
+
+function isPublished(root: string, path: string): boolean {
+  const segments = relative(root, path).split(sep);
+  return !/\.test\.tsx?$/.test(path) && !segments.some((segment) => LOCAL_ARTIFACTS.has(segment));
 }
 
 // Packing rewrites `workspace:*` to a concrete version, so sibling toolkit packages always
@@ -60,7 +71,7 @@ function copyPackage(appDir: string, pkg: ToolkitPackage): boolean {
   const installed = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
   const source = JSON.parse(readFileSync(join(pkg.dir, "package.json"), "utf8"));
   if (externalDependencies(installed) !== externalDependencies(source)) {
-    console.warn(`${pkg.name}: dependencies changed, re-run pack:local and bun install in the app`);
+    console.warn(`${pkg.name}: dependencies changed, bun add the new ones in the app`);
   }
   syncEntryPoints(target, installed, source);
   for (const entry of pkg.files) {
@@ -69,7 +80,7 @@ function copyPackage(appDir: string, pkg: ToolkitPackage): boolean {
     rmSync(join(target, entry), { recursive: true, force: true });
     cpSync(from, join(target, entry), {
       recursive: true,
-      filter: (path) => !/\.test\.tsx?$/.test(path),
+      filter: (path) => isPublished(from, path),
     });
   }
   return true;
@@ -114,9 +125,19 @@ function watchedPaths(pkg: ToolkitPackage): string[] {
   return [...new Set(sources)].map((entry) => join(pkg.dir, entry)).filter(existsSync);
 }
 
+// A recursive watch cannot exclude subtrees and throws on dangling symlinks, which template's
+// node_modules (bun's isolated linker) can hold, so artifact folders are skipped by watching
+// their siblings instead.
+function watchTargets(path: string): string[] {
+  if (!statSync(path).isDirectory()) return [path];
+  const children = readdirSync(path);
+  if (!children.some((name) => LOCAL_ARTIFACTS.has(name))) return [path];
+  return children.filter((name) => !LOCAL_ARTIFACTS.has(name)).map((name) => join(path, name));
+}
+
 if (watchMode) {
   let timer: Timer | undefined;
-  for (const path of toolkitPackages().flatMap(watchedPaths)) {
+  for (const path of toolkitPackages().flatMap(watchedPaths).flatMap(watchTargets)) {
     watch(path, { recursive: true }, () => {
       clearTimeout(timer);
       timer = setTimeout(rebuildAndSync, 100);
