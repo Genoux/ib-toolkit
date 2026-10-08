@@ -16,6 +16,7 @@ export type MultiSelectOption = {
   value: string;
   label: string;
   imageUrl?: string | null;
+  disabled?: boolean;
 };
 
 function truncateText(value: string, maxLength: number): string {
@@ -106,6 +107,7 @@ export function MultiSelectOptionList({
         {visibleOptions.map((option) => {
           const checked = selectedValues.includes(option.value);
           const rowId = `${idPrefix}-${option.value}`;
+          const isDisabled = disabled || option.disabled;
           return (
             <label
               key={option.value}
@@ -114,14 +116,14 @@ export function MultiSelectOptionList({
               className={cn(
                 "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm",
                 "hover:bg-muted/80 has-focus-visible:ring-2 has-focus-visible:ring-ring",
-                disabled && "pointer-events-none opacity-50",
+                isDisabled && "pointer-events-none opacity-50",
               )}
             >
               <Checkbox
                 id={rowId}
                 checked={checked}
-                disabled={disabled}
-                onCheckedChange={disabled ? undefined : () => onToggle(option.value)}
+                disabled={isDisabled}
+                onCheckedChange={isDisabled ? undefined : () => onToggle(option.value)}
               />
               {option.imageUrl !== undefined ? (
                 <PersonAvatar imageUrl={option.imageUrl} name={option.label} />
