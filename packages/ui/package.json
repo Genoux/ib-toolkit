@@ -1,6 +1,6 @@
 {
   "name": "@inbeat/ui",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "inBeat design tokens and primitives (Radix + Tailwind v4), shipped as source",
   "type": "module",
   "sideEffects": [
