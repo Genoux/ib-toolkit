@@ -27,3 +27,9 @@ export const WithAvatars: Story = {
     selectedValues: [PEOPLE_OPTIONS[0]?.value ?? ""],
   },
 };
+
+export const WithDisabledOption: Story = {
+  args: {
+    options: OPTIONS.map((option, index) => (index === 1 ? { ...option, disabled: true } : option)),
+  },
+};
