@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.4](https://github.com/Genoux/ib-toolkit/compare/next-v0.9.3...next-v0.9.4) (2026-10-08)
+
+
+### Bug Fixes
+
+* **next:** make sentry, geist and zod optional peers ([#48](https://github.com/Genoux/ib-toolkit/issues/48)) ([1f531bd](https://github.com/Genoux/ib-toolkit/commit/1f531bd4d1c940765c4e3ff3a1a6c5e7697ca255))
+
 ## [0.9.3](https://github.com/Genoux/ib-toolkit/compare/next-v0.9.2...next-v0.9.3) (2026-10-08)
 
 
