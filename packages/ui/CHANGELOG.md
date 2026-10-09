@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.2](https://github.com/Genoux/ib-toolkit/compare/ui-v0.11.1...ui-v0.11.2) (2026-10-09)
+
+
+### Bug Fixes
+
+* **ui:** open tooltips on keyboard focus only ([#56](https://github.com/Genoux/ib-toolkit/issues/56)) ([cee23e3](https://github.com/Genoux/ib-toolkit/commit/cee23e3d16012e27bc16ea19b8f6830a4a439e63))
+
 ## [0.11.1](https://github.com/Genoux/ib-toolkit/compare/ui-v0.11.0...ui-v0.11.1) (2026-10-08)
 
 
