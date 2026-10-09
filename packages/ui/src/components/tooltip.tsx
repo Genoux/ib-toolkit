@@ -22,8 +22,22 @@ function TooltipRoot({ ...props }: React.ComponentProps<typeof TooltipPrimitive.
   return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
 }
 
-function TooltipTrigger({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+function TooltipTrigger({
+  onFocus,
+  ...props
+}: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
+  return (
+    <TooltipPrimitive.Trigger
+      data-slot="tooltip-trigger"
+      // Radix opens on any focus, including the auto-focus a Dialog/Sheet gives its first
+      // button; preventDefault makes Radix skip opening unless the focus came from the keyboard.
+      onFocus={(event) => {
+        onFocus?.(event);
+        if (!event.currentTarget.matches(":focus-visible")) event.preventDefault();
+      }}
+      {...props}
+    />
+  );
 }
 
 function TooltipContent({
