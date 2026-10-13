@@ -37,3 +37,28 @@ export const Default: Story = {
     </Breadcrumb>
   ),
 };
+
+export const LongTitle: Story = {
+  parameters: { layout: "padded" },
+  render: () => (
+    <div className="max-w-96">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Clients</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Nutramax</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>
+              NMAX - UGC brief - D1 - Nutramax BAU UGC Ads - Concept 3 - Wellness
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
+  ),
+};
