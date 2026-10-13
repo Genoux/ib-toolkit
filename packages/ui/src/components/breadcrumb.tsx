@@ -1,11 +1,21 @@
+"use client";
+
 import * as React from "react";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
 import { Slot } from "radix-ui";
 
 import { cn } from "../lib/utils";
+import { TooltipContent, TooltipRoot, TooltipTrigger } from "./tooltip";
 
-function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
-  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
+function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
+  return (
+    <nav
+      aria-label="breadcrumb"
+      data-slot="breadcrumb"
+      className={cn("min-w-0", className)}
+      {...props}
+    />
+  );
 }
 
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
@@ -13,7 +23,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
     <ol
       data-slot="breadcrumb-list"
       className={cn(
-        "text-muted-foreground flex flex-wrap items-center gap-1 text-sm wrap-break-word ",
+        "text-muted-foreground flex items-center gap-1 text-sm",
         className,
       )}
       {...props}
@@ -25,7 +35,10 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
       data-slot="breadcrumb-item"
-      className={cn("inline-flex items-center gap-1.5", className)}
+      className={cn(
+        "inline-flex shrink-0 items-center gap-1.5 has-data-[slot=breadcrumb-page]:min-w-20 has-data-[slot=breadcrumb-page]:shrink",
+        className,
+      )}
       {...props}
     />
   );
@@ -43,22 +56,39 @@ function BreadcrumbLink({
   return (
     <Comp
       data-slot="breadcrumb-link"
-      className={cn("py-1 px-1.5 rounded-md hover:text-foreground hover:bg-muted-foreground/5 transition-colors", className)}
+      className={cn("block max-w-40 truncate py-1 px-1.5 rounded-md hover:text-foreground hover:bg-muted-foreground/5 transition-colors", className)}
       {...props}
     />
   );
 }
 
-function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
+function BreadcrumbPage({ className, children, ...props }: React.ComponentProps<"span">) {
+  const pageRef = React.useRef<HTMLSpanElement>(null);
+  const [tooltipOpen, setTooltipOpen] = React.useState(false);
+
   return (
-    <span
-      data-slot="breadcrumb-page"
-      role="link"
-      aria-disabled="true"
-      aria-current="page"
-      className={cn("py-1 px-1.5 text-foreground font-normal", className)}
-      {...props}
-    />
+    <TooltipRoot
+      open={tooltipOpen}
+      onOpenChange={(open) => {
+        const page = pageRef.current;
+        setTooltipOpen(open && !!page && page.scrollWidth > page.clientWidth);
+      }}
+    >
+      <TooltipTrigger asChild>
+        <span
+          data-slot="breadcrumb-page"
+          role="link"
+          aria-disabled="true"
+          aria-current="page"
+          className={cn("block truncate py-1 px-1.5 text-foreground font-normal", className)}
+          {...props}
+          ref={pageRef}
+        >
+          {children}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>{children}</TooltipContent>
+    </TooltipRoot>
   );
 }
 

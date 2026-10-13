@@ -83,7 +83,7 @@ function AppShell({
               orientation="vertical"
               className={cn(headerStyle.separator, "data-[orientation=vertical]:h-4")}
             />
-            {header ? <div className="flex w-full items-center justify-between">{header}</div> : null}
+            {header ? <div className="flex w-full min-w-0 items-center justify-between">{header}</div> : null}
           </div>
         </header>
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">{children}</div>
