@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.3](https://github.com/Genoux/ib-toolkit/compare/ui-v0.11.2...ui-v0.11.3) (2026-10-13)
+
+
+### Bug Fixes
+
+* **ui:** keep long breadcrumb titles on one line ([#58](https://github.com/Genoux/ib-toolkit/issues/58)) ([31852e3](https://github.com/Genoux/ib-toolkit/commit/31852e3002bc1d5f9b86aec0d4eb35624b013307))
+
 ## [0.11.2](https://github.com/Genoux/ib-toolkit/compare/ui-v0.11.1...ui-v0.11.2) (2026-10-09)
 
 
