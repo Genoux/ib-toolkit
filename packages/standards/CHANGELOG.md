@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.12.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.11.3...standards-v0.12.0) (2026-10-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **ui:** make breadcrumb a single adaptive component ([#60](https://github.com/Genoux/ib-toolkit/issues/60))
+
+### Features
+
+* **ui:** make breadcrumb a single adaptive component ([#60](https://github.com/Genoux/ib-toolkit/issues/60)) ([502a13b](https://github.com/Genoux/ib-toolkit/commit/502a13baeac34279c88cb77192d3ce824da58d23))
+
 ## [0.11.3](https://github.com/Genoux/ib-toolkit/compare/standards-v0.11.2...standards-v0.11.3) (2026-10-13)
 
 
