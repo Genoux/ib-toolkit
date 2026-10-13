@@ -109,7 +109,7 @@ Every module of `@inbeat/ui`, imported as `@inbeat/ui/<path>`.
 ### Navigation
 - `components/app-nav`: sidebar navigation list driven by `items` and `renderLink`.
 - `components/nav-user`: sidebar user menu with name, email, avatar and dropdown.
-- `components/breadcrumb`: Breadcrumb trail.
+- `components/breadcrumb`: Breadcrumb from `links` + `page` (pass `renderLink` for the router Link); renderLink must return an element that forwards props and ref, which `next/link` does. It truncates the page title and collapses links into a … menu below `lg` and when there are more than 2 links.
 - `components/tabs`: Tabs, TabsList (pills from a `tabs` array) and TabsContent.
 - `components/sidebar`: Sidebar primitives that AppShell is built from; apps do not use them directly.
 
