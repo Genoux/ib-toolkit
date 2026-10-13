@@ -5,38 +5,36 @@ import { ChevronRight, MoreHorizontal } from "lucide-react";
 import { Slot } from "radix-ui";
 
 import { cn } from "../lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
 import { TooltipContent, TooltipRoot, TooltipTrigger } from "./tooltip";
 
-function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
-  return (
-    <nav
-      aria-label="breadcrumb"
-      data-slot="breadcrumb"
-      className={cn("min-w-0", className)}
-      {...props}
-    />
-  );
-}
+type BreadcrumbLinkItem = { label: React.ReactNode; href: string };
 
-function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
-  return (
-    <ol
-      data-slot="breadcrumb-list"
-      className={cn(
-        "text-muted-foreground flex items-center gap-1 text-sm",
-        className,
-      )}
-      {...props}
-    />
-  );
-}
+// The element is rendered through Slot and asChild, so it must forward props and ref.
+type RenderBreadcrumbLink<Link extends BreadcrumbLinkItem> = (
+  link: Link,
+  content: React.ReactNode,
+) => React.ReactElement;
+
+const MAX_INLINE_LINKS = 2;
+// From md the sidebar takes 16rem, which leaves too little header room for inline links until lg.
+const DESKTOP_ONLY = "hidden lg:inline-flex";
+
+const renderAnchor: RenderBreadcrumbLink<BreadcrumbLinkItem> = (link, content) => (
+  <a href={link.href}>{content}</a>
+);
 
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
       data-slot="breadcrumb-item"
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 has-data-[slot=breadcrumb-page]:min-w-20 has-data-[slot=breadcrumb-page]:shrink",
+        "inline-flex shrink-0 items-center gap-1.5",
         className,
       )}
       {...props}
@@ -44,96 +42,151 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   );
 }
 
-function BreadcrumbLink({
-  asChild,
-  className,
-  ...props
-}: React.ComponentProps<"a"> & {
-  asChild?: boolean;
-}) {
-  const Comp = asChild ? Slot.Root : "a";
-
-  return (
-    <Comp
-      data-slot="breadcrumb-link"
-      className={cn("block max-w-40 truncate py-1 px-1.5 rounded-md hover:text-foreground hover:bg-muted-foreground/5 transition-colors", className)}
-      {...props}
-    />
-  );
-}
-
-function BreadcrumbPage({ className, children, ...props }: React.ComponentProps<"span">) {
-  const pageRef = React.useRef<HTMLSpanElement>(null);
-  const [tooltipOpen, setTooltipOpen] = React.useState(false);
-
-  return (
-    <TooltipRoot
-      open={tooltipOpen}
-      onOpenChange={(open) => {
-        const page = pageRef.current;
-        setTooltipOpen(open && !!page && page.scrollWidth > page.clientWidth);
-      }}
-    >
-      <TooltipTrigger asChild>
-        <span
-          data-slot="breadcrumb-page"
-          role="link"
-          aria-disabled="true"
-          aria-current="page"
-          className={cn("block truncate py-1 px-1.5 text-foreground font-normal", className)}
-          {...props}
-          ref={pageRef}
-        >
-          {children}
-        </span>
-      </TooltipTrigger>
-      <TooltipContent>{children}</TooltipContent>
-    </TooltipRoot>
-  );
-}
-
-function BreadcrumbSeparator({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<"li">) {
+function BreadcrumbSeparator({ className }: { className?: string }) {
   return (
     <li
       data-slot="breadcrumb-separator"
       role="presentation"
       aria-hidden="true"
       className={cn("[&>svg]:size-3.5", className)}
-      {...props}
     >
-      {children ?? <ChevronRight />}
+      <ChevronRight />
     </li>
   );
 }
 
-function BreadcrumbEllipsis({
-  className,
-  ...props
-}: React.ComponentProps<"span">) {
+function TruncationTooltip({
+  content,
+  children,
+}: {
+  content: React.ReactNode;
+  children: React.ReactElement;
+}) {
+  // Radix types the trigger ref as a button; with asChild it lands on the span or anchor child.
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const [tooltipOpen, setTooltipOpen] = React.useState(false);
+
   return (
-    <span
-      data-slot="breadcrumb-ellipsis"
-      role="presentation"
-      aria-hidden="true"
-      className={cn("flex size-9 items-center justify-center", className)}
-      {...props}
+    <TooltipRoot
+      open={tooltipOpen}
+      onOpenChange={(open) => {
+        const trigger = triggerRef.current;
+        setTooltipOpen(open && !!trigger && trigger.scrollWidth > trigger.clientWidth);
+      }}
     >
-      <MoreHorizontal className="size-4" />
-      <span className="sr-only">More</span>
-    </span>
+      <TooltipTrigger asChild ref={triggerRef}>
+        {children}
+      </TooltipTrigger>
+      <TooltipContent>{content}</TooltipContent>
+    </TooltipRoot>
   );
 }
 
-export {
-  Breadcrumb,
-  BreadcrumbEllipsis,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-};
+function BreadcrumbPage({ children }: { children: React.ReactNode }) {
+  return (
+    <TruncationTooltip content={children}>
+      <span
+        data-slot="breadcrumb-page"
+        role="link"
+        aria-disabled="true"
+        aria-current="page"
+        className="block truncate py-1 px-1.5 text-foreground font-normal"
+      >
+        {children}
+      </span>
+    </TruncationTooltip>
+  );
+}
+
+function BreadcrumbMenu<Link extends BreadcrumbLinkItem>({
+  links,
+  renderLink,
+  className,
+}: {
+  links: Link[];
+  renderLink: RenderBreadcrumbLink<Link>;
+  className: string;
+}) {
+  return (
+    <>
+      <BreadcrumbItem className={className}>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            aria-label="Show more breadcrumbs"
+            className="flex h-7 items-center rounded-md px-1.5 hover:text-foreground hover:bg-muted-foreground/5 transition-colors"
+          >
+            <MoreHorizontal className="size-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="max-w-72">
+            {links.map((link) => (
+              <DropdownMenuItem key={link.href} asChild>
+                {renderLink(link, link.label)}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator className={className} />
+    </>
+  );
+}
+
+function Breadcrumb<Link extends BreadcrumbLinkItem>({
+  links = [],
+  page,
+  renderLink = renderAnchor,
+  className,
+}: {
+  links?: Link[];
+  page: React.ReactNode;
+  renderLink?: RenderBreadcrumbLink<Link>;
+  className?: string;
+}) {
+  const renderInlineLink = (link: Link) => (
+    <React.Fragment key={link.href}>
+      <BreadcrumbItem className={DESKTOP_ONLY}>
+        <TruncationTooltip content={link.label}>
+          <Slot.Root
+            data-slot="breadcrumb-link"
+            className="block max-w-40 truncate py-1 px-1.5 rounded-md hover:text-foreground hover:bg-muted-foreground/5 transition-colors"
+          >
+            {renderLink(link, link.label)}
+          </Slot.Root>
+        </TruncationTooltip>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator className={DESKTOP_ONLY} />
+    </React.Fragment>
+  );
+
+  return (
+    <nav aria-label="breadcrumb" data-slot="breadcrumb" className={cn("min-w-0", className)}>
+      <ol
+        data-slot="breadcrumb-list"
+        className="text-muted-foreground flex items-center gap-1 text-sm"
+      >
+        {links.length > 0 && (
+          <BreadcrumbMenu links={links} renderLink={renderLink} className="lg:hidden" />
+        )}
+        {links.length > MAX_INLINE_LINKS ? (
+          <>
+            {links.slice(0, 1).map(renderInlineLink)}
+            <BreadcrumbMenu
+              links={links.slice(1, -1)}
+              renderLink={renderLink}
+              className={DESKTOP_ONLY}
+            />
+            {links.slice(-1).map(renderInlineLink)}
+          </>
+        ) : (
+          links.map(renderInlineLink)
+        )}
+        <BreadcrumbItem className="min-w-20 shrink">
+          <BreadcrumbPage>{page}</BreadcrumbPage>
+        </BreadcrumbItem>
+      </ol>
+    </nav>
+  );
+}
+
+export { Breadcrumb };
+export type { BreadcrumbLinkItem };

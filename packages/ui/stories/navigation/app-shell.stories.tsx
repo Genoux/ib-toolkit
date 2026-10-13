@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { BarChart3, Home, Inbox, LogOut, Settings, UserCog } from "lucide-react";
-import { type ComponentProps, useState } from "react";
+import { BarChart3, Home, Inbox, LogOut, MoreHorizontal, Settings, UserCog } from "lucide-react";
+import { type ComponentProps, type ReactNode, useState } from "react";
 import { AppNav, type AppNavItem } from "../../src/components/app-nav";
 import { AppShell, AppShellLogo } from "../../src/components/app-shell";
+import { Breadcrumb } from "../../src/components/breadcrumb";
+import { Button } from "../../src/components/button";
 import { DropdownMenuItem } from "../../src/components/dropdown-menu";
 import { NavUser } from "../../src/components/nav-user";
 import { Skeleton } from "../../src/components/skeleton";
@@ -17,7 +19,12 @@ const NAV_ITEMS: AppNavItem[] = [
 
 type StoryArgs = Pick<ComponentProps<typeof AppShell>, "variant" | "headerVariant" | "collapsible">;
 
-function AppShellPreview({ variant, headerVariant, collapsible }: StoryArgs) {
+function AppShellPreview({
+  variant,
+  headerVariant,
+  collapsible,
+  header,
+}: StoryArgs & { header?: ReactNode }) {
   const [activeTitle, setActiveTitle] = useState(NAV_ITEMS[0]?.title);
   return (
     <AppShell
@@ -47,7 +54,7 @@ function AppShellPreview({ variant, headerVariant, collapsible }: StoryArgs) {
           </DropdownMenuItem>
         </NavUser>
       }
-      header={<span className="text-sm font-medium">{activeTitle}</span>}
+      header={header ?? <span className="text-sm font-medium">{activeTitle}</span>}
     >
       <div className="flex flex-col gap-3 p-6">
         <Skeleton className="h-6 w-48" />
@@ -80,3 +87,32 @@ export const Default: Story = {};
 export const Floating: Story = { args: { variant: "floating", headerVariant: "plain" } };
 
 export const Inset: Story = { args: { variant: "inset" } };
+
+export const WithBreadcrumb: Story = {
+  render: ({ variant = "sidebar", headerVariant = "bordered", collapsible = "offcanvas" }) => (
+    <AppShellPreview
+      variant={variant}
+      headerVariant={headerVariant}
+      collapsible={collapsible}
+      header={
+        <>
+          <Breadcrumb
+            links={[
+              { label: "Clients", href: "#clients" },
+              { label: "Nutramax", href: "#nutramax" },
+              {
+                label: "NMAX - UGC brief - D1 - Nutramax BAU UGC Ads - Concept 3 - Wellness",
+                href: "#campaign",
+              },
+              { label: "Jane Creator", href: "#creator" },
+            ]}
+            page="Brief - Concept 3 - Wellness hooks and raw footage"
+          />
+          <Button variant="dots" aria-label="Actions">
+            <MoreHorizontal />
+          </Button>
+        </>
+      }
+    />
+  ),
+};
