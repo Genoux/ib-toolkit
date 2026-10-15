@@ -36,7 +36,7 @@ function AvatarFallback({
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        "flex size-full items-center justify-center rounded-full bg-muted font-medium text-foreground transition-colors duration-100 group-hover:bg-black/5",
+        "flex size-full items-center justify-center rounded-full bg-muted font-medium text-foreground transition-colors duration-100 group-hover:bg-[color-mix(in_oklab,var(--muted),black_5%)]",
         className,
       )}
       {...props}

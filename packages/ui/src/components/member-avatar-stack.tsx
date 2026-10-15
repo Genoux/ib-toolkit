@@ -19,11 +19,7 @@ export function MemberAvatarStack({ members }: { members?: MemberAvatarProfile[]
       </div>
     );
 
-  const shown = visibleMembers
-    .filter((m): m is MemberAvatarProfile & { name: string; imageUrl: string } =>
-      Boolean(m.name && m.imageUrl),
-    )
-    .slice(0, 3);
+  const shown = visibleMembers.slice(0, 3);
   const extra = visibleMembers.length - shown.length;
 
   return (
@@ -32,7 +28,7 @@ export function MemberAvatarStack({ members }: { members?: MemberAvatarProfile[]
         <PersonAvatar
           key={m.id}
           imageUrl={m.imageUrl}
-          name={m.name}
+          name={m.name ?? ""}
           fallbackClassName="text-[8px]"
         />
       ))}
