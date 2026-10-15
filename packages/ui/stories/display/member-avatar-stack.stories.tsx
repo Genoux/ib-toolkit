@@ -15,4 +15,8 @@ export const Default: Story = {};
 
 export const Overflow: Story = { args: { members: PEOPLE } };
 
+export const WithoutImages: Story = {
+  args: { members: [PEOPLE[4], { id: "6", name: null, imageUrl: null }] },
+};
+
 export const Empty: Story = { args: { members: [] } };
