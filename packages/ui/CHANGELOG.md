@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.1](https://github.com/Genoux/ib-toolkit/compare/ui-v0.12.0...ui-v0.12.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* **ui:** show members without photos in avatar stack ([#62](https://github.com/Genoux/ib-toolkit/issues/62)) ([46f6011](https://github.com/Genoux/ib-toolkit/commit/46f60117a685ef24d7c06a3652d7bde5ad4894bc))
+
 ## [0.12.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.11.3...ui-v0.12.0) (2026-10-13)
 
 
