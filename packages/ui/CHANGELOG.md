@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.2](https://github.com/Genoux/ib-toolkit/compare/ui-v0.12.1...ui-v0.12.2) (2026-10-19)
+
+
+### Bug Fixes
+
+* **ui:** plain dim dialog overlays, pretty-wrap descriptions ([#64](https://github.com/Genoux/ib-toolkit/issues/64)) ([c640ef7](https://github.com/Genoux/ib-toolkit/commit/c640ef78becfc03ec7b7e32da16c11b20758eab4))
+
 ## [0.12.1](https://github.com/Genoux/ib-toolkit/compare/ui-v0.12.0...ui-v0.12.1) (2026-10-15)
 
 
