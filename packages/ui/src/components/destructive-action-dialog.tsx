@@ -69,7 +69,7 @@ export function DestructiveActionDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription className="text-muted-foreground text-sm text-balance">
+          <AlertDialogDescription>
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
