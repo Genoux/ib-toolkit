@@ -79,7 +79,7 @@ function AlertDialogContent({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15, ease: EASING_FUNCTION.dialog }}
               style={{ willChange: "opacity" }}
-              className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm supports-backdrop-filter:backdrop-blur-sm"
+              className="fixed inset-0 z-50 bg-black/30"
             />
           </AlertDialogPrimitive.Overlay>
         )}
@@ -177,7 +177,7 @@ function AlertDialogDescription({
   return (
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
-      className={cn("text-muted-foreground *:[a]:hover:text-foreground text-sm text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3", className)}
+      className={cn("text-muted-foreground *:[a]:hover:text-foreground text-sm text-pretty *:[a]:underline *:[a]:underline-offset-3", className)}
       {...props}
     />
   )
