@@ -82,19 +82,48 @@ jobs:
 
   secrets-scan:
     name: Secret scan
-    # gitleaks-action v2 rejects repository_dispatch; a release sha's changes were already scanned on its PR.
+    # A release sha's changes were already scanned on its PR.
     if: github.event_name != 'repository_dispatch'
     runs-on: ubuntu-latest
-    # gitleaks lists the PR commits through the API on pull_request events.
-    permissions:
-      contents: read
-      pull-requests: read
     timeout-minutes: 10
+    env:
+      GITLEAKS_VERSION: "8.30.1"
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: ${{ inputs.ref }}
-      - uses: gitleaks/gitleaks-action@v3
+
+      # The CLI, not gitleaks-action: the action refuses organization repos without a
+      # GITLEAKS_LICENSE secret (gitleaks-action README, "License"), the MIT CLI does not.
+      - name: Install gitleaks
+        run: |
+          archive="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -sSfLO "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${archive}"
+          echo "${GITLEAKS_SHA256}  ${archive}" | sha256sum --check
+          tar -xzf "${archive}" -C "${RUNNER_TEMP}" gitleaks
+
+      # Scans the commits of the event, as the action did; anything else (first push,
+      # force push, an explicit ref) scans the whole history.
+      - name: Scan
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+          PUSH_AFTER_SHA: ${{ github.sha }}
+          EXPLICIT_REF: ${{ inputs.ref }}
+        run: |
+          commit_range=""
+          if [ -z "${EXPLICIT_REF}" ]; then
+            case "${EVENT_NAME}" in
+              pull_request) commit_range="${PR_BASE_SHA}..${PR_HEAD_SHA}" ;;
+              push) commit_range="${PUSH_BEFORE_SHA}..${PUSH_AFTER_SHA}" ;;
+            esac
+          fi
+          if [ -n "${commit_range}" ] && git rev-parse --quiet --verify "${commit_range%%..*}^{commit}" >/dev/null; then
+            "${RUNNER_TEMP}/gitleaks" git --redact --no-banner --log-opts="${commit_range}"
+          else
+            "${RUNNER_TEMP}/gitleaks" git --redact --no-banner
+          fi
