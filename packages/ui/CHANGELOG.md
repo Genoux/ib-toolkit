@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.13.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.12.2...ui-v0.13.0) (2026-11-12)
+
+
+### Features
+
+* **ui:** add opt-in fieldtrip brand layer ([#68](https://github.com/Genoux/ib-toolkit/issues/68)) ([1e8f629](https://github.com/Genoux/ib-toolkit/commit/1e8f6296336e8e76c69787f374ba6b782c690abe))
+
+
+### Bug Fixes
+
+* **standards:** keep markdown out of biome in new apps ([1e8f629](https://github.com/Genoux/ib-toolkit/commit/1e8f6296336e8e76c69787f374ba6b782c690abe))
+
 ## [0.12.2](https://github.com/Genoux/ib-toolkit/compare/ui-v0.12.1...ui-v0.12.2) (2026-10-19)
 
 

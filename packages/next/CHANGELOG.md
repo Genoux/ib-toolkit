@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/Genoux/ib-toolkit/compare/next-v0.12.2...next-v0.13.0) (2026-11-12)
+
+
+### Miscellaneous Chores
+
+* **next:** Synchronize inbeat versions
+
 ## [0.12.2](https://github.com/Genoux/ib-toolkit/compare/next-v0.12.1...next-v0.12.2) (2026-10-19)
 
 
