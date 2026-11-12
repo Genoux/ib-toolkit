@@ -78,7 +78,7 @@ Then:
 - `next.config.ts` has `transpilePackages: ["@inbeat/ui"]` (core and next ship compiled JS), and `geist` is a dependency (`@inbeat/next/fonts` loads it)
 - `vitest.config.ts` spreads `vitestPreset` from `@inbeat/config/vitest`, which runs `@inbeat/*` through Vite so mocks and aliases apply (alias `server-only` to a stub, see the template). Only code that runs outside Vite (e.g. workflow step bundles) needs `execArgv: ["--conditions=react-server"]`
 - `biome.json` extends `@inbeat/config/biome`
-- `globals.css` imports `@inbeat/ui/theme.css`
+- `globals.css` imports `@inbeat/ui/theme.css`, and `@inbeat/ui/fieldtrip.css` after it when the app carries the Fieldtrip brand (palette and brand fonts; the app loads the licensed font files)
 - the root layout puts `fontVariables` from `@inbeat/next/fonts` on `<html>`
 - `bunx ib sync` writes the shared agent rules; `bunx ib check` fails CI when they drift
 

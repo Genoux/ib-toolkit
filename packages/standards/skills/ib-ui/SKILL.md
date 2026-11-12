@@ -152,6 +152,23 @@ Every module of `@inbeat/ui`, imported as `@inbeat/ui/<path>`.
 `next.config.ts`: `transpilePackages: ["@inbeat/ui"]` (ui ships source; core and next ship compiled JS).
 The template installs every peer the catalog needs.
 
+## Look: neutral, Fieldtrip, or product-specific
+
+Decide this when the app starts and record it in the app's `AGENTS.md`. The components are the
+same in all three; only tokens and app-owned components change.
+
+- **Neutral** (default; dashboards and internal tools): `theme.css` alone.
+- **Fieldtrip brand**: add `@import "@inbeat/ui/fieldtrip.css";` after `theme.css`. It gives the
+  brand palette as `--color-fieldtrip-<name>` and `-light` (ink, olive, orange, mauve, brown,
+  green, spring, yellow, sky, pink, powder; utilities like `bg-fieldtrip-orange`) and maps
+  `font-sans` to SwissNow and `font-serif` to Diplomat. The font files are licensed and stay in
+  the app: load them with `next/font/local` and put `--font-swiss-now` and `--font-diplomat` on
+  `<html>`.
+- **Product-specific**: override tokens (`--primary`, `--radius`, ...) in the app's `globals.css`
+  after the imports, and build components only that product needs (a game card, a custom
+  dropdown) in the app, on the same tokens. They are not toolkit gaps and stay in the app until a
+  second app needs them. Never copy a toolkit component into the app to edit it.
+
 ## Adding or changing a component
 
 Do it in `ib-toolkit/packages/ui/src/components`, add or update its story in `packages/ui/stories`

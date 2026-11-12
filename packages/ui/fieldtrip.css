@@ -1,0 +1,38 @@
+/*
+ * Opt-in Fieldtrip brand layer. Import after theme.css in the app's globals.css:
+ *   @import "@inbeat/ui/theme.css";
+ *   @import "@inbeat/ui/fieldtrip.css";
+ * The licensed font files stay in the app (this package is public): load SwissNow and Diplomat
+ * with next/font/local and put the --font-swiss-now and --font-diplomat variables on <html>.
+ */
+@theme inline {
+  --font-sans: var(--font-swiss-now);
+  --font-serif: var(--font-diplomat);
+}
+
+/* static: apps read these through var(--color-fieldtrip-<name>), which Tailwind cannot see, so unused ones would be dropped. */
+/* Base/light pairs from the "Fieldtrip - Brand" Figma palette; ink has no light pair there, so it takes grey-3. */
+@theme static {
+  --color-fieldtrip-ink: #191910;
+  --color-fieldtrip-ink-light: #e4e4df;
+  --color-fieldtrip-olive: #8e8003;
+  --color-fieldtrip-olive-light: #d2cc9a;
+  --color-fieldtrip-orange: #ea4112;
+  --color-fieldtrip-orange-light: #f6b3a0;
+  --color-fieldtrip-mauve: #b398ad;
+  --color-fieldtrip-mauve-light: #e1d6de;
+  --color-fieldtrip-brown: #ad7b53;
+  --color-fieldtrip-brown-light: #decaba;
+  --color-fieldtrip-green: #157428;
+  --color-fieldtrip-green-light: #a1c8a9;
+  --color-fieldtrip-spring: #46b832;
+  --color-fieldtrip-spring-light: #b5e3ad;
+  --color-fieldtrip-yellow: #f9d317;
+  --color-fieldtrip-yellow-light: #fdeda2;
+  --color-fieldtrip-sky: #46bdf0;
+  --color-fieldtrip-sky-light: #b5e5f9;
+  --color-fieldtrip-pink: #ff97ab;
+  --color-fieldtrip-pink-light: #ffd5dd;
+  --color-fieldtrip-powder: #bccfef;
+  --color-fieldtrip-powder-light: #e4ecf9;
+}

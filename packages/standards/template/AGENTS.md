@@ -93,7 +93,8 @@ Server actions are queued per client; never use them for reads.
   component or variant is missing, stop and flag it for ib-toolkit; never invent, copy or patch
   one (a workaround needs the user's OK and a `// toolkit-gap:` comment).
 - Primitives and generic blocks from `@inbeat/ui/components/*`; tokens from
-  `@inbeat/ui/theme.css`. A block moves to the toolkit only once an app actually uses it.
+  `@inbeat/ui/theme.css`, plus the opt-in Fieldtrip brand layer `@inbeat/ui/fieldtrip.css` (see
+  "Look" in the `ib-ui` skill). A block moves to the toolkit only once an app actually uses it.
 - Buttons are `rounded-full` with no destructive variant; destructive flows use
   `DestructiveActionDialog` from `@inbeat/ui`. Icon-only buttons get a tooltip. Lists use
   `DataTableShell` + `DataTable`; empty lists use `EmptyState`.
