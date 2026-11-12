@@ -8,11 +8,13 @@
   ],
   "files": [
     "CHANGELOG.md",
+    "fieldtrip.css",
     "src",
     "theme.css"
   ],
   "exports": {
     "./theme.css": "./theme.css",
+    "./fieldtrip.css": "./fieldtrip.css",
     "./components/*": "./src/components/*.tsx",
     "./hooks/*": "./src/hooks/*.ts",
     "./lib/*": "./src/lib/*.ts"
