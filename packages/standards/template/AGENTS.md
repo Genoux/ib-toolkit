@@ -98,6 +98,17 @@ Server actions are queued per client; never use them for reads.
 - Buttons are `rounded-full` with no destructive variant; destructive flows use
   `DestructiveActionDialog` from `@inbeat/ui`. Icon-only buttons get a tooltip. Lists use
   `DataTableShell` + `DataTable`; empty lists use `EmptyState`.
+- Type scale: every text takes one of these roles and nothing sets a size or weight of its own
+  (`ib check` fails on `text-[13px]`, `font-[510]`, `font-bold`). Body `text-sm` (14px): table
+  cells, inputs, menu items, detail values, person names. Body strong `text-sm font-medium`: a
+  row's identifying cell, card titles, form labels, buttons, tabs. Caption `text-xs` muted: meta
+  lines, timestamps, hints. Tag `text-xs font-medium`: pills and count badges. Section title
+  `text-base font-semibold`; card, sheet and dialog title `text-lg font-semibold`; page title
+  `text-xl font-semibold`. Table column headers are 13px, set by `TableHead`. Secondary
+  information is `text-muted-foreground`, never smaller. Weights are regular, medium and
+  semibold. Larger named sizes are for display text on public and onboarding screens. To change
+  the scale, change it in ib-toolkit.
+- People in a table are avatars only (`MemberAvatarStack`); it names them in a tooltip.
 - Radix via `radix-ui`; animation via `motion` only.
 
 ### Simplicity

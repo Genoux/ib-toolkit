@@ -5,6 +5,7 @@ import { parseCreateArgs } from "./create-args";
 import { foundationProblems } from "./foundation";
 import { runMcp } from "./mcp";
 import { claudeFilesIgnoringAgents, staleFiles, write } from "./sync";
+import { typeScaleProblems } from "./type-scale";
 
 const USAGE = [
   "usage: ib <create <dir> [--local] | sync [app-dir] | check [app-dir] | mcp>",
@@ -42,6 +43,7 @@ const commands: Record<string, () => number | Promise<number>> = {
     const stale = staleFiles(appDir);
     const ignoring = claudeFilesIgnoringAgents(appDir);
     const problems = foundationProblems(appDir);
+    const offScale = typeScaleProblems(appDir);
     if (stale.length > 0) {
       console.error(
         `out of date with @inbeat/standards, run \`ib sync\`:\n  ${stale.join("\n  ")}`,
@@ -56,7 +58,13 @@ const commands: Record<string, () => number | Promise<number>> = {
     if (problems.length > 0) {
       console.error(`not on the shared foundation:\n  ${problems.join("\n  ")}`);
     }
-    return stale.length + ignoring.length + problems.length === 0 ? 0 : 1;
+    if (offScale.length > 0) {
+      console.error(
+        'outside the type scale (see "UI" in the standard; pick a role, or change the scale in ' +
+          `ib-toolkit):\n  ${offScale.join("\n  ")}`,
+      );
+    }
+    return stale.length + ignoring.length + problems.length + offScale.length === 0 ? 0 : 1;
   },
   mcp: () =>
     runMcp(args, {
