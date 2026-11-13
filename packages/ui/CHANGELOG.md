@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.13.0...ui-v0.14.0) (2026-11-13)
+
+
+### Features
+
+* enforce the type scale and show avatar stack names ([#70](https://github.com/Genoux/ib-toolkit/issues/70)) ([e6020e6](https://github.com/Genoux/ib-toolkit/commit/e6020e649762503db92358590822d603ebe8d29d))
+* **ui:** set table cells to 13.5px ([#72](https://github.com/Genoux/ib-toolkit/issues/72)) ([3e1b5d5](https://github.com/Genoux/ib-toolkit/commit/3e1b5d5d80c36c99a6c2efd03fe26921110d39eb))
+
 ## [0.13.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.12.2...ui-v0.13.0) (2026-11-12)
 
 
