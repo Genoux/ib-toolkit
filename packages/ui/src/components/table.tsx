@@ -13,7 +13,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
       <table
         data-slot="table"
         className={cn(
-          "w-full border-separate border-spacing-x-0 border-spacing-y-1.5 text-sm",
+          "w-full border-separate border-spacing-x-0 border-spacing-y-1.5 text-[13.5px]",
           "[&_tbody_tr>td:first-child]:rounded-l-lg [&_tbody_tr>td:last-child]:rounded-r-lg",
           "[&_tbody_tr:hover>td]:bg-muted/50 [&_tbody_tr:focus-within>td]:bg-muted/50",
           "[&_tbody_tr[data-state=selected]>td]:bg-muted",
