@@ -32,7 +32,7 @@ export interface PersonNameProps {
 
 export function PersonName({ name, className }: PersonNameProps) {
   return (
-    <p className={cn("w-full whitespace-nowrap text-[13px] text-muted-foreground", className)}>
+    <p className={cn("w-full whitespace-nowrap text-sm text-muted-foreground", className)}>
       {name}
     </p>
   );
