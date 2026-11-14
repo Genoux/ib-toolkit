@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.15.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.14.0...standards-v0.15.0) (2026-11-14)
+
+
+### Features
+
+* **standards:** install shared third-party skills on create, sync and install ([#74](https://github.com/Genoux/ib-toolkit/issues/74)) ([c9a3388](https://github.com/Genoux/ib-toolkit/commit/c9a3388a405e3815c09a9be8016880f2d524ded7))
+
+
+### Bug Fixes
+
+* **standards:** pin biome in the app template ([#67](https://github.com/Genoux/ib-toolkit/issues/67)) ([0a14baa](https://github.com/Genoux/ib-toolkit/commit/0a14baa9de9e6c8ff1c9464df0a70bbc94dbe026))
+
 ## [0.14.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.13.0...standards-v0.14.0) (2026-11-13)
 
 
