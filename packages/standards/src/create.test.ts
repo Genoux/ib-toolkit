@@ -80,6 +80,14 @@ describe("rewriteManifest", () => {
     expect(rewritten).not.toHaveProperty("overrides");
   });
 
+  it("runs ib sync after every install, keeping the template's scripts", () => {
+    const rewritten = rewriteManifest(
+      { ...manifest, scripts: { dev: "next dev" } },
+      { name: "acme", version: "0.1.2" },
+    );
+    expect(rewritten.scripts).toEqual({ dev: "next dev", postinstall: "ib sync" });
+  });
+
   it("points workspace deps at local tarballs and overrides every package", () => {
     const tarballs = {
       "@inbeat/core": "file:/toolkit/.packs/inbeat-core.tgz",

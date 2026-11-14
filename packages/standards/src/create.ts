@@ -21,6 +21,7 @@ export type Manifest = {
   dependencies?: Dependencies;
   devDependencies?: Dependencies;
   peerDependencies?: Dependencies;
+  scripts?: Record<string, string>;
   [field: string]: unknown;
 };
 
@@ -77,6 +78,13 @@ export function rewriteManifest(
     ...manifest,
     ...resolved,
     name,
+    // `bun install` after a clone fetches the shared skills, which are never
+    // committed. Added here, not in the template: the template is a workspace of
+    // ib-toolkit, where it would download them on every toolkit install.
+    scripts: {
+      ...(manifest.scripts as Record<string, string> | undefined),
+      postinstall: "ib sync",
+    },
     ...(tarballs && { overrides: tarballs }),
   };
 }

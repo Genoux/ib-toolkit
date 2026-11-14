@@ -1,0 +1,23 @@
+# Skills every project gets. The toolkit's sync downloads the latest version
+# of each from GitHub into the project's .agents/skills/, linked into
+# .claude/skills/ for Claude Code (never committed).
+#
+# <owner/repo>  <folder in the repo>  [installed name]
+#   folder/*    every skill folder inside folder
+#   file.md     a single-file agent or skill, installed as <name>/SKILL.md
+#   .           the whole repo is one skill (give the name)
+
+# Design and UI
+emilkowalski/skills                    skills/*
+anthropics/skills                      skills/frontend-design
+leonxlnx/taste-skill                   skills/taste-skill
+
+# Code
+anthropics/claude-plugins-official     plugins/code-simplifier/agents/code-simplifier.md
+planetscale/database-skills            skills/postgres
+
+# Workflow
+mattpocock/skills                      skills/productivity/grill-me
+mattpocock/skills                      skills/productivity/handoff
+affaan-m/everything-claude-code        skills/strategic-compact
+rebelytics/one-skill-to-rule-them-all  .  task-observer
