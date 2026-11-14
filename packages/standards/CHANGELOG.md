@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.15.0...standards-v0.16.0) (2026-11-14)
+
+
+### Features
+
+* **standards:** add the ui, interface and react pattern skills to the shared list ([#75](https://github.com/Genoux/ib-toolkit/issues/75)) ([47cb26a](https://github.com/Genoux/ib-toolkit/commit/47cb26aef650c89521aa1f0b9d4535cd5b97e342))
+
 ## [0.15.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.14.0...standards-v0.15.0) (2026-11-14)
 
 
