@@ -11,6 +11,14 @@
 emilkowalski/skills                    skills/*
 anthropics/skills                      skills/frontend-design
 leonxlnx/taste-skill                   skills/taste-skill
+jakubkrehel/make-interfaces-feel-better  skills/make-interfaces-feel-better
+ibelick/ui-skills                      skills/baseline-ui
+ibelick/ui-skills                      skills/fixing-accessibility
+ibelick/ui-skills                      skills/fixing-metadata
+benjitaylor/skills                     stageshow
+
+# React and rendering patterns
+PatternsDev/skills                     react/*
 
 # Code
 anthropics/claude-plugins-official     plugins/code-simplifier/agents/code-simplifier.md
