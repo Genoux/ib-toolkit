@@ -80,7 +80,11 @@ Then:
 - `biome.json` extends `@inbeat/config/biome`
 - `globals.css` imports `@inbeat/ui/theme.css`, and `@inbeat/ui/fieldtrip.css` after it when the app carries the Fieldtrip brand (palette and brand fonts; the app loads the licensed font files)
 - the root layout puts `fontVariables` from `@inbeat/next/fonts` on `<html>`
-- `bunx ib sync` writes the shared agent rules; `bunx ib check` fails CI when they drift
+- `bunx ib sync` writes the shared agent rules and downloads the latest shared third-party skills; `bunx ib check` fails CI when the rules drift
+
+### Shared skills
+
+`packages/standards/external-skills.txt` lists third-party skills every app gets (design, animation, code, workflow). `ib create` and `ib sync` download the latest version of each from GitHub into the app's `.agents/skills/`, which Codex, Cursor, Gemini CLI, Copilot and OpenCode read, and link each one into `.claude/skills/` for Claude Code (a copy where links are not allowed). They are never committed: the app's `postinstall` runs `ib sync`, so `bun install` after a clone fetches them (skipped when `CI` is set). The list is also the one jb-toolkit reads, so personal and work projects get the same skills. A folder without the `.toolkit-source` marker is the app's own and is never replaced. A failed download only warns, and removes nothing. To add or drop a skill, edit the list and release `@inbeat/standards`.
 
 ## Develop
 
