@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.20.0](https://github.com/Genoux/ib-toolkit/compare/standards-v0.19.1...standards-v0.20.0) (2026-11-21)
+
+
+### Features
+
+* **ui:** components own spacing, ib check fails hand-picked spacing ([#95](https://github.com/Genoux/ib-toolkit/issues/95)) ([e265f49](https://github.com/Genoux/ib-toolkit/commit/e265f490ad6229eb2a4a4ab7ec7ae547fdb0992c))
+
+
+### Bug Fixes
+
+* keep the 404 title and button 16px apart ([#97](https://github.com/Genoux/ib-toolkit/issues/97)) ([1d9a346](https://github.com/Genoux/ib-toolkit/commit/1d9a346a28875ccd194a69ce93d28e42dbe1bcf8))
+
 ## [0.19.1](https://github.com/Genoux/ib-toolkit/compare/standards-v0.19.0...standards-v0.19.1) (2026-11-20)
 
 

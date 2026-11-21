@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.0](https://github.com/Genoux/ib-toolkit/compare/ui-v0.19.1...ui-v0.20.0) (2026-11-21)
+
+
+### Features
+
+* **ui:** components own spacing, ib check fails hand-picked spacing ([#95](https://github.com/Genoux/ib-toolkit/issues/95)) ([e265f49](https://github.com/Genoux/ib-toolkit/commit/e265f490ad6229eb2a4a4ab7ec7ae547fdb0992c))
+
 ## [0.19.1](https://github.com/Genoux/ib-toolkit/compare/ui-v0.19.0...ui-v0.19.1) (2026-11-20)
 
 
